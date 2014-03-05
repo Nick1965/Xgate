@@ -1,0 +1,9 @@
+C:\Projects\oldigw\SocialExplorer.FastDbf\bin\Debug\SocialExplorer.FastDbf.dll
+C:\Projects\oldigw\SocialExplorer.FastDbf\bin\Debug\SocialExplorer.FastDbf.pdb
+C:\Projects\oldigw\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.dll
+C:\Projects\oldigw\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\SocialExplorer.FastDbf\bin\Debug\SocialExplorer.FastDbf.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\SocialExplorer.FastDbf\bin\Debug\SocialExplorer.FastDbf.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.csprojResolveAssemblyReference.cache

@@ -1,0 +1,56 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Oldi.Net.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="FailResponse" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;response&gt;
+	&lt;error code="{0}"&gt;{1}&lt;/error&gt; 
+&lt;/response&gt;
+</Value>
+    </Setting>
+    <Setting Name="CodeSNA" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
+    <Setting Name="XmlHeader" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-8"?&gt;</Value>
+    </Setting>
+    <Setting Name="CodeLongWait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
+    <Setting Name="providerMTS" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mts</Value>
+    </Setting>
+    <Setting Name="Response" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;response&gt;
+	&lt;error code="{0}"&gt;{1}&lt;/error&gt; 
+	&lt;transaction&gt;{2}&lt;/transaction&gt;
+	&lt;acceptdate&gt;{3}&lt;/acceptdate&gt;
+	&lt;acceptcode&gt;{4}&lt;/acceptcode&gt;
+	&lt;account&gt;{5}&lt;/account&gt;
+	&lt;addinfo&gt;{6}&lt;/addinfo&gt;
+	&lt;debt-amount&gt;{7}&lt;/debt-amount&gt;
+&lt;/response&gt;</Value>
+    </Setting>
+    <Setting Name="CodeSUCS" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="providerCyber" Type="System.String" Scope="User">
+      <Value Profile="(Default)">cyber</Value>
+    </Setting>
+    <Setting Name="providerPCC" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pcc</Value>
+    </Setting>
+    <Setting Name="XmlHeader1251" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="windows-1251"?&gt;</Value>
+    </Setting>
+    <Setting Name="rtResponse" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;response&gt;
+	&lt;error code="{0}"&gt;{1}&lt;/error&gt; 
+	&lt;transaction&gt;{2}&lt;/transaction&gt;
+	&lt;acceptdate&gt;{3}&lt;/acceptdate&gt;
+	&lt;opname&gt;{4}&lt;/opname&gt;
+	&lt;addinfo&gt;{5}&lt;/addinfo&gt;
+&lt;/response&gt;</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

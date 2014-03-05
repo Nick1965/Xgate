@@ -1,0 +1,62 @@
+C:\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.csprojResolveAssemblyReference.cache
+C:\Projects\oldigw\oldigw\obj\x86\Debug\Oldi.Net.Properties.Resources.resources
+C:\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
+C:\Projects\oldigw\oldigw\bin\Debug\OldiGW.xml
+C:\Projects\oldigw\oldigw\bin\Debug\oldigw.exe.config
+C:\Projects\oldigw\oldigw\bin\Debug\oldigw.exe
+C:\Projects\oldigw\oldigw\bin\Debug\oldigw.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\Autoshow.dll
+C:\Projects\oldigw\oldigw\bin\Debug\Cyber.dll
+C:\Projects\oldigw\oldigw\bin\Debug\Ekt.dll
+C:\Projects\oldigw\oldigw\bin\Debug\Mts.dll
+C:\Projects\oldigw\oldigw\bin\Debug\Oldi.Net.dll
+C:\Projects\oldigw\oldigw\bin\Debug\Redo.dll
+C:\Projects\oldigw\oldigw\bin\Debug\Smtp.dll
+C:\Projects\oldigw\oldigw\bin\Debug\Utility.dll
+C:\Projects\oldigw\oldigw\bin\Debug\SMPP.dll
+C:\Projects\oldigw\oldigw\bin\Debug\SocialExplorer.FastDbf.dll
+C:\Projects\oldigw\oldigw\bin\Debug\Autoshow.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\Cyber.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\Ekt.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\Mts.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\Oldi.Net.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\Smtp.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\Utility.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\Redo.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\SMPP.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\SocialExplorer.FastDbf.pdb
+C:\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.exe
+C:\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.pdb
+C:\Projects\oldigw\oldigw\bin\Debug\RT.dll
+C:\Projects\oldigw\oldigw\bin\Debug\RT.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\OldiGW.xml
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\oldigw.exe.config
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\oldigw.exe
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\oldigw.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Autoshow.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Cyber.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Ekt.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Mts.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Oldi.Net.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Redo.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\RT.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Smtp.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Utility.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\SMPP.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\SocialExplorer.FastDbf.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Autoshow.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Cyber.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Ekt.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Mts.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Oldi.Net.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\RT.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Smtp.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Utility.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\Redo.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\SMPP.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\bin\Debug\SocialExplorer.FastDbf.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.csprojResolveAssemblyReference.cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\obj\x86\Debug\Oldi.Net.Properties.Resources.resources
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.exe
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.pdb

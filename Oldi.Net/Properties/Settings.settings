@@ -1,0 +1,144 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Oldi.Net.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="СodeSNA" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
+    <Setting Name="FailResponse" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;response&gt;
+	&lt;error code="{0}"&gt;{1}&lt;/error&gt; 
+&lt;/response&gt;</Value>
+    </Setting>
+    <Setting Name="XmlHeader" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-8"?&gt;</Value>
+    </Setting>
+    <Setting Name="CodeSUCS" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="CodeFail" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">6</Value>
+    </Setting>
+    <Setting Name="CodeWait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="CodeTryAgain" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="CodeLongWait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">11</Value>
+    </Setting>
+    <Setting Name="ProviderMTS" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mts</Value>
+    </Setting>
+    <Setting Name="ProviderCyber" Type="System.String" Scope="User">
+      <Value Profile="(Default)">cyber</Value>
+    </Setting>
+    <Setting Name="ProviderPCC" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pcc</Value>
+    </Setting>
+    <Setting Name="ProviderUPC" Type="System.String" Scope="User">
+      <Value Profile="(Default)">upc</Value>
+    </Setting>
+    <Setting Name="ProviderEKT" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ekt</Value>
+    </Setting>
+    <Setting Name="ProviderRapida" Type="System.String" Scope="User">
+      <Value Profile="(Default)">rapida</Value>
+    </Setting>
+    <Setting Name="Response" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;response&gt;
+	&lt;error code="{0}"&gt;{1}&lt;/error&gt; 
+	&lt;transaction&gt;{2}&lt;/transaction&gt;
+	&lt;acceptdate&gt;{3}&lt;/acceptdate&gt;
+	&lt;acceptcode&gt;{4}&lt;/acceptcode&gt;
+	&lt;account&gt;{5}&lt;/account&gt;
+	&lt;addinfo&gt;{6}&lt;/addinfo&gt;
+&lt;/response&gt;</Value>
+    </Setting>
+    <Setting Name="Success" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="NameResolutionFailure" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10001</Value>
+    </Setting>
+    <Setting Name="ConnectFailure" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10002</Value>
+    </Setting>
+    <Setting Name="ReceiveFailure" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10003</Value>
+    </Setting>
+    <Setting Name="SendFailure" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10004</Value>
+    </Setting>
+    <Setting Name="PipelineFailure" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10005</Value>
+    </Setting>
+    <Setting Name="RequestCanceled" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10006</Value>
+    </Setting>
+    <Setting Name="ProtocolError" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10007</Value>
+    </Setting>
+    <Setting Name="ConnectionClosed" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10008</Value>
+    </Setting>
+    <Setting Name="TrustFailure" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10009</Value>
+    </Setting>
+    <Setting Name="SecureChannelFailure" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10010</Value>
+    </Setting>
+    <Setting Name="ServerProtocolViolation" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10011</Value>
+    </Setting>
+    <Setting Name="KeepAliveFailure" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10012</Value>
+    </Setting>
+    <Setting Name="Pending" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10013</Value>
+    </Setting>
+    <Setting Name="Timeout" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10014</Value>
+    </Setting>
+    <Setting Name="ProxyNameResolutionFailure" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10015</Value>
+    </Setting>
+    <Setting Name="UnknownError" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10016</Value>
+    </Setting>
+    <Setting Name="MessageLengthLimitExceeded" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10017</Value>
+    </Setting>
+    <Setting Name="CacheEntryNotFound" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10018</Value>
+    </Setting>
+    <Setting Name="RequestProhibitedByCachePolicy" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10019</Value>
+    </Setting>
+    <Setting Name="RequestProhibitedByProxy" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10020</Value>
+    </Setting>
+    <Setting Name="XmlHeader1251" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="windows-1251"?&gt;</Value>
+    </Setting>
+    <Setting Name="SessionPrefix" Type="System.String" Scope="User">
+      <Value Profile="(Default)">OLDIGW</Value>
+    </Setting>
+    <Setting Name="CodeLongLongWait" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="LogLevel" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DEBUG</Value>
+    </Setting>
+    <Setting Name="BalanceResponse" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;response&gt;
+	&lt;error code="{0}"&gt;{1}&lt;/error&gt; 
+	&lt;balance&gt;{2}&lt;/balance&gt;
+&lt;/response&gt;</Value>
+    </Setting>
+    <Setting Name="MsgWaitPrice" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Ожидается платеж на сумму {0}</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

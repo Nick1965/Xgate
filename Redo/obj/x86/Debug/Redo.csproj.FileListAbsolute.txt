@@ -1,0 +1,50 @@
+C:\Projects\oldigw\Redo\obj\x86\Debug\Redo.csprojResolveAssemblyReference.cache
+C:\Projects\oldigw\Redo\obj\x86\Debug\OldiGW.Redo.Net.Properties.Resources.resources
+C:\Projects\oldigw\Redo\obj\x86\Debug\Redo.csproj.GenerateResource.Cache
+C:\Projects\oldigw\Redo\bin\Debug\OldiGW.xml
+C:\Projects\oldigw\Redo\bin\Debug\Redo.dll.config
+C:\Projects\oldigw\Redo\bin\Debug\Redo.dll
+C:\Projects\oldigw\Redo\bin\Debug\Redo.pdb
+C:\Projects\oldigw\Redo\bin\Debug\Autoshow.dll
+C:\Projects\oldigw\Redo\bin\Debug\Cyber.dll
+C:\Projects\oldigw\Redo\bin\Debug\Ekt.dll
+C:\Projects\oldigw\Redo\bin\Debug\Mts.dll
+C:\Projects\oldigw\Redo\bin\Debug\Oldi.Net.dll
+C:\Projects\oldigw\Redo\bin\Debug\Utility.dll
+C:\Projects\oldigw\Redo\bin\Debug\SMPP.dll
+C:\Projects\oldigw\Redo\bin\Debug\Autoshow.pdb
+C:\Projects\oldigw\Redo\bin\Debug\Cyber.pdb
+C:\Projects\oldigw\Redo\bin\Debug\Ekt.pdb
+C:\Projects\oldigw\Redo\bin\Debug\Mts.pdb
+C:\Projects\oldigw\Redo\bin\Debug\Oldi.Net.pdb
+C:\Projects\oldigw\Redo\bin\Debug\Utility.pdb
+C:\Projects\oldigw\Redo\bin\Debug\SMPP.pdb
+C:\Projects\oldigw\Redo\obj\x86\Debug\Redo.dll
+C:\Projects\oldigw\Redo\obj\x86\Debug\Redo.pdb
+C:\Projects\oldigw\Redo\bin\Debug\RT.dll
+C:\Projects\oldigw\Redo\bin\Debug\RT.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\OldiGW.xml
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Redo.dll.config
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Redo.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Redo.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Autoshow.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Cyber.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Ekt.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Mts.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Oldi.Net.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\RT.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Utility.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\SMPP.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Autoshow.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Cyber.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Ekt.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Mts.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Oldi.Net.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\RT.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\Utility.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\bin\Debug\SMPP.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\obj\x86\Debug\Redo.csprojResolveAssemblyReference.cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\obj\x86\Debug\OldiGW.Redo.Net.Properties.Resources.resources
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\obj\x86\Debug\Redo.csproj.GenerateResource.Cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\obj\x86\Debug\Redo.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\obj\x86\Debug\Redo.pdb

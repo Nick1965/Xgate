@@ -1,0 +1,29 @@
+C:\Projects\oldigw\Mts\bin\Debug\OldiGW.xml
+C:\Projects\oldigw\Mts\bin\Debug\Mts.dll.config
+C:\Projects\oldigw\Mts\bin\Debug\Mts.dll
+C:\Projects\oldigw\Mts\bin\Debug\Mts.pdb
+C:\Projects\oldigw\Mts\bin\Debug\Oldi.Net.dll
+C:\Projects\oldigw\Mts\bin\Debug\Utility.dll
+C:\Projects\oldigw\Mts\bin\Debug\SMPP.dll
+C:\Projects\oldigw\Mts\bin\Debug\Oldi.Net.pdb
+C:\Projects\oldigw\Mts\bin\Debug\Utility.pdb
+C:\Projects\oldigw\Mts\bin\Debug\SMPP.pdb
+C:\Projects\oldigw\Mts\obj\Debug\Oldi.Mts.Properties.Resources.resources
+C:\Projects\oldigw\Mts\obj\Debug\Mts.csproj.GenerateResource.Cache
+C:\Projects\oldigw\Mts\obj\Debug\Mts.dll
+C:\Projects\oldigw\Mts\obj\Debug\Mts.pdb
+C:\Projects\oldigw\Mts\obj\Debug\Mts.csprojResolveAssemblyReference.cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\bin\Debug\OldiGW.xml
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\bin\Debug\Mts.dll.config
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\bin\Debug\Mts.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\bin\Debug\Mts.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\bin\Debug\Oldi.Net.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\bin\Debug\Utility.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\bin\Debug\SMPP.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\bin\Debug\Oldi.Net.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\bin\Debug\Utility.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\bin\Debug\SMPP.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\obj\Debug\Oldi.Mts.Properties.Resources.resources
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\obj\Debug\Mts.csproj.GenerateResource.Cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\obj\Debug\Mts.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\obj\Debug\Mts.pdb

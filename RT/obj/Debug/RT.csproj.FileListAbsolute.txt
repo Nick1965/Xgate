@@ -1,0 +1,28 @@
+C:\Projects\oldigw\RT\obj\Debug\RT.Properties.Resources.resources
+C:\Projects\oldigw\RT\obj\Debug\RT.csproj.GenerateResource.Cache
+C:\Projects\oldigw\RT\bin\Debug\OldiGW.xml
+C:\Projects\oldigw\RT\bin\Debug\RT.dll
+C:\Projects\oldigw\RT\bin\Debug\RT.pdb
+C:\Projects\oldigw\RT\bin\Debug\Oldi.Net.dll
+C:\Projects\oldigw\RT\bin\Debug\Utility.dll
+C:\Projects\oldigw\RT\bin\Debug\SMPP.dll
+C:\Projects\oldigw\RT\bin\Debug\Oldi.Net.pdb
+C:\Projects\oldigw\RT\bin\Debug\Utility.pdb
+C:\Projects\oldigw\RT\bin\Debug\SMPP.pdb
+C:\Projects\oldigw\RT\obj\Debug\RT.dll
+C:\Projects\oldigw\RT\obj\Debug\RT.pdb
+C:\Projects\oldigw\RT\obj\Debug\RT.csprojResolveAssemblyReference.cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\bin\Debug\OldiGW.xml
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\bin\Debug\RT.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\bin\Debug\RT.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\bin\Debug\Oldi.Net.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\bin\Debug\Utility.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\bin\Debug\SMPP.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\bin\Debug\Oldi.Net.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\bin\Debug\Utility.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\bin\Debug\SMPP.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\obj\Debug\RT.csprojResolveAssemblyReference.cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\obj\Debug\RT.Properties.Resources.resources
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\obj\Debug\RT.csproj.GenerateResource.Cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\obj\Debug\RT.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\RT\obj\Debug\RT.pdb

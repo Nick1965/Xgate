@@ -1,0 +1,28 @@
+C:\Projects\oldigw\Ekt\bin\Debug\OldiGW.xml
+C:\Projects\oldigw\Ekt\bin\Debug\Ekt.dll
+C:\Projects\oldigw\Ekt\bin\Debug\Ekt.pdb
+C:\Projects\oldigw\Ekt\bin\Debug\Oldi.Net.dll
+C:\Projects\oldigw\Ekt\bin\Debug\Utility.dll
+C:\Projects\oldigw\Ekt\bin\Debug\SMPP.dll
+C:\Projects\oldigw\Ekt\bin\Debug\Oldi.Net.pdb
+C:\Projects\oldigw\Ekt\bin\Debug\Utility.pdb
+C:\Projects\oldigw\Ekt\bin\Debug\SMPP.pdb
+C:\Projects\oldigw\Ekt\obj\Debug\Oldi.Ekt.Properties.Resources.resources
+C:\Projects\oldigw\Ekt\obj\Debug\Ekt.csproj.GenerateResource.Cache
+C:\Projects\oldigw\Ekt\obj\Debug\Ekt.dll
+C:\Projects\oldigw\Ekt\obj\Debug\Ekt.pdb
+C:\Projects\oldigw\Ekt\obj\Debug\Ekt.csprojResolveAssemblyReference.cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\bin\Debug\OldiGW.xml
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\bin\Debug\Ekt.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\bin\Debug\Ekt.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\bin\Debug\Oldi.Net.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\bin\Debug\Utility.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\bin\Debug\SMPP.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\bin\Debug\Oldi.Net.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\bin\Debug\Utility.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\bin\Debug\SMPP.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\obj\Debug\Ekt.csprojResolveAssemblyReference.cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\obj\Debug\Oldi.Ekt.Properties.Resources.resources
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\obj\Debug\Ekt.csproj.GenerateResource.Cache
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\obj\Debug\Ekt.dll
+D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Ekt\obj\Debug\Ekt.pdb

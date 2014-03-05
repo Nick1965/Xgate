@@ -1,0 +1,46 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Oldi.Mts.Properties.Properties.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Header" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version = "1.0" encoding = "UTF-8"?&gt;
+&lt;{0}\txmlns = "http://schema.mts.ru/ESPP/AgentPayments/Protocol/Messages/v5_02"
+				xmlns:espp-constraints = "http://schema.mts.ru/ESPP/Core/Constraints/v5_02"
+				xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+				xsi:schemaLocation = "http://schema.mts.ru/ESPP/AgentPayments/Protocol/Messages/v5_02 ESPP_AgentPayments_Protocol_Messages_v5_02.xsd
+									  http://schema.mts.ru/ESPP/Core/Constraints/v5_02 ESPP_Core_Constraints_v5_02.xsd"
+				{1}&gt;
+</Value>
+    </Setting>
+    <Setting Name="Footer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;/{0}&gt;</Value>
+    </Setting>
+    <Setting Name="Tag1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;{0} xsi:type = "espp-constraints:{1}"&gt;{2}&lt;/{0}&gt;</Value>
+    </Setting>
+    <Setting Name="Tag2" Type="System.String" Scope="User">
+      <Value Profile="(Default)">&lt;{0}&gt;{1}&lt;/{0}&gt;</Value>
+    </Setting>
+    <Setting Name="UrlMessages" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://schema.mts.ru/ESPP/AgentPayments/Protocol/Messages/v{0}</Value>
+    </Setting>
+    <Setting Name="XsdMessages" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ESPP_AgentPayments_Protocol_Messages_v{0}.xsd</Value>
+    </Setting>
+    <Setting Name="UrlConstraints" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://schema.mts.ru/ESPP/Core/Constraints/v{0}</Value>
+    </Setting>
+    <Setting Name="XsdConstraints" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ESPP_Core_Constraints_v{0}.xsd</Value>
+    </Setting>
+    <Setting Name="CheckTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ESPP_0104010</Value>
+    </Setting>
+    <Setting Name="PayTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ESPP_0104090</Value>
+    </Setting>
+    <Setting Name="StatusTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ESPP_0104085</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
