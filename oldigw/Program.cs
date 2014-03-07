@@ -24,7 +24,7 @@ namespace Oldi.Net
     {
         // static dynamic MtsGW;
         // static dynamic CyberPlatGW;
-        delegate void CallBackResut(string response);
+        // delegate void CallBackResut(string response);
         // public static ConcurrentBag<Redo> tasks = new ConcurrentBag<Redo>();
         public static int NumberOfProcess = 0;
         static string logFile;
@@ -41,22 +41,22 @@ namespace Oldi.Net
 				Settings.ReadConfig();
 				logFile = Settings.OldiGW.LogFile;
 
+				// Больше не будем проверять работоспособность так.
+				// В следующей версии процесс будем пинговать.
 				// Если задание уже выполняется, завершить выполнение
 				// if (args.Length == 0 && Jobrunning()) return;
 
 				// Проверка доступности БД
 				if (!CheckDbConnection()) return;
 
-				/*
-				
 				if (args.Length != 0)
 				{
-					if (args[0] == "--noredo")
-						noredo = true;
-					else
-					{
-						if (args[0] == "--pays")
-						{
+					switch (args[0])
+                    {
+                        case "--noredo":
+                            noredo = true;
+                            break;
+                        case "--pays":
 							GWMtsRegister reg = null;
 
 							if (args.Length == 1)
@@ -68,23 +68,18 @@ namespace Oldi.Net
 								reg = new GWMtsRegister(args[2], args[4]);
 							else
 							{
-								Usage();
+                                Console.WriteLine(Properties.Resources.MsgUsage);
 								return;
 							}
 
 							reg.MakeRegister();
 							return;
-						}
-						else
-						{
-							Usage();
-							return;
-						}
-					}
+                        default:
+							Console.WriteLine(Properties.Resources.MsgUsage);
+                            return;
+                    }
 				}
 				
-				*/
-				noredo = true;
 				// Если произойдёт сбой, процесс перезапустится
 				while (!stop)
 				{
@@ -108,20 +103,6 @@ namespace Oldi.Net
 			// Console.ReadKey();
 		}
 
-		static void Usage()
-		{
-			Console.WriteLine("Usage oldigw {command} [{key1} [{key2}]], где\r\n\r\n" +
-				"\tcommand:\r\n" +
-				"\t\t --noredo - запуск без допроведения (отладка)\r\n\r\n" +
-				// "\t\t --tpp - передать реестр регистрации ТПП\r\n" +
-				"\t\t --pays - передать реестров платежей\r\n\r\n" +
-				// "\t\t --undo - выполнить отмену платежей\r\n\r\n" +
-				"\tКлючи:\r\n" +
-				"\t\t --from dd.mm.yyyy - начальная дата реестра платежей\r\n" +
-				"\t\t --to dd.mm.yyyy - конечная дата реестра платежей\r\n" +
-				"\t\t --noredo - запуск шлюза без допроведения");
-		}
-
 		static void Run(bool noredo)
         {
             // CancellationTokenSource cts = new CancellationTokenSource();
@@ -129,7 +110,7 @@ namespace Oldi.Net
 			// ThreadPool.SetMinThreads(3, 3);
 
 			// Максимальное количество соединений с конечной точкой
-			ServicePointManager.DefaultConnectionLimit = 4;
+            ServicePointManager.DefaultConnectionLimit = Settings.ConnectionLimit;
 
 			ManualResetEvent[] CancelTaskEvents = new ManualResetEvent[2];
 
@@ -168,14 +149,9 @@ namespace Oldi.Net
 			Console.WriteLine("{0} останавливается...", Settings.Title);
 			Log("{0} останавливается...", Settings.Title);
 
-			if (CancelTaskEvents.Length > 0)
-				CancelTaskEvents[0].WaitOne();
-			Console.WriteLine("Процес допроведения остановлен");
-			if (CancelTaskEvents.Length > 1)
-				CancelTaskEvents[1].WaitOne();
-			Console.WriteLine("Процесс обработки реестров остановлен");
-			// if (!noredo)
-			//	WaitHandle.WaitAll(CancelTaskEvents);
+            // Остановка процессов допроведения
+            if (!noredo)
+				WaitHandle.WaitAll(CancelTaskEvents);
             
 			// Остановка службы
 			// Console.WriteLine("Служба {0} остановлена", Settings.Title);
@@ -204,36 +180,37 @@ namespace Oldi.Net
                 try
                 {
                     using (SqlConnection cnn = new SqlConnection(Settings.ConnectionString))
+                    using (SqlCommand cmd = new SqlCommand(stRequest, cnn))
                     {
-                        SqlCommand cmd = new SqlCommand(stRequest, cnn);
                         cnn.Open();
-                        SqlDataReader dr = cmd.ExecuteReader();
-                        if (dr.HasRows)
-                        {
-                            if (dr.Read())
-                            {
-                                long tid = Convert.ToInt64(dr["Tid"]);
-                            }
-                        }
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                            if (dr.HasRows)
+                                dr.Read();
                     }
-                    // Log("Соединение с БД проверено.");
-                    return true;
+                    break;
                 }
                 catch (SqlException ex)
                 {
-                    Log("Нет соединения с БД: {0}", ex.Message);
+                    Log("CheckDbConnection: Нет соединения с БД: {0}", ex.Message);
                 }
 
-                if (++count > attempts) break;
+                if (++count > attempts)
+                    return false;
+
                 Thread.Sleep(idle * 1000);
             }
 
-            return false;
+            return true;
         
         }
 
 
-        private static bool Jobrunning()
+        /// <summary>
+        /// Проверка загружен ли процесс -- больше не используется
+        /// </summary>
+        /// <returns></returns>
+		/*
+		private static bool Jobrunning()
         {
 			Console.WriteLine("\r\nПроверка работоспособности процесса {0}", Settings.Jobname);
 			Log("\r\nПроверка работоспособности процесса {0}", Settings.Jobname);
@@ -252,6 +229,7 @@ namespace Oldi.Net
 
             return false;
         }
+		*/
         
         /// <summary>
         /// Локальная копия лога
@@ -271,10 +249,11 @@ namespace Oldi.Net
         /// Результат вызова метода Gateway
         /// </summary>
         /// <param name="response">ответ сервера ПУ</param>
-        static void Result(string response)
+		/*
+		static void Result(string response)
         {
             Console.WriteLine("Ответ сервера: {0}", response);
         }
-        
+		*/
     }
 }

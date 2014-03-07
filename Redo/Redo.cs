@@ -113,22 +113,18 @@ namespace OldiGW.Redo.Net
 
 			// Читать отложенные платежи
 
-			int sec = 0;
 			while (!Canceling)
 			{
 				try
 				{
-					if (++sec == 20)
-					{
-						sec = 0;
-						DoRedo();
-					}
+					DoRedo();
 				}
 				catch (Exception ex)
 				{
 					Log("Redo: {0}\r\n{1}", ex.Message, ex.StackTrace);
 				}
-				Thread.Sleep(1000);
+				// Ожидать 20 сек.
+				Thread.Sleep(20 * 1000);
 			}
 
 			// Завершение дочерних процессов
@@ -173,13 +169,7 @@ namespace OldiGW.Redo.Net
 								// Допровести платежи с нефинальными статусами
 								CheckInfo checkinfo = new CheckInfo(req);
 								if (!ThreadPool.QueueUserWorkItem(new WaitCallback(CheckState), checkinfo))
-								{
-									Log("Redo: Не удалось запустить процесс допроведения для session={0}, state={1}", req.Session, req.State);
-								}
-								else
-								{
-									// Log("Redo: Допроводится {0}, mem={1}", req.Tid, GC.GetTotalMemory(false).ToString("###,###,###,###"));
-								}
+									Log("Redo: Не удалось запустить процесс допроведения для tid={0}, state={1}", req.Tid, req.State);
 							}
 							else
 								Log("Redo: Ошибка чтения БД");
@@ -205,12 +195,14 @@ namespace OldiGW.Redo.Net
 				gw = ((CheckInfo)stateInfo).gw;
 
 				// gw.ReportRequest("Redo   ");
-				
+
+				// Платежи Ростелекома не допроводим
+				if (gw.Provider == Settings.Rt.Name)
+					return;
+
 				gw.SetLock(1);
 
 				// Если отладка не производится...
-				if (gw.Provider == Settings.Rt.Name)
-					gw = new RT.RTRequest(gw);
 				if (gw.Provider == Settings.Cyber.Name)
 					gw = new GWCyberRequest(gw);
 				else if (gw.Provider == Settings.Mts.Name)
@@ -240,39 +232,6 @@ namespace OldiGW.Redo.Net
 			}
         
         }
-
-		/*
-		/// <summary>
-		/// Обработать реестр
-		/// </summary>
-		void RedoRegisters()
-		{
-			SqlDataReader dr = null;
-			long Rid = 0;
-
-			using (SqlConnection cnn = new SqlConnection(Settings.ConnectionString))
-			using (SqlCommand cmd = new SqlCommand("OLDIGW.Ver3_ReadHoldedRegisters", cnn))
-			{
-				cmd.CommandType = System.Data.CommandType.StoredProcedure;
-				cmd.Connection.Open();
-				using (dr = cmd.ExecuteReader())
-				{
-					if (dr.Read())
-					{
-						Rid = dr.GetInt64(0);
-					}
-					dr.Close();
-				}
-				cnn.Close();
-			}
-
-			if (Rid == 0)
-				return;
-
-			GWMtsRegister gr = new GWMtsRegister();
-		}
-		 
-		 */
 
 	}
 

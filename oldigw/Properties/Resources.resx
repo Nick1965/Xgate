@@ -190,4 +190,14 @@
     <value>Ответ шлюза:
 {0}</value>
   </data>
+  <data name="MsgUsage" xml:space="preserve">
+    <value>Usage: oldigw {command} [{key1} [{key2}]], где
+	command:
+		--noredo - запуск без допроведения (отладка)
+		--pays - передать реестр платежей MTS
+	Ключи:
+		--from dd.mm.yyyy - начальная дата реестра платежей MTS
+		--to dd.mm.yyyy - конечная дата реестра платежей MTS</value>
+    <comment>вывод usage</comment>
+  </data>
 </root>

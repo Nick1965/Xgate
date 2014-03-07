@@ -67,14 +67,14 @@ namespace Oldi.Net
 		public static int processes = 0;
 		static int maxprocesses = 0;
 
-		volatile static bool Canceling = false;
+		static bool Canceling = false;
 
 		/// <summary>
 		/// Количество обработанных запросов
 		/// </summary>
 		// static int requests = 0;
 
-		static Object SyncLock = new Object();
+		volatile static Object SyncLock = new Object();
 
 		ConcurrentBag<InternalContext> Conveyor = null;
 

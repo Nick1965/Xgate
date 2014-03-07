@@ -7,3 +7,7 @@ D:\MyDocuments\Visual Studio 2013\Projects\oldigw\SMPP\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\SMPP\obj\Debug\SMPP.dll
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\SMPP\obj\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\SMPP\obj\Debug\SMPP.csprojResolveAssemblyReference.cache
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\SMPP\bin\Debug\SMPP.dll
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\SMPP\bin\Debug\SMPP.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\SMPP\obj\Debug\SMPP.dll
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\SMPP\obj\Debug\SMPP.pdb

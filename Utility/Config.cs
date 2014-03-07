@@ -218,6 +218,8 @@ namespace Oldi.Utility
 		static int fakeTppType = 2;
 		static string attachments = "";
 		static int delivery = 0;
+
+        static int connectionLimit = 2;
 		// static int deliveryStart;
 		// static int deliveryStop;
 
@@ -286,6 +288,11 @@ namespace Oldi.Utility
 		public static int SslPort { get { return sslPort; } }
 		static int sslPort = 0;
 		public static string GWHost { get; set; }
+
+        /// <summary>
+        /// Количество одновременно открытых соединений
+        /// </summary>
+        public static int ConnectionLimit { get { return connectionLimit; } }
 
 		/// <summary>
 		/// TZ по умолчанию, если терминал не определён
@@ -473,6 +480,9 @@ namespace Oldi.Utility
 			DbCheckTimeout = int.Parse(Config.AppSettings["DbCheckTimeout"]);
 			GWHost = Config.AppSettings["GWHost"];
 			logLevel = Config.AppSettings["logLevel"];
+
+            if (!string.IsNullOrEmpty(Config.AppSettings["ConnectionLimit"]))
+                int.TryParse(Config.AppSettings["ConnectionLimit"], out connectionLimit);
 
 			if (!string.IsNullOrEmpty(Config.AppSettings["tz"]))
 				tz = int.Parse(Config.AppSettings["tz"]);

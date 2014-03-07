@@ -76,8 +76,9 @@
       <add key="GWHost" value="oldigw/" />
       <add key="Port" value="200" />
       <add key="SslPort" value="201" />
+      <add key="ConnectionLimit" value="10" />
 
-      <add key="ConnectionString" value="Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;" />
+    <add key="ConnectionString" value="Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;" />
       <add key="GorodConnectionString" value="Data Source=odbs1.regplat.ru; Initial Catalog=Gorod; User ID=sa; Password=5;" />
       <add key="DbCheckTimeout" value="2" />
       <add key="fake-tpp-id" value="281" />

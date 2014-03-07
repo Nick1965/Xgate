@@ -254,7 +254,24 @@ namespace Oldi.Net.Cyber
 						prm.AppendLine("NUMBER", number);
 						prm.AppendLine("CARD", card);
 						prm.AppendLine("FIO", fio);
-						prm.AppendLine("ACCOUNT", account);
+
+						string acc = Account;
+						if (Service == "ge".ToLower() && Gateway == "484")
+						{
+							if (Account.IndexOf("1||") != -1 && Account.IndexOf("221||") == -1)
+							{
+								acc = Account.Replace("1||", "21||");
+								RootLog("{0} Триколор. Замена услуги 1 на 21");
+							}
+							else if (Account.IndexOf("7||") != -1)
+							{
+								acc = Account.Replace("7||", "21||");
+								RootLog("{0} Триколор. Замена услуги 1 на 21");
+							}
+						}
+						account = acc;
+						prm.AppendLine("ACCOUNT", Account);
+						
 						prm.AppendLine("DOCNUM", docnum);
 						prm.AppendLine("DOCDATE", docdate);
 						prm.AppendLine("PURPOSE", purpose);
@@ -723,6 +740,8 @@ namespace Oldi.Net.Cyber
 				{
 					case 24: // Ошибка связи с сервером Получателя.
 						// После 48 часов отменить платёж
+						state = 12;
+						/*
 						if (operdate.AddHours(48) < DateTime.Now)
 						{
 							state = 12;
@@ -731,6 +750,7 @@ namespace Oldi.Net.Cyber
 						}
 						else
 							state = 3;
+						*/
 						break;
 					case 6: // Неверная АСП (устарел ключ)
 					case 21: // Недостаточно средств для проведения платежа

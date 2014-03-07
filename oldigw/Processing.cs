@@ -193,10 +193,12 @@ namespace Oldi.Net
 					break;
 				
 				// Отмена платежа
+				// Отменяет платёж на шлюзе, затем в процессинге
 				case "undo":
 					if (req.Provider == "rt")
 					{
 						gw = new RTRequest(req);
+						Log("\r\n{0} Запрос отмены платежа в ЕСПП", gw.Tid);
 						gw.Undo();
 						gw.ReportRequest("UNDO");
 					}
@@ -206,7 +208,6 @@ namespace Oldi.Net
 						req.errCode = 6;
 						req.errDesc = "Платёж отменён оператором";
 						req.UpdateState(tid: req.Tid, state: req.State, errCode: req.ErrCode, errDesc: req.ErrDesc);
-						// SendAnswer(m_data, req);
 						req.ReportRequest("UNDO");
 					}
 					break;
@@ -363,12 +364,12 @@ namespace Oldi.Net
 			}
 
 			string stResponse = r.Answer;
-			if (string.IsNullOrEmpty(r.ErrDesc))
-				errDesc = HttpUtility.HtmlEncode(r.ErrDesc);
+			// if (string.IsNullOrEmpty(r.ErrDesc))
+			errDesc = HttpUtility.HtmlEncode(r.ErrDesc);
 
 			try
             {
-				if (r.Provider != Settings.Rt.Name)
+				if (r.Provider != Settings.Rt.Name) // RT передаёт уже заполненнвй Answer
 				{
 					if (r.State == 6)
 					{
@@ -445,6 +446,10 @@ namespace Oldi.Net
 
         } // makeResponse
 
+		/// <summary>
+		/// Отправка ответа без параметров (может его использовать в дальнейшем?
+		/// </summary>
+		/// <param name="dataHolder"></param>
 		private void SendAnswer(RequestInfo dataHolder)
 		{
 
