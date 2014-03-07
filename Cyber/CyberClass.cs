@@ -255,21 +255,19 @@ namespace Oldi.Net.Cyber
 						prm.AppendLine("CARD", card);
 						prm.AppendLine("FIO", fio);
 
-						string acc = Account;
 						if (Service == "ge".ToLower() && Gateway == "484")
 						{
-							if (Account.IndexOf("1||") != -1 && Account.IndexOf("221||") == -1)
+							if (Account.Substring(0, 3) == "1||")
 							{
-								acc = Account.Replace("1||", "21||");
+								account = "21||";;
 								RootLog("{0} Триколор. Замена услуги 1 на 21");
 							}
-							else if (Account.IndexOf("7||") != -1)
+							else if (Account.Substring(0, 3) == "7||")
 							{
-								acc = Account.Replace("7||", "21||");
-								RootLog("{0} Триколор. Замена услуги 1 на 21");
+								account = "21||"; ;
+								RootLog("{0} Триколор. Замена услуги 7 на 21");
 							}
 						}
-						account = acc;
 						prm.AppendLine("ACCOUNT", Account);
 						
 						prm.AppendLine("DOCNUM", docnum);
