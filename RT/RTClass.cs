@@ -626,10 +626,9 @@ namespace RT
 							balance = decValue / 100M;
 							break;
 						case "payeeRecPay":		// Рекомендуемый платёж
-							price = decimal.MinusOne;
-							decimal.TryParse(value, out price);
-							if (price > 0m)
-								price /= 100M;
+							decValue = 0m;
+							decimal.TryParse(value, out decValue);
+							price = decValue / 100M;
 							break;
 						case "payeeName":
 							fio = HttpUtility.UrlDecode(value);		// Инициалы абонента
