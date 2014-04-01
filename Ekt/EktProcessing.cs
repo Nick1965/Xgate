@@ -64,6 +64,15 @@ namespace Oldi.Ekt
 				{
 					// TraceRequest("New");
 					
+					// Проверка на размер платежа
+					if (AmountAll >= 5000M)
+					{
+						state = 12;
+						errCode = 6;
+						errDesc = "Финансовая безопасность";
+						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
+					}
+					
 					if (DoPay(0, 3) == 0)
 					{
 						// TraceRequest("Sent");
