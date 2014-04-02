@@ -152,13 +152,13 @@ namespace Oldi.Net
 
 
 				// Добавим заголовки в коллекцию, если они есть
-				if (f01 != null) request.Headers.Add("f_01", f01);
-				if (f02 != null) request.Headers.Add("f_02", f02);
-				if (f03 != null) request.Headers.Add("f_03", f03);
+				if (!string.IsNullOrEmpty(f01)) request.Headers.Add("f_01", f01);
+				if (!string.IsNullOrEmpty(f02)) request.Headers.Add("f_02", f02);
+				if (!string.IsNullOrEmpty(f03)) request.Headers.Add("f_03", f03);
 				
 				// Добавим заголовки из дочерних классов
 				AddHeaders(request);
-
+				request.UserAgent = Settings.ClientName;
 
 				// Log("Host={0}", request.Host);
 				/*

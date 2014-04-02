@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
-[assembly: AssemblyTitle("Oldi-GW .Net")]
-[assembly: AssemblyDescription("Build on 03.03.2014")]
+[assembly: AssemblyTitle("X-Gate .Net")]
+[assembly: AssemblyDescription("Build on 02.04.2014")]
 [assembly: AssemblyConfiguration("DEBUG")]
 [assembly: AssemblyCompany("OLDI L.L.C., Tomsk, Russia")]
-[assembly: AssemblyProduct("Oldi-GW .Net")]
-[assembly: AssemblyCopyright("Copyright © Nick Svetlov 2012,2013")]
+[assembly: AssemblyProduct("X-Gate .Net")]
+[assembly: AssemblyCopyright("Copyright © Nick Svetlov, Regplat.ru 2012 - 2014")]
 [assembly: AssemblyTrademark("Regplat.ru")]
 [assembly: AssemblyCulture("")]
 
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // Можно задать все значения или принять номер построения и номер редакции по умолчанию, 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("3.2.2.1")]
+[assembly: AssemblyVersion("3.2.2.31")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

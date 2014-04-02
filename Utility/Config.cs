@@ -435,6 +435,10 @@ namespace Oldi.Utility
 		public static string CyberPath { get { return cyber; } }
 
 		/// <summary>
+		/// Имя Web-клиента
+		/// </summary>
+		public static string ClientName { get; set; }
+		/// <summary>
 		/// Чтение файла *.exe.config
 		/// </summary>
 		public static void ReadConfig()
@@ -450,11 +454,14 @@ namespace Oldi.Utility
 				(System.Reflection.AssemblyProductAttribute[])asm.GetCustomAttributes(typeof(System.Reflection.AssemblyProductAttribute), false);
 			AssemblyDescriptionAttribute[] asmDesc =
 				(System.Reflection.AssemblyDescriptionAttribute[])asm.GetCustomAttributes(typeof(System.Reflection.AssemblyDescriptionAttribute), false);
+			AssemblyTitleAttribute[] asmTitle =
+				(System.Reflection.AssemblyTitleAttribute[])asm.GetCustomAttributes(typeof(System.Reflection.AssemblyTitleAttribute), false);
 	
 			Settings.Jobname = assemName.Name;
 			//Settings.Title = /*assemName.Name;*/ myFileVersionInfo.ProductName;
 
 			Title = string.Format("{0} {1}. {2}", asmProduct[0].Product, Version, asmDesc[0].Description);
+			ClientName = asmTitle[0].Title + " Client " + Version;
 
 			// Config config = new Config();
 			Config.Load();

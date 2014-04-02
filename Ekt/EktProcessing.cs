@@ -71,6 +71,7 @@ namespace Oldi.Ekt
 						errCode = 6;
 						errDesc = "Финансовая безопасность";
 						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
+						RootLog("{0} A={1} S={2} - Платёж отменён из соображений финансовой безопасности", Tid, Amount, AmountAll);
 						return;
 					}
 					

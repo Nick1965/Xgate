@@ -40,6 +40,7 @@ namespace Oldi.Net
 
 				Settings.ReadConfig();
 				logFile = Settings.OldiGW.LogFile;
+				Log("\r\n{0}", Settings.Title);
 
 				// Больше не будем проверять работоспособность так.
 				// В следующей версии процесс будем пинговать.
@@ -47,7 +48,11 @@ namespace Oldi.Net
 				// if (args.Length == 0 && Jobrunning()) return;
 
 				// Проверка доступности БД
-				if (!CheckDbConnection()) return;
+				if (!CheckDbConnection())
+				{
+					Log("Соединение с БД не установлено после {0} попыток", Settings.DbCheckTimeout * 60 / 20);
+					return;
+				}
 
 				if (args.Length != 0)
 				{
@@ -125,18 +130,18 @@ namespace Oldi.Net
 				stateInfo = new TaskState(CancelTaskEvents[0]);
 				task = new System.Threading.Tasks.Task(redo.Run, stateInfo, TaskCreationOptions.LongRunning);
 				task.Start();
-				Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс допроведения платежей");
+				// Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс допроведения платежей");
 
 				CancelTaskEvents[1] = new ManualResetEvent(false);
 				stateInfo = new TaskState(CancelTaskEvents[1]);
 				task = new System.Threading.Tasks.Task(regs.ProcessingRegisters, stateInfo, TaskCreationOptions.LongRunning);
 				task.Start();
-				Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс отправки реестров МТС");
+				// Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс отправки реестров МТС");
 
 				// Запуск процесса отправки СМС
-				task = new Task(GWRequest.SendSmsProcess, TaskCreationOptions.LongRunning | TaskCreationOptions.AttachedToParent);
-				task.Start();
-				Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс отправки СМС");
+				// task = new Task(GWRequest.SendSmsProcess, TaskCreationOptions.LongRunning | TaskCreationOptions.AttachedToParent);
+				// task.Start();
+				// Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс отправки СМС");
 			}
 
 			// Запуск слушателя
