@@ -65,6 +65,7 @@ namespace Oldi.Ekt
 					// TraceRequest("New");
 					
 					// Проверка на размер платежа
+					/*
 					if (AmountAll >= 5000M)
 					{
 						state = 12;
@@ -74,7 +75,7 @@ namespace Oldi.Ekt
 						RootLog("{0} A={1} S={2} - Платёж отменён из соображений финансовой безопасности", Tid, Amount, AmountAll);
 						return;
 					}
-					
+					*/
 					if (DoPay(0, 3) == 0)
 					{
 						// TraceRequest("Sent");

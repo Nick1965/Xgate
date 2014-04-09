@@ -533,7 +533,12 @@ namespace Oldi.Mts
 				if (phone.Length > 10)
 				{
 					account = phone;
-					phone = null;
+					phone = "";
+				}
+				else if (phone.Length == 10 && phone.Substring(0, 1) == "1")
+				{
+					account = phone;
+					phone = "";
 				}
 			}
 			else
