@@ -289,7 +289,7 @@ namespace Oldi.Ekt
 		/// <returns></returns>
 		string GetErrDesc()
 		{
-			string msg = Properties.Resources.State60;
+		string msg = Properties.Resources.State60;
 
 			switch (result.state)
 			{
@@ -461,40 +461,33 @@ namespace Oldi.Ekt
 				return 1;
 			}
 
-			stRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
+			if (Pcdate == DateTime.MinValue)
+				pcdate = DateTime.Now;
+			string sDate = pcdate + "+0700";
+
+			stRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
 			if (state == 0) // Payment
 				if (Gateway == "605")
-					stRequest += string.Format(Properties.Resources.Template_Payment_605,
-					Settings.Ekt.Pointid,
-					Account, Gateway, // Номер сервиса ЕКТ, 
-					Math.Round(Amount * 100),
-					Math.Round(AmountAll * 100),
-					Tid.ToString(),
-					MakeCheckNumber(),
-					Pcdate != DateTime.MinValue ? XConvert.AsDate(Pcdate) + "+0700" : XConvert.AsDate(DateTime.Now) + "+0700",
+					stRequest += string.Format(Properties.Resources.Template_Payment_605, Settings.Ekt.Pointid, Account, Gateway,
+					Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(), sDate,
 					// Атрибуты: id2, fio, address, ee
 					Phone, Fio, Address, Number);
 				else if (Gateway == "1668")
-					stRequest += string.Format(Properties.Resources.Template_Payment_1668,
-						Settings.Ekt.Pointid,
-						Card, 
-						Gateway, // Номер сервиса ЕКТ, 
-						Math.Round(Amount * 100),
-						Math.Round(AmountAll * 100),
-						Tid.ToString(),
-						MakeCheckNumber(),
-						Pcdate != DateTime.MinValue ? XConvert.AsDate(Pcdate) + "+0700" : XConvert.AsDate(DateTime.Now) + "+0700",
-						Phone
-						).Replace("\r\n", "").Replace("\t", "");
+					stRequest += string.Format(Properties.Resources.Template_Payment_1668, Settings.Ekt.Pointid, Card, Gateway,
+						Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(), sDate, Phone);
+				// Единый кошелёк
+				else if (Gateway == "458")
+					{
+					stRequest += string.Format(Properties.Resources.Template_Id1, Settings.Ekt.Pointid, Gateway,
+					Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(),
+					sDate,
+					Account.Length > 10 || (Account.Length == 10 && Account.Substring(0) != "9")? "id1": "id2", 
+					Account);
+					}
 				else
-					stRequest += string.Format(Properties.Resources.Template_Payment,
-						Settings.Ekt.Pointid,
+					stRequest += string.Format(Properties.Resources.Template_Payment, Settings.Ekt.Pointid,
 						string.IsNullOrEmpty(Phone) ? Account : Phone, Gateway, // Номер сервиса ЕКТ, 
-						Math.Round(Amount * 100),
-						Tid.ToString(),
-						MakeCheckNumber(),
-						Pcdate != DateTime.MinValue ? XConvert.AsDate(Pcdate) + "+0700" : XConvert.AsDate(DateTime.Now) + "+0700",
-						Attributes.SaveToXml());
+						Math.Round(Amount * 100), Tid.ToString(), MakeCheckNumber(), sDate, Attributes.SaveToXml());
 			else if (state == 3) // Status
 				stRequest += string.Format(Properties.Resources.Template_Status, Settings.Ekt.Pointid, Tid);
 			else
