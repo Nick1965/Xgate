@@ -463,7 +463,7 @@ namespace Oldi.Ekt
 
 			if (Pcdate == DateTime.MinValue)
 				pcdate = DateTime.Now;
-			string sDate = pcdate + "+0700";
+			string sDate = XConvert.AsDate(pcdate) + "+0700";
 
 			stRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
 			if (state == 0) // Payment
@@ -478,11 +478,29 @@ namespace Oldi.Ekt
 				// Единый кошелёк
 				else if (Gateway == "458")
 					{
-					stRequest += string.Format(Properties.Resources.Template_Id1, Settings.Ekt.Pointid, Gateway,
-					Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(),
-					sDate,
-					Account.Length > 10 || (Account.Length == 10 && Account.Substring(0) != "9")? "id1": "id2", 
-					Account);
+					if (Account.Length > 10 || (Account.Length == 10 && Account.Substring(0) != "9"))
+						{
+						stRequest += string.Format(Properties.Resources.Template_Id1, 
+							Settings.Ekt.Pointid, 
+							Account, 
+							Gateway,
+							Math.Round(Amount * 100), 
+							Math.Round(AmountAll * 100), 
+							Tid.ToString(), 
+							MakeCheckNumber(), 
+							sDate);
+						}
+					else
+						{
+						stRequest += string.Format(Properties.Resources.Template_Id1, Settings.Ekt.Pointid, 
+							Gateway,
+							Math.Round(Amount * 100), 
+							Math.Round(AmountAll * 100), 
+							Tid.ToString(), 
+							MakeCheckNumber(), 
+							sDate, 
+							Account);
+						}
 					}
 				else
 					stRequest += string.Format(Properties.Resources.Template_Payment, Settings.Ekt.Pointid,

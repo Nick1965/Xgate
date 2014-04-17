@@ -242,8 +242,13 @@
   </data>
   <data name="Template_Id1" xml:space="preserve">
     <value>&lt;request point="{0}"&gt;
+	&lt;payment account="{1}" service="{2}" sum="{3}" sum-in="{4}" id="{5}" check="{6}" date="{7}" /&gt;
+&lt;/request&gt;</value>
+  </data>
+  <data name="Template_Id2" xml:space="preserve">
+    <value>&lt;request point="{0}"&gt;
 	&lt;payment service="{1}" sum="{2}" sum-in="{3}" id="{4}" check="{5}" date="{6}"&gt;
-		&lt;attribute name="{7}" value="{8}" /&gt;
+		&lt;attribute name="id2" value="{7}" /&gt;
 	&lt;/payment&gt;
 &lt;/request&gt;</value>
   </data>
