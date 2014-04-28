@@ -443,8 +443,7 @@ namespace Oldi.Ekt
 		/// <returns></returns>
 		public override int MakeRequest(int state)
 		{
-			if (string.IsNullOrEmpty(Settings.Ekt.Pointid) || 
-				string.IsNullOrEmpty(Gateway))
+			if (string.IsNullOrEmpty(Settings.Ekt.Pointid) || string.IsNullOrEmpty(Gateway))
 			{
 				state = 0;
 				errCode = 2;
