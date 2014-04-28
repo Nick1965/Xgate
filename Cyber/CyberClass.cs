@@ -255,6 +255,8 @@ namespace Oldi.Net.Cyber
 						prm.AppendLine("CARD", card);
 						prm.AppendLine("FIO", fio);
 
+						// Исправление удалено, после внесения изменений в меню терминалов.
+						/*
 						if (Service == "ge".ToLower() && Gateway == "484")
 						{
 							if (Account.Substring(0, 3) == "1||")
@@ -268,6 +270,7 @@ namespace Oldi.Net.Cyber
 								RootLog("{0} Триколор. Замена услуги 7 на 21");
 							}
 						}
+						*/
 						prm.AppendLine("ACCOUNT", Account);
 						
 						prm.AppendLine("DOCNUM", docnum);
