@@ -264,7 +264,7 @@
 &lt;/request&gt;</value>
   </data>
   <data name="Template_Payment_605" xml:space="preserve">
-    <value>&lt;request point="{0}"&gt;&lt;payment account="{1}" service="{2}" sum="{3}" sum-in="{4}" id="{5}" check="{6}" date="{7}"&gt;&lt;attribute name="id2" value="{8}" /&gt;&lt;attribute name="fio" value="{9}" /&gt;&lt;attribute name="address" value="{10}" /&gt;&lt;attribute name="ee" value="{11}" /&gt;&lt;/request&gt;</value>
+    <value>&lt;request point="{0}"&gt;&lt;payment account="{1}" service="{2}" sum="{3}" sum-in="{4}" id="{5}" check="{6}" date="{7}"&gt;&lt;attribute name="id2" value="{8}" /&gt;&lt;attribute name="fio" value="{9}" /&gt;&lt;attribute name="address" value="{10}" /&gt;&lt;attribute name="ee" value="{11}" /&gt;&lt;/payment&gt;&lt;/request&gt;</value>
     <comment>Сервис 605 ХакасЭнергосбыт</comment>
   </data>
   <data name="Template_Status" xml:space="preserve">
