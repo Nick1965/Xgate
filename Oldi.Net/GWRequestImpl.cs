@@ -443,6 +443,28 @@ namespace Oldi.Net
 										attributes: Attributes.SaveToXml());
 		}
 
+		/// <summary>
+		/// Финансовы контроль
+		/// </summary>
+		protected virtual bool FinancialCheck()
+			{
+			foreach (var item in Settings.CheckedProviders)
+				if (item.Name == Provider 
+					&& item.Service == Service 
+					&& item.Gateway == Gateway 
+					&& AmountAll >= Settings.AmountLimit 
+					&& Pcdate.AddHours(Settings.AmountDelay) < DateTime.Now)
+					{
+					state = 1;
+					errCode = 11;
+					errDesc = "X-Gate: Финансовый контроль";
+					UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
+					RootLog("{0} {1}/{2} A={3} S={4} - Платёж отложен. Финансовый контроль", Tid, Service, Gateway, Amount, AmountAll);
+					return true;
+					}
+			return false;
+			}
+	
 
 		/// <summary>
 		/// Разбор ответа провайдера

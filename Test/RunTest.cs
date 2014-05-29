@@ -14,8 +14,11 @@ namespace Test
 		static void Main(string[] args)
 		{
 
-			RTTest test = new RTTest();
-			test.Run();
+			XMLTest test = new XMLTest();
+			test.Test();
+			
+			// RTTest test = new RTTest();
+			// test.Run();
 
 			/*
 			try

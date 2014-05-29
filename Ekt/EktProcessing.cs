@@ -64,18 +64,9 @@ namespace Oldi.Ekt
 				{
 					// TraceRequest("New");
 					
-					// Проверка на размер платежа
-					/*
-					if (AmountAll >= 5000M)
-					{
-						state = 12;
-						errCode = 6;
-						errDesc = "Финансовая безопасность";
-						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-						RootLog("{0} A={1} S={2} - Платёж отменён из соображений финансовой безопасности", Tid, Amount, AmountAll);
-						return;
-					}
-					*/
+					// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
+					if (FinancialCheck()) return;
+
 					if (DoPay(0, 3) == 0)
 					{
 						// TraceRequest("Sent");
@@ -95,6 +86,8 @@ namespace Oldi.Ekt
 			}
 			else // Redo
 			{
+				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
+				if (FinancialCheck()) return;
 				DoPay(state, 6);
 			}
 		}
@@ -121,6 +114,14 @@ namespace Oldi.Ekt
 			// БД уже доступна, не будем её проверять
 			if ((retcode = MakeRequest(old_state)) == 0)
 			{
+				if (FinancialCheck())
+					{
+					errDesc = "X-Gate: финансовый контроль";
+					errCode = 12;
+					state = 3;
+					return 0;
+					}
+				
 				// retcode = 0 - OK
 				// retcode = 1 - TCP-error
 				// retcode = 2 - Message sends, but no answer recieved.

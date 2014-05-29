@@ -179,6 +179,19 @@ namespace Oldi.Utility
 			else
 				return "";
 		}
+
+		/// <summary>
+		/// Преобразует строку вида dddddd.dddd в decimal
+		/// </summary>
+		/// <param name="s">строка цифр с точкой с возможным символом +-</param>
+		/// <returns>результат преобразования</returns>
+		public static decimal ToDecimal(string s)
+			{
+			decimal a;
+			if (!decimal.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out a))
+				a = decimal.MinusOne;
+			return a;
+			}
 	}
 
 }

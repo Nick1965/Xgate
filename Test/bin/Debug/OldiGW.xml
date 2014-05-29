@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Configuration>
 
+
+  <!-- 
+    amount-limit: максимальный размер платежа, до постановки на финансовый контроль 
+    amount-delay: время задержки на финансовый контроль (в часах)
+  -->
+  
   <!-- mode = Gateway, Server -->
   <!-- redo = yes, no -->
   <gateway mode="Gateway" redo="yes" />
@@ -72,12 +78,29 @@
     <password>outbox</password>
   </Smtp>
 
+  <!--
+      Финансовый контроль
+        AmountLimit: максимальный размер платежа, до постановки на финансовый контроль 
+        AmountDelay: время задержки на финансовый контроль (в часах)
+        Описание провайдеров находится options.ini Online Exchange
+-->
+  <FinancialCheck>
+    <AmountLimit>1000</AmountLimit>
+    <AmountDelay>24</AmountDelay>
+    <Providers>
+      <Provider Name="ekt" Service="W1-LS" GateWay="458" />
+      <Provider Name="ekt" Service="Beeline" GateWay="2" />
+      <Provider Name="ekt" Service="Beeline-woc" GateWay="414" />
+    </Providers>
+  </FinancialCheck>
+
   <AppSettings>
       <add key="GWHost" value="oldigw/" />
       <add key="Port" value="200" />
       <add key="SslPort" value="201" />
+      <add key="ConnectionLimit" value="10" />
 
-      <add key="ConnectionString" value="Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;" />
+    <add key="ConnectionString" value="Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;" />
       <add key="GorodConnectionString" value="Data Source=odbs1.regplat.ru; Initial Catalog=Gorod; User ID=sa; Password=5;" />
       <add key="DbCheckTimeout" value="2" />
       <add key="fake-tpp-id" value="281" />

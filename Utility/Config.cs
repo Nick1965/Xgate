@@ -13,6 +13,7 @@ using System.Xml.Xsl;
 using System.IO;
 using System.Threading;
 using System.Reflection;
+using System.Globalization;
 
 namespace Oldi.Utility
 {
@@ -93,6 +94,46 @@ namespace Oldi.Utility
 									}
 								}
 								break;
+							case "FinancialCheck":
+								foreach (XElement s in el.Elements())
+									{
+									switch (s.Name.LocalName)
+										{
+										case "AmountLimit":
+											Settings.amountLimit = XConvert.ToDecimal(s.Value.ToString());
+											break;
+										case "AmountDelay":
+											Settings.amountDelay = int.Parse(s.Value.ToString());
+											break;
+										case "Providers":
+											IEnumerable<XElement> elements =
+												from e in s.Elements("Provider")
+												select e;
+											foreach (XElement e in elements)
+												{
+												// Console.WriteLine(e.Name.LocalName);
+												if (e.Name.LocalName == "Provider")
+													{
+													string Name = "";
+													string Service = "";
+													string Gateway = "";
+													foreach (var item in e.Attributes())
+														{
+														if (item.Name.LocalName == "Name")
+															Name = item.Value.ToString();
+														if (item.Name.LocalName == "Service")
+															Service = item.Value.ToString();
+														if (item.Name.LocalName == "Gateway")
+															Gateway = item.Value.ToString();
+														}
+													Settings.checkedProviders.Add(new ProviderItem(Name, Service, Gateway));
+													}
+												}
+
+											break;
+										}
+									}
+								break;
 						}
 					}
 				}
@@ -113,6 +154,35 @@ namespace Oldi.Utility
 
 	}
 
+	public class ProviderItem
+		{
+		public string Name
+			{
+			get;
+			set;
+			}
+		public string Service
+			{
+			get;
+			set;
+			}
+		public string Gateway
+			{
+			get;
+			set;
+			}
+		public ProviderItem(string Name, string Service, string Gateway)
+			{
+			this.Name = Name;
+			this.Service = Service;
+			this.Gateway = Gateway;
+			}
+		public override string ToString()
+			{
+			return string.Format("Name = \"{0}\" Service = \"{1}\" Gateway = \"{2}\"", Name, Service, Gateway);
+			}
+		}
+	
 	/// <summary>
 	/// Провайдеры
 	/// </summary>
@@ -218,6 +288,20 @@ namespace Oldi.Utility
 		static int fakeTppType = 2;
 		static string attachments = "";
 		static int delivery = 0;
+		internal static decimal amountLimit = decimal.MinusOne;
+		internal static int amountDelay = 0;
+		
+		/// <summary>
+		/// Контролируемые поставщики
+		/// </summary>
+		public static List<ProviderItem> CheckedProviders
+			{
+			get
+				{
+				return checkedProviders;
+				}
+			}
+		internal static List<ProviderItem> checkedProviders = new List<ProviderItem>();
 
         static int connectionLimit = 2;
 		// static int deliveryStart;
@@ -340,6 +424,27 @@ namespace Oldi.Utility
 		/// Номер рассылки. 0 - не рассылать
 		/// </summary>
 		public static int Delivery { get { return delivery; } }
+
+		/// <summary>
+		/// Предел суммы для финансового контроля
+		/// </summary>
+		public static decimal AmountLimit
+			{
+			get
+				{
+				return amountLimit;
+				}
+			}
+		/// <summary>
+		/// Звдержка (в часах) для финансового контроля
+		/// </summary>
+		public static int AmountDelay
+			{
+			get
+				{
+				return amountDelay;
+				}
+			}
 
 		/// <summary>
 		/// SMTP-сервер
@@ -559,6 +664,11 @@ namespace Oldi.Utility
 				// Console.WriteLine("Smtp: host={0} port={1} user={2} password={3}",
 					Settings.Smtp.Host, Settings.Smtp.Port, Settings.Smtp.User, Settings.Smtp.Password);
 
+				// FinancialCheck
+				Oldi.Net.Utility.Log(log, "FinancialCheck:\r\n\tAmountLimit = \"{0}\" AmountDelay = \"{1}\"", AmountLimit, AmountDelay);
+				foreach(var item in CheckedProviders)
+					Oldi.Net.Utility.Log(log, "\tProvider = \"{0}\" Service = \"{1}\" Gateway = \"{2}\"", item.Name, item.Service, item.Gateway);
+				
 			}
 		}
 

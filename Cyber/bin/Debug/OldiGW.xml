@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Configuration>
 
+
+  <!-- 
+    amount-limit: максимальный размер платежа, до постановки на финансовый контроль 
+    amount-delay: время задержки на финансовый контроль (в часах)
+  -->
+  
   <!-- mode = Gateway, Server -->
   <!-- redo = yes, no -->
   <gateway mode="Gateway" redo="yes" />
@@ -71,6 +77,22 @@
     <user>outbox</user>
     <password>outbox</password>
   </Smtp>
+
+  <!--
+      Финансовый контроль
+        AmountLimit: максимальный размер платежа, до постановки на финансовый контроль 
+        AmountDelay: время задержки на финансовый контроль (в часах)
+        Описание провайдеров находится options.ini Online Exchange
+-->
+  <FinancialCheck>
+    <AmountLimit>1000</AmountLimit>
+    <AmountDelay>24</AmountDelay>
+    <Providers>
+      <Provider Name="ekt" Service="W1-LS" Gateway="458" />
+      <Provider Name="ekt" Service="Beeline" Gateway="2" />
+      <Provider Name="ekt" Service="Beeline-woc" Gateway="414" />
+    </Providers>
+  </FinancialCheck>
 
   <AppSettings>
       <add key="GWHost" value="oldigw/" />
