@@ -117,6 +117,7 @@ namespace Oldi.Utility
 													string Name = "";
 													string Service = "";
 													string Gateway = "";
+													decimal Limit = decimal.MinusOne;
 													foreach (var item in e.Attributes())
 														{
 														if (item.Name.LocalName == "Name")
@@ -125,8 +126,10 @@ namespace Oldi.Utility
 															Service = item.Value.ToString();
 														if (item.Name.LocalName == "Gateway")
 															Gateway = item.Value.ToString();
+														if (item.Name.LocalName == "Limit")
+															Limit = XConvert.ToDecimal(item.Value.ToString());
 														}
-													Settings.checkedProviders.Add(new ProviderItem(Name, Service, Gateway));
+													Settings.checkedProviders.Add(new ProviderItem(Name, Service, Gateway, Limit));
 													}
 												}
 
@@ -171,11 +174,17 @@ namespace Oldi.Utility
 			get;
 			set;
 			}
-		public ProviderItem(string Name, string Service, string Gateway)
+		public decimal Limit
+			{
+			get;
+			set;
+			}
+		public ProviderItem(string Name, string Service, string Gateway, decimal Limit)
 			{
 			this.Name = Name;
 			this.Service = Service;
 			this.Gateway = Gateway;
+			this.Limit = Limit;
 			}
 		public override string ToString()
 			{
@@ -667,7 +676,12 @@ namespace Oldi.Utility
 				// FinancialCheck
 				Oldi.Net.Utility.Log(log, "FinancialCheck:\r\n\tAmountLimit = \"{0}\" AmountDelay = \"{1}\"", AmountLimit, AmountDelay);
 				foreach(var item in CheckedProviders)
-					Oldi.Net.Utility.Log(log, "\tProvider = \"{0}\" Service = \"{1}\" Gateway = \"{2}\"", item.Name, item.Service, item.Gateway);
+					{
+					if (item.Limit == decimal.MinusOne)
+						item.Limit = AmountLimit;
+					Oldi.Net.Utility.Log(log, "\tProvider = \"{0}\" Service = \"{1}\" Gateway = \"{2}\" Limit = \"{3}\"",
+						item.Name, item.Service, item.Gateway, item.Limit);
+					}
 				
 			}
 		}

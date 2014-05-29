@@ -63,23 +63,23 @@ namespace Oldi.Ekt
 				if (MakePayment() == 0)
 				{
 					// TraceRequest("New");
-					
+
 					// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
 					if (FinancialCheck()) return;
 
 					if (DoPay(0, 3) == 0)
-					{
-						// TraceRequest("Sent");
-						for (int i = 0; i < 4; i++)
 						{
-							atts = i + 1;
-							Wait(6);
-							DoPay(3, 6); // Платёж проведён
-							if (result.state == 60 || result.state == 80 || result.state == -2 || result.state == 10) // Финальные статусы и фин.контроль
-								break;
+							// TraceRequest("Sent");
+							for (int i = 0; i < 4; i++)
+							{
+								atts = i + 1;
+								Wait(6);
+								DoPay(3, 6); // Платёж проведён
+								if (result.state == 60 || result.state == 80 || result.state == -2 || result.state == 10) // Финальные статусы и фин.контроль
+									break;
+							}
+							//TechInfo = string.Format("Состояние={1}/{2}/{3} запросов={0}", atts + 1, result.state, result.substate, result.code);
 						}
-						//TechInfo = string.Format("Состояние={1}/{2}/{3} запросов={0}", atts + 1, result.state, result.substate, result.code);
-					}
 				}
 				TechInfo = string.Format("Состояние={1}/{2}/{3} запросов={0}", atts + 1, result.state, result.substate, result.code);
 				// TraceRequest("End");

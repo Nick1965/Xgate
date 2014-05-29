@@ -308,12 +308,19 @@ namespace Oldi.Net
 			if (New)  // Новый платёж
 			{
 				if (MakePayment() != 0) return;
+
+				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
+				if (FinancialCheck()) return;
+
 				if (DoPay(0, 1) != 0) return;
 				if (DoPay(1, 3) != 0) return;
 				DoPay(3, 6);
 			}
 			else // Redo
 			{
+				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
+				if (FinancialCheck()) return;
+			
 				if (State == 0)
 				{
 					if (DoPay(0, 1) != 0) return;
@@ -327,6 +334,28 @@ namespace Oldi.Net
 			}
 
 		}
+
+		/// <summary>
+		/// Финансовы контроль
+		/// </summary>
+		protected virtual bool FinancialCheck()
+			{
+			foreach (var item in Settings.CheckedProviders)
+				if (item.Name == Provider 
+					&& item.Service == Service 
+					&& item.Gateway == Gateway 
+					&& AmountAll >= item.Limit 
+					&& Pcdate.AddHours(Settings.AmountDelay) < DateTime.Now)
+					{
+						state = 1;
+						errCode = 11;
+						errDesc = "X-Gate: Финансовый контроль";
+						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
+						RootLog("{0} {1}/{2} A={3} S={4} - Платёж отложен. Финансовый контроль", Tid, Service, Gateway, Amount, AmountAll);
+						return true;
+					}
+			return false;
+			}
 
 		/// <summary>
 		/// Допроведение платежа
@@ -442,29 +471,6 @@ namespace Oldi.Net
 										reason: reason,
 										attributes: Attributes.SaveToXml());
 		}
-
-		/// <summary>
-		/// Финансовы контроль
-		/// </summary>
-		protected virtual bool FinancialCheck()
-			{
-			foreach (var item in Settings.CheckedProviders)
-				if (item.Name == Provider 
-					&& item.Service == Service 
-					&& item.Gateway == Gateway 
-					&& AmountAll >= Settings.AmountLimit 
-					&& Pcdate.AddHours(Settings.AmountDelay) < DateTime.Now)
-					{
-					state = 1;
-					errCode = 11;
-					errDesc = "X-Gate: Финансовый контроль";
-					UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-					RootLog("{0} {1}/{2} A={3} S={4} - Платёж отложен. Финансовый контроль", Tid, Service, Gateway, Amount, AmountAll);
-					return true;
-					}
-			return false;
-			}
-	
 
 		/// <summary>
 		/// Разбор ответа провайдера

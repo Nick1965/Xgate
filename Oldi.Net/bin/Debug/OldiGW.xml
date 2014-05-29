@@ -88,9 +88,9 @@
     <AmountLimit>1000</AmountLimit>
     <AmountDelay>24</AmountDelay>
     <Providers>
-      <Provider Name="ekt" Service="W1-LS" Gateway="458" />
-      <Provider Name="ekt" Service="Beeline" Gateway="2" />
-      <Provider Name="ekt" Service="Beeline-woc" Gateway="414" />
+      <Provider Name="ekt" Service="W1-LS" Gateway="458" Limit="3000"/>
+      <Provider Name="ekt" Service="Beeline" Gateway="2" Limit="2000"/>
+      <Provider Name="ekt" Service="Beeline-woc" Gateway="414" Limit="2000"/>
     </Providers>
   </FinancialCheck>
 
