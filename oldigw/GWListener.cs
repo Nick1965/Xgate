@@ -142,6 +142,9 @@ namespace Oldi.Net
             // Обрабатывать Ctrl-C как обычный ввод
             Console.TreatControlCAsInput = true;
 
+			processes = 0;
+			maxprocesses = 0;
+			
 			Task task;
 			ManualResetEvent[] me = new ManualResetEvent[Settings.ConveyorSize];
 			
@@ -186,13 +189,14 @@ namespace Oldi.Net
 
             Log("GwListener: Слушатель запущен.", Properties.Resources.listenerStarted);
             Console.WriteLine("Press C to terminate process...");
+			Console.WriteLine("Press R to restart process...");
 				
 			while (true)
 			{
 				Thread.Sleep(1000);
 				// По идее, мы сюда больше не вернемся, так что ждем...
 				ConsoleKeyInfo c = Console.ReadKey(true);
-				if (c.Key == ConsoleKey.C)
+				if (c.Key == ConsoleKey.C || c.Key == ConsoleKey.R)
 				{
 					// Если нажаты C или Ctrl-C завершим работу слушателя
 					// Остановим слушатель
@@ -204,6 +208,13 @@ namespace Oldi.Net
 					}
 					// Пока выполняются фоновые процессы будем ждать завершения
 					WaitHandle.WaitAll(me);
+					if (c.Key == ConsoleKey.R)
+						{
+						Program.Reload = true;
+						Canceling = false;
+						}
+					else
+						Program.Reload = false;
 					break;
 					// throw new ApplicationException(Properties.Resources.cancelledByUser);
 				}

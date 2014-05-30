@@ -1023,7 +1023,7 @@ namespace Oldi.Net
 			if (Tid != 0 && Tid != int.MinValue)
 				sb.AppendFormat("{0} ", Tid);
 			if (!string.IsNullOrEmpty(step))
-				sb.AppendFormat("[{0}]" , step);
+				sb.AppendFormat("[{0}] " , step);
 			if (!string.IsNullOrEmpty(Service))
 				sb.AppendFormat("{0}", Service);
 			if (!string.IsNullOrEmpty(Gateway))

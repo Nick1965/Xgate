@@ -40,6 +40,14 @@ namespace Oldi.Utility
 				XDocument doc = XDocument.Load(".\\OldiGW.xml");
 				string provider = "";
 
+				// Очистить колекцию параметров
+				appSettings.Clear();
+				// Очитска списка поставщиков услуг
+				providers.Clear();
+				// Финансовый контроль
+				Settings.checkedProviders.Clear();
+				Settings.excludes.Clear();
+
 				if (doc.Element("Configuration").HasElements)
 				{
 					foreach (XElement el in doc.Root.Elements())

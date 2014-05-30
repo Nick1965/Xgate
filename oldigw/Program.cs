@@ -30,6 +30,7 @@ namespace Oldi.Net
         static string logFile;
 		static bool stop = false;
 		static bool noredo = false;
+		public static bool Reload = false;
 
 		static void Main(string[] args)
 		{
@@ -130,13 +131,13 @@ namespace Oldi.Net
 				stateInfo = new TaskState(CancelTaskEvents[0]);
 				task = new System.Threading.Tasks.Task(redo.Run, stateInfo, TaskCreationOptions.LongRunning);
 				task.Start();
-				// Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс допроведения платежей");
+				Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс допроведения платежей");
 
 				CancelTaskEvents[1] = new ManualResetEvent(false);
 				stateInfo = new TaskState(CancelTaskEvents[1]);
 				task = new System.Threading.Tasks.Task(regs.ProcessingRegisters, stateInfo, TaskCreationOptions.LongRunning);
 				task.Start();
-				// Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс отправки реестров МТС");
+				Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс отправки реестров МТС");
 
 				// Запуск процесса отправки СМС
 				// task = new Task(GWRequest.SendSmsProcess, TaskCreationOptions.LongRunning | TaskCreationOptions.AttachedToParent);
@@ -162,6 +163,13 @@ namespace Oldi.Net
 			// Console.WriteLine("Служба {0} остановлена", Settings.Title);
 			Log("Служба {0} остановлена", Settings.Title);
 
+			// Перезагрузка службы
+			if (Reload)
+				{
+				Log("Перезагрузка....");
+				Program.stop = false;
+				Program.Reload = false;
+				}
 
 		}
 

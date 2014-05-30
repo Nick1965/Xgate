@@ -152,7 +152,7 @@ namespace Oldi.Net
 							break;
 						case "amount":
 							amount = decimal.Parse(el.Value.Replace(',', '.'), NumberStyles.Number, CultureInfo.InvariantCulture);
-							Console.WriteLine("{0} - {1}", el.Value, XConvert.AsAmount(amount));
+							// Console.WriteLine("{0} - {1}", el.Value, XConvert.AsAmount(amount));
                             break;
                         case "amount-all":
 							amountAll = decimal.Parse(el.Value.Replace(',', '.'), NumberStyles.Number, CultureInfo.InvariantCulture);
