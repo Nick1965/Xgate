@@ -351,7 +351,14 @@ namespace Oldi.Net
 					&& trmtype == 1 // Терминал
 					&& Pcdate.AddHours(Settings.AmountDelay) > DateTime.Now)
 					{
-						state = 1;
+						// Если номер телефона в списке исключаемых завершить финансовый контроль
+						if (!string.IsNullOrEmpty(Phone))
+							foreach (string prefix in Settings.Excludes)
+								{
+								if (Phone.Length >= prefix.Length && Phone.Substring(0, prefix.Length) == prefix)
+									return false;
+								}
+						state = 0;
 						errCode = 11;
 						string acnt = string.IsNullOrEmpty(Phone)? "Acnt=" + Account: "Ph=" + Phone;
 						errDesc = string.Format("X-Gate: Финансовый контроль. Id={0} Type={1} Отложен до {2}", 

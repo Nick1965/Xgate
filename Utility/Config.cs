@@ -134,6 +134,13 @@ namespace Oldi.Utility
 												}
 
 											break;
+										case "Exclude":
+											foreach (XAttribute a in s.Attributes())
+												{
+												if (a.Name.LocalName == "Prefix")
+													Settings.Excludes.Add(a.Value);
+												}
+											break;
 										}
 									}
 								break;
@@ -311,6 +318,17 @@ namespace Oldi.Utility
 				}
 			}
 		internal static List<ProviderItem> checkedProviders = new List<ProviderItem>();
+		/// <summary>
+		/// Список номеров, исключаемых из проверки
+		/// </summary>
+		public static List<string> Excludes
+			{
+			get
+				{
+				return excludes;
+				}
+			}
+		internal static List<string> excludes = new List<string>();
 
         static int connectionLimit = 2;
 		// static int deliveryStart;
@@ -681,6 +699,10 @@ namespace Oldi.Utility
 						item.Limit = AmountLimit;
 					Oldi.Net.Utility.Log(log, "\tProvider = \"{0}\" Service = \"{1}\" Gateway = \"{2}\" Limit = \"{3}\"",
 						item.Name, item.Service, item.Gateway, item.Limit);
+					}
+				foreach(string prefix in Excludes)
+					{
+					Oldi.Net.Utility.Log(log, "\tExclude prefix \"{0}\"", prefix);
 					}
 				
 			}
