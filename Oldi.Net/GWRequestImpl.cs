@@ -345,13 +345,15 @@ namespace Oldi.Net
 					&& item.Service == Service 
 					&& item.Gateway == Gateway 
 					&& AmountAll >= item.Limit 
-					&& Pcdate.AddHours(Settings.AmountDelay) < DateTime.Now)
+					&& Pcdate.AddHours(Settings.AmountDelay) > DateTime.Now)
 					{
 						state = 1;
 						errCode = 11;
-						errDesc = "X-Gate: Финансовый контроль";
+						string acnt = string.IsNullOrEmpty(Phone)? "Acnt=" + Account: "Ph=" + Phone;
+						errDesc = string.Format("X-Gate: Финансовый контроль. Отложен до {0}", acnt);
 						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-						RootLog("{0} {1}/{2} A={3} S={4} - Платёж отложен. Финансовый контроль", Tid, Service, Gateway, Amount, AmountAll);
+						RootLog("{0} {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}. Финансовый контроль", 
+							Tid, Service, Gateway, Amount, AmountAll, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), acnt);
 						return true;
 					}
 			return false;
