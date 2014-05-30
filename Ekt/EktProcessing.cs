@@ -114,14 +114,6 @@ namespace Oldi.Ekt
 			// БД уже доступна, не будем её проверять
 			if ((retcode = MakeRequest(old_state)) == 0)
 			{
-				if (FinancialCheck())
-					{
-					errDesc = "X-Gate: финансовый контроль";
-					errCode = 12;
-					state = 3;
-					return 0;
-					}
-				
 				// retcode = 0 - OK
 				// retcode = 1 - TCP-error
 				// retcode = 2 - Message sends, but no answer recieved.
@@ -467,10 +459,11 @@ namespace Oldi.Ekt
 
 			stRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
 			if (state == 0) // Payment
+				{
 				if (Gateway == "605")
 					stRequest += string.Format(Properties.Resources.Template_Payment_605, Settings.Ekt.Pointid, Account, Gateway,
 					Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(), sDate,
-					// Атрибуты: id2, fio, address, ee
+						// Атрибуты: id2, fio, address, ee
 					Phone, Fio, Address, Number);
 				else if (Gateway == "1668")
 					stRequest += string.Format(Properties.Resources.Template_Payment_1668, Settings.Ekt.Pointid, Card, Gateway,
@@ -480,25 +473,25 @@ namespace Oldi.Ekt
 					{
 					if (Account.Length > 10 || (Account.Length == 10 && Account.Substring(0) != "9"))
 						{
-						stRequest += string.Format(Properties.Resources.Template_Id1, 
-							Settings.Ekt.Pointid, 
-							Account, 
+						stRequest += string.Format(Properties.Resources.Template_Id1,
+							Settings.Ekt.Pointid,
+							Account,
 							Gateway,
-							Math.Round(Amount * 100), 
-							Math.Round(AmountAll * 100), 
-							Tid.ToString(), 
-							MakeCheckNumber(), 
+							Math.Round(Amount * 100),
+							Math.Round(AmountAll * 100),
+							Tid.ToString(),
+							MakeCheckNumber(),
 							sDate);
 						}
 					else
 						{
-						stRequest += string.Format(Properties.Resources.Template_Id1, Settings.Ekt.Pointid, 
+						stRequest += string.Format(Properties.Resources.Template_Id1, Settings.Ekt.Pointid,
 							Gateway,
-							Math.Round(Amount * 100), 
-							Math.Round(AmountAll * 100), 
-							Tid.ToString(), 
-							MakeCheckNumber(), 
-							sDate, 
+							Math.Round(Amount * 100),
+							Math.Round(AmountAll * 100),
+							Tid.ToString(),
+							MakeCheckNumber(),
+							sDate,
 							Account);
 						}
 					}
@@ -506,16 +499,17 @@ namespace Oldi.Ekt
 					stRequest += string.Format(Properties.Resources.Template_Payment, Settings.Ekt.Pointid,
 						string.IsNullOrEmpty(Phone) ? Account : Phone, Gateway, // Номер сервиса ЕКТ, 
 						Math.Round(Amount * 100), Tid.ToString(), MakeCheckNumber(), sDate, Attributes.SaveToXml());
+				}
 			else if (state == 3) // Status
 				stRequest += string.Format(Properties.Resources.Template_Status, Settings.Ekt.Pointid, Tid);
 			else
-			{
+				{
+				errDesc = string.Format("Ekt.MakeRequest: Неизвестное состояние {0} при построении запроса", state);
 				state = 0;
 				errCode = 2;
-				errDesc = string.Format("Ekt.MakeRequest: Неизвестное состояние {0} при построении запроса", state);
 				RootLog(ErrDesc);
 				return 1;
-			}
+				}
 
 			// ReportRequest();
 
