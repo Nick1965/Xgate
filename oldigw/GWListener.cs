@@ -67,7 +67,7 @@ namespace Oldi.Net
 		public static int processes = 0;
 		static int maxprocesses = 0;
 
-		static bool Canceling = false;
+		public static bool Canceling = false;
 
 		/// <summary>
 		/// Количество обработанных запросов
@@ -209,10 +209,7 @@ namespace Oldi.Net
 					// Пока выполняются фоновые процессы будем ждать завершения
 					WaitHandle.WaitAll(me);
 					if (c.Key == ConsoleKey.R)
-						{
 						Program.Reload = true;
-						Canceling = false;
-						}
 					else
 						Program.Reload = false;
 					break;

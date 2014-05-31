@@ -167,8 +167,10 @@ namespace Oldi.Net
 			if (Reload)
 				{
 				Log("Перезагрузка....");
-				Program.stop = false;
-				Program.Reload = false;
+				stop = false;
+				Reload = false;
+				Redo.Canceling = false;
+				GWListener.Canceling = false;
 				}
 
 		}

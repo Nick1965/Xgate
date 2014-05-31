@@ -343,31 +343,32 @@ namespace Oldi.Net
 			int trmtype = TerminalType != int.MinValue? TerminalType: 2;
 			int trmid = Terminal != int.MinValue? Terminal: 281;
 
-			foreach (var item in Settings.CheckedProviders)
-				if (item.Name == Provider 
-					&& item.Service == Service 
-					&& item.Gateway == Gateway 
-					&& AmountAll >= item.Limit 
-					&& trmtype == 1 // Терминал
-					&& Pcdate.AddHours(Settings.AmountDelay) > DateTime.Now)
-					{
-						// Если номер телефона в списке исключаемых завершить финансовый контроль
-						if (!string.IsNullOrEmpty(Phone))
-							foreach (string prefix in Settings.Excludes)
-								{
-								if (Phone.Length >= prefix.Length && Phone.Substring(0, prefix.Length) == prefix)
-									return false;
-								}
-						state = 0;
-						errCode = 11;
-						string acnt = string.IsNullOrEmpty(Phone)? "Acnt=" + Account: "Ph=" + Phone;
-						errDesc = string.Format("X-Gate: Финансовый контроль. Id={0} Type={1} Отложен до {2}", 
-							trmid, trmtype, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
-						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-						RootLog("{0} {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}. Финансовый контроль", 
-							Tid, Service, Gateway, Amount, AmountAll, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), acnt);
-						return true;
-					}
+			if (State == 0) // Если только новый платёж
+				foreach (var item in Settings.CheckedProviders)
+					if (item.Name == Provider 
+						&& item.Service == Service 
+						&& item.Gateway == Gateway 
+						&& AmountAll >= item.Limit 
+						&& trmtype == 1 // Терминал
+						&& Pcdate.AddHours(Settings.AmountDelay) > DateTime.Now)
+						{
+							// Если номер телефона в списке исключаемых завершить финансовый контроль
+							if (!string.IsNullOrEmpty(Phone))
+								foreach (string prefix in Settings.Excludes)
+									{
+									if (Phone.Length >= prefix.Length && Phone.Substring(0, prefix.Length) == prefix)
+										return false;
+									}
+							state = 0;
+							errCode = 11;
+							string acnt = string.IsNullOrEmpty(Phone)? "Acnt=" + Account: "Ph=" + Phone;
+							errDesc = string.Format("X-Gate: Финансовый контроль. Id={0} Type={1} Отложен до {2}", 
+								trmid, trmtype, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
+							UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
+							RootLog("{0} {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}. Финансовый контроль", 
+								Tid, Service, Gateway, Amount, AmountAll, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), acnt);
+							return true;
+						}
 			return false;
 			}
 
