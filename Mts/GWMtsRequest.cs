@@ -250,6 +250,23 @@ namespace Oldi.Mts
 			int retcode = 0;
 			// Создание шаблона сообщения check/pay/status
 
+			// Проверка времени создания платежа
+			// Если платёж кис больше часа, скорректировать время
+			if (old_state == 0 && DateTime.Now.Ticks - Pcdate.Ticks > TimeSpan.TicksPerHour * 1)
+				{
+				pcdate = DateTime.Now;
+				Random rnd = new Random((int)DateTime.Now.Ticks);
+				DateTime time = new DateTime(pcdate.Ticks - TimeSpan.TicksPerSecond * (long)(rnd.NextDouble() * 10.0));
+				RootLog("{3} Корректировка времени PC={0} old TD={1} new TD={2}",
+					XConvert.AsDateTZ(Pcdate, Settings.Tz),
+					XConvert.AsDateTZ(TerminalDate, Tz),
+					XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
+					Tid);
+				if (Exec("UpdateTime", Tid, pcdate :Pcdate, terminalDate :terminalDate) != 0)
+					return -1;
+				}
+
+			
 			// БД уже доступна, не будем её проверять
 			if (MakeRequest(old_state) == 0)
 			{

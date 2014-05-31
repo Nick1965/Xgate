@@ -644,9 +644,11 @@ namespace Oldi.Net
 				return 0;
 
 			Random rnd = new Random((int)DateTime.Now.Ticks);
+			// Если PCdate не задан или ситарше 120 сек, скорректируем Pcdate
 			if (Pcdate == DateTime.MinValue)
 				pcdate = DateTime.Now;
 			DateTime time = new DateTime(pcdate.Ticks - TimeSpan.TicksPerSecond * (long)(rnd.NextDouble() * 10.0));
+
 
 			using (SqlConnection cnn = new SqlConnection(Settings.ConnectionString))
 			using (SqlCommand cmd = new SqlCommand("[OldiGW].[ver3_GetTerminalInfo]", cnn))
@@ -674,35 +676,38 @@ namespace Oldi.Net
 						terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
 						return 0;
 					}
-					
+
 					if (TerminalDate == null)
+						{
+						RootLog("{0} Установка времени для терминала = {1} TD = {2}",
+							Tid, Terminal, XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz));
 						terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
+						}
 					else
-					{
+						{
 						DateTime pc = Pcdate.AddHours(-1 * Settings.Tz);
 						DateTime td = TerminalDate.Value.AddHours(-1 * Tz);
 						if (td >= pc)
-						{
-							RootLog("{3} Корректировка времени PC={0} old TD={1} new TD={2}", 
+							{
+							RootLog("{3} Корректировка времени PC={0} old TD={1} new TD={2}",
 								XConvert.AsDateTZ(Pcdate, Settings.Tz),
 								XConvert.AsDateTZ(TerminalDate, Tz),
 								XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
 								Tid);
 							terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
-						}
-						else if (td < pc.AddSeconds(-60))
-						{
+							}
+						else if (td < pc.AddSeconds(-30))
+							{
 							RootLog("{4} Корректировка времени PC={0} old TD={1} new TD={2} diff={3} sec.",
 								XConvert.AsDateTZ(Pcdate, Settings.Tz),
 								XConvert.AsDateTZ(TerminalDate, Tz),
 								XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
 								(pc.Ticks - td.Ticks) / TimeSpan.TicksPerSecond, Tid);
 							terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
-						}
-
+							}
 
 						// terminalDate += TimeSpan.FromHours(Tz - Settings.Tz);
-					}
+						}
 				
 				}
 				else // Терминал не зарегистрирован
@@ -712,7 +717,12 @@ namespace Oldi.Net
 					terminal = Settings.FakeTppId;
 					terminalType = Settings.FakeTppType;
 					// Если терминал не зарегистрирован, время устанавливается по ПЦ
-					tz = Settings.Tz; 
+					tz = Settings.Tz;
+					RootLog("{3} Корректировка времени PC={0} old TD={1} new TD={2}",
+						XConvert.AsDateTZ(Pcdate, Settings.Tz),
+						XConvert.AsDateTZ(TerminalDate, Tz),
+						XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
+						Tid);
 					terminalDate = time;
 				}
 			}
