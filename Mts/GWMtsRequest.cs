@@ -592,11 +592,9 @@ namespace Oldi.Mts
 			{
 				// ReportRequest("Redo start");
 
-				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-				if (FinancialCheck()) return;
-			
 				if (State == 0) // Новый платеж, получить разрешение
 				{
+					if (FinancialCheck()) return;
 					if (DoPay(0, 1) == 0)
 						DoPay(1, 6);
 				}

@@ -310,8 +310,7 @@ namespace Oldi.Net
 				if (MakePayment() != 0) return;
 
 				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-				if (State == 0)
-					if (FinancialCheck()) return;
+				if (FinancialCheck()) return;
 
 				if (DoPay(0, 1) != 0) return;
 				if (DoPay(1, 3) != 0) return;
@@ -319,12 +318,9 @@ namespace Oldi.Net
 			}
 			else // Redo
 			{
-				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-				if (State == 0)
-					if (FinancialCheck()) return;
-			
 				if (State == 0)
 				{
+					if (FinancialCheck()) return;
 					if (DoPay(0, 1) != 0) return;
 					if (DoPay(1, 3) != 0) return;
 				}
@@ -342,6 +338,7 @@ namespace Oldi.Net
 		/// </summary>
 		protected virtual bool FinancialCheck()
 			{
+
 			if (State == 0) // Если только новый платёж
 				foreach (var item in Settings.CheckedProviders)
 					if (item.Name.ToLower() == Provider.ToLower() 
@@ -349,28 +346,29 @@ namespace Oldi.Net
 						&& item.Gateway.ToLower() == Gateway.ToLower() 
 						&& AmountAll >= item.Limit 
 						&& TerminalType == 1 // Терминал
-						&& Pcdate.AddHours(Settings.AmountDelay) < DateTime.Now)
+						&& Pcdate.AddHours(Settings.AmountDelay) >= DateTime.Now)
 						{
-						RootLog("Tid={5} [Финансовый контроль] Provider={0} Service={1} Gateway={2} ID={3} Type={4} Amount={6}",
-							Provider, Service, Gateway, Terminal, TerminalType, Tid, XConvert.AsAmount(AmountAll));
-
-						string acnt = string.IsNullOrEmpty(Phone)? "Acnt=" + Account: "Ph=" + Phone;
-						RootLog("{0} [Финансовый контроль] {1}/{2} {5} A={3} S={4} state={6}", Tid, Service, Gateway, Amount, AmountAll, acnt, State);
+							RootLog("\r\nTid={5} [Финансовый контроль] Ph={7} Provider={0} Service={1} Gateway={2} ID={3} Type={4} Amount={6}",
+								Provider, Service, Gateway, Terminal == int.MinValue? "": Terminal.ToString(), TerminalType == int.MinValue? "": TerminalType.ToString(), 
+								Tid, XConvert.AsAmount(AmountAll), Phone);
+							
 							// Если номер телефона в списке исключаемых завершить финансовый контроль
 							if (!string.IsNullOrEmpty(Phone))
 								foreach (string prefix in Settings.Excludes)
 									{
 									if (Phone.Length >= prefix.Length && Phone.Substring(0, prefix.Length) == prefix)
-										RootLog("{0} Ph=\"{1}\" найден ы белом списке \"{2}\"", Tid, Phone, prefix);
+										{
+										RootLog("\r\nTid={0} Ph=\"{1}\" найден в белом списке \"{2}\"", Tid, Phone, prefix);
 										return false;
+										}
 									}
 							state = 0;
 							errCode = 11;
 							errDesc = string.Format("[Финансовый контроль] Id={0} Type={1} Отложен до {2}", 
 								Terminal, TerminalType, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
 							UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-							RootLog("{0} [Финансовый контроль] {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}. Финансовый контроль", 
-								Tid, Service, Gateway, Amount, AmountAll, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), acnt);
+							RootLog("\r\nTid={0} [Финансовый контроль] {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}. Финансовый контроль", 
+								Tid, Service, Gateway, Amount, AmountAll, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), Phone);
 							return true;
 						}
 			return false;
@@ -448,6 +446,8 @@ namespace Oldi.Net
 			operdate = DateTime.Now;
 			
 			GetTerminalInfo();
+
+			State = 0; // Новый
 
 			return Exec(sp: "MakePayment2", tid: Tid,
 										provider: provider,
@@ -667,7 +667,7 @@ namespace Oldi.Net
 				if (cmd.Parameters["TppType"].Value != DBNull.Value)
 					terminalType = Convert.ToInt32(cmd.Parameters["TppType"].Value);
 				else
-					terminalType = -1;
+					terminalType = int.MinValue;
 
 				if (terminalType > 0)
 				{
