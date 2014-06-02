@@ -310,7 +310,8 @@ namespace Oldi.Net
 				if (MakePayment() != 0) return;
 
 				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-				if (FinancialCheck()) return;
+				if (State == 0)
+					if (FinancialCheck()) return;
 
 				if (DoPay(0, 1) != 0) return;
 				if (DoPay(1, 3) != 0) return;
@@ -319,7 +320,8 @@ namespace Oldi.Net
 			else // Redo
 			{
 				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-				if (FinancialCheck()) return;
+				if (State == 0)
+					if (FinancialCheck()) return;
 			
 				if (State == 0)
 				{
@@ -340,32 +342,34 @@ namespace Oldi.Net
 		/// </summary>
 		protected virtual bool FinancialCheck()
 			{
-			int trmtype = TerminalType != int.MinValue? TerminalType: 2;
-			int trmid = Terminal != int.MinValue? Terminal: 281;
-
 			if (State == 0) // Если только новый платёж
 				foreach (var item in Settings.CheckedProviders)
-					if (item.Name == Provider 
-						&& item.Service == Service 
-						&& item.Gateway == Gateway 
+					if (item.Name.ToLower() == Provider.ToLower() 
+						&& item.Service.ToLower() == Service.ToLower() 
+						&& item.Gateway.ToLower() == Gateway.ToLower() 
 						&& AmountAll >= item.Limit 
-						&& trmtype == 1 // Терминал
-						&& Pcdate.AddHours(Settings.AmountDelay) > DateTime.Now)
+						&& TerminalType == 1 // Терминал
+						&& Pcdate.AddHours(Settings.AmountDelay) < DateTime.Now)
 						{
+						RootLog("Tid={5} [Финансовый контроль] Provider={0} Service={1} Gateway={2} ID={3} Type={4} Amount={6}",
+							Provider, Service, Gateway, Terminal, TerminalType, Tid, XConvert.AsAmount(AmountAll));
+
+						string acnt = string.IsNullOrEmpty(Phone)? "Acnt=" + Account: "Ph=" + Phone;
+						RootLog("{0} [Финансовый контроль] {1}/{2} {5} A={3} S={4} state={6}", Tid, Service, Gateway, Amount, AmountAll, acnt, State);
 							// Если номер телефона в списке исключаемых завершить финансовый контроль
 							if (!string.IsNullOrEmpty(Phone))
 								foreach (string prefix in Settings.Excludes)
 									{
 									if (Phone.Length >= prefix.Length && Phone.Substring(0, prefix.Length) == prefix)
+										RootLog("{0} Ph=\"{1}\" найден ы белом списке \"{2}\"", Tid, Phone, prefix);
 										return false;
 									}
 							state = 0;
 							errCode = 11;
-							string acnt = string.IsNullOrEmpty(Phone)? "Acnt=" + Account: "Ph=" + Phone;
-							errDesc = string.Format("X-Gate: Финансовый контроль. Id={0} Type={1} Отложен до {2}", 
-								trmid, trmtype, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
+							errDesc = string.Format("[Финансовый контроль] Id={0} Type={1} Отложен до {2}", 
+								Terminal, TerminalType, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
 							UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-							RootLog("{0} {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}. Финансовый контроль", 
+							RootLog("{0} [Финансовый контроль] {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}. Финансовый контроль", 
 								Tid, Service, Gateway, Amount, AmountAll, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), acnt);
 							return true;
 						}
