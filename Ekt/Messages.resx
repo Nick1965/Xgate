@@ -117,39 +117,136 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Template_Id1" xml:space="preserve">
-    <value>&lt;request point="{0}"&gt;
-	&lt;payment account="{1}" service="{2}" sum="{3}" sum-in="{4}" id="{5}" check="{6}" date="{7}" /&gt;
-&lt;/request&gt;</value>
+  <data name="Code1" xml:space="preserve">
+    <value>Неверно указан номер</value>
   </data>
-  <data name="Template_Id2" xml:space="preserve">
-    <value>&lt;request point="{0}"&gt;
-	&lt;payment service="{1}" sum="{2}" sum-in="{3}" id="{4}" check="{5}" date="{6}"&gt;
-		&lt;attribute name="id2" value="{7}" /&gt;
-	&lt;/payment&gt;
-&lt;/request&gt;</value>
+  <data name="Code10" xml:space="preserve">
+    <value>Фатальная ошибка провайдера</value>
   </data>
-  <data name="Template_Payment" xml:space="preserve">
-    <value>&lt;request point="{0}"&gt;&lt;payment account="{1}" service="{2}" sum="{3}" id="{4}" check="{5}" date="{6}"&gt;{7}&lt;/payment&gt;&lt;/request&gt;</value>
-    <comment>Шаблон запроса payment</comment>
+  <data name="Code12" xml:space="preserve">
+    <value>Нехватка средств (без повторов)</value>
   </data>
-  <data name="Template_Payment_1668" xml:space="preserve">
-    <value>&lt;request point="{0}"&gt;
-	&lt;payment account="{1}" service="{2}" sum="{3}" sum-in="{4}" id="{5}" check="{6}" date="{7}"&gt;
-		&lt;attribute name="id2" value="{8}" /&gt;
-	&lt;/payment&gt;
-&lt;/request&gt;</value>
+  <data name="Code13" xml:space="preserve">
+    <value>Внутренняя: Таймаут обработки</value>
   </data>
-  <data name="Template_Payment_605" xml:space="preserve">
-    <value>&lt;request point="{0}"&gt;&lt;payment account="{1}" service="{2}" sum="{3}" sum-in="{4}" id="{5}" check="{6}" date="{7}"&gt;&lt;attribute name="id2" value="{8}" /&gt;&lt;attribute name="fio" value="{9}" /&gt;&lt;attribute name="address" value="{10}" /&gt;&lt;attribute name="ee" value="{11}" /&gt;&lt;/payment&gt;&lt;/request&gt;</value>
-    <comment>Сервис 605 ХакасЭнергосбыт</comment>
+  <data name="Code14" xml:space="preserve">
+    <value>Внутренняя: Платеж отменен плательщиком</value>
   </data>
-  <data name="Template_Status" xml:space="preserve">
-    <value>&lt;request point="{0}"&gt;&lt;status id="{1}" /&gt;&lt;/request&gt;</value>
-    <comment>Шаблон запроса проверки статуса платежа</comment>
+  <data name="Code15" xml:space="preserve">
+    <value>Внутренняя: Нехватка средств на счете агента</value>
   </data>
-  <data name="Template_XmlHeader" xml:space="preserve">
-    <value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;</value>
-    <comment>Заголовок XML-сообщения</comment>
+  <data name="Code16" xml:space="preserve">
+    <value>Внутренняя: Отменена тех.поддержкой</value>
+  </data>
+  <data name="Code17" xml:space="preserve">
+    <value>Неверный формат идентификатора абонента (КабINET)</value>
+  </data>
+  <data name="Code18" xml:space="preserve">
+    <value>Нет связи с сервером провайдера (24)</value>
+  </data>
+  <data name="Code19" xml:space="preserve">
+    <value>Закрыт шлюз у оператора</value>
+  </data>
+  <data name="Code2" xml:space="preserve">
+    <value>Неверно указан номер</value>
+  </data>
+  <data name="Code20" xml:space="preserve">
+    <value>Прием платежа блокирован на стороне провайдера</value>
+  </data>
+  <data name="Code21" xml:space="preserve">
+    <value>Ошибка Базы Данных у провайдера</value>
+  </data>
+  <data name="Code22" xml:space="preserve">
+    <value>Неверный номер телефона/счета(Евротел)</value>
+  </data>
+  <data name="Code3" xml:space="preserve">
+    <value>Сумма вне допустимого диапазона</value>
+  </data>
+  <data name="Code30" xml:space="preserve">
+    <value>Недостаточно средств на счете провайдера</value>
+  </data>
+  <data name="Code33" xml:space="preserve">
+    <value>Сервис не подключен</value>
+  </data>
+  <data name="Code4" xml:space="preserve">
+    <value>Сервер провайдера недоступен</value>
+  </data>
+  <data name="Code5" xml:space="preserve">
+    <value>Ошибка авторизации</value>
+  </data>
+  <data name="Code6" xml:space="preserve">
+    <value>Сервер оператора недоступен</value>
+  </data>
+  <data name="Code7" xml:space="preserve">
+    <value>Общая ошибка провайдера</value>
+  </data>
+  <data name="Code8" xml:space="preserve">
+    <value>Фатальная ошибка платежной системы</value>
+  </data>
+  <data name="Code9" xml:space="preserve">
+    <value>Неверные параметры проведения</value>
+  </data>
+  <data name="Err_NoAmount" xml:space="preserve">
+    <value>Не заполнено поле AMOUNT</value>
+  </data>
+  <data name="Err_NoDefaults" xml:space="preserve">
+    <value>Ekt.MakeRequest: Не заданы обязательные параметры</value>
+  </data>
+  <data name="Err_UnknownState" xml:space="preserve">
+    <value>Ekt.MakeRequest: Неизвестное состояние {0} при построении запроса</value>
+  </data>
+  <data name="State0" xml:space="preserve">
+    <value>Новый</value>
+  </data>
+  <data name="State10" xml:space="preserve">
+    <value>Финансовый контроль</value>
+  </data>
+  <data name="State20_1" xml:space="preserve">
+    <value>Готов к списанию</value>
+  </data>
+  <data name="State20_2_3" xml:space="preserve">
+    <value>Списание средств со счета</value>
+  </data>
+  <data name="State20_4" xml:space="preserve">
+    <value>Недостаточно средств на счете</value>
+  </data>
+  <data name="State20_X" xml:space="preserve">
+    <value>Списание:: (20/{0}/{1})</value>
+  </data>
+  <data name="State40_1" xml:space="preserve">
+    <value>Готов к проведению</value>
+  </data>
+  <data name="State40_2_3" xml:space="preserve">
+    <value>Проведение</value>
+  </data>
+  <data name="State40_4_5" xml:space="preserve">
+    <value>Ошибка проведения</value>
+  </data>
+  <data name="State40_X" xml:space="preserve">
+    <value>Проведение (40/{0}/{1})</value>
+  </data>
+  <data name="State60" xml:space="preserve">
+    <value>Проведён</value>
+  </data>
+  <data name="State80_1_2_3" xml:space="preserve">
+    <value>Платёж отменён вручную</value>
+  </data>
+  <data name="State80_4" xml:space="preserve">
+    <value>Отменён: недостаточно средств на счете</value>
+  </data>
+  <data name="State80_5" xml:space="preserve">
+    <value>Отменён: общая ошибка</value>
+  </data>
+  <data name="State80_6" xml:space="preserve">
+    <value>Отменён: неизвестная ошибка</value>
+  </data>
+  <data name="State80_X" xml:space="preserve">
+    <value>Отменён (80/{0}/{1})</value>
+  </data>
+  <data name="State_minus_1" xml:space="preserve">
+    <value>Ошибка вставки операции в БД</value>
+  </data>
+  <data name="State_minus_2" xml:space="preserve">
+    <value>Платеж не найден при проверке статуса</value>
   </data>
 </root>

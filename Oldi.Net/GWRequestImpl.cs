@@ -119,6 +119,10 @@ namespace Oldi.Net
 		}
 
 		bool disposed = false;
+		/// <summary>
+		/// Метод очситки памяти при завершении процесса
+		/// </summary>
+		/// <param name="disposing"></param>
 		protected virtual void Dispose(bool disposing)
 		{
 			if (!disposed)
@@ -258,13 +262,12 @@ namespace Oldi.Net
 		}
 
 		/// <summary>
-		/// Задержка процессора на sec секунд
+		/// Задержка процесса на sec секунд
 		/// </summary>
 		/// <param name="sec">int секунды</param>
 		public void Wait(int sec)
 		{
-			TimeSpan delay = new TimeSpan(0, 0, sec);
-			Thread.Sleep(delay);
+			Thread.Sleep(sec * 1000);
 		}
 
 		/// <summary>
@@ -319,15 +322,17 @@ namespace Oldi.Net
 			else // Redo
 			{
 				if (State == 0)
-				{
+					{
 					if (FinancialCheck()) return;
 					if (DoPay(0, 1) != 0) return;
 					if (DoPay(1, 3) != 0) return;
-				}
+					}
+
 				if (State == 1)
-				{
+					{
 					if (DoPay(1, 3) != 0) return;
-				}
+					}
+	
 				DoPay(3, 6);
 			}
 
@@ -382,10 +387,26 @@ namespace Oldi.Net
 		/// <param name="ErrDesc"></param>
 		public virtual void Processing(byte State, int ErrCode, string ErrDesc)
 		{
-			state = State;
-			errCode = ErrCode;
-			errDesc = ErrDesc;
-			Processing(false);
+			// Блок try используется исключительно для секции finally
+			// для того, что бы снять блокировку с записи
+			try
+				{
+				state = State;
+				errCode = ErrCode;
+				errDesc = ErrDesc;
+				if (State == 11 || State ==	 12)
+					UpdatePayment(); // Перепроведение
+				state = 0;
+				Processing(false); // Допроведение
+				}
+			catch (Exception ex)
+				{
+				RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				}
+			finally
+				{
+				SetLock(0);
+				}
 		}
 
 		public virtual int UpdateState(long tid, byte state = 255, int errCode = -1, string errDesc = null, int result = -1,
@@ -434,6 +455,62 @@ namespace Oldi.Net
 			return MakePayment();
 		}
 		
+		/// <summary>
+		/// Перепроведение (изменение) платежа
+		/// Статус устанавливается в 0.
+		/// </summary>
+		/// <returns>0 - успех; иначе ошибка в ErrDesc</returns>
+		public virtual int UpdatePayment()
+			{
+			// Установка даты операции
+			operdate = DateTime.Now;
+
+			GetTerminalInfo();
+
+			State = 0; // Новый
+
+			return Exec(sp :"UpdatePayment", tid :Tid,
+										provider :provider,
+										phone :phone,
+										phoneParam :PhoneParam,
+										account :account,
+										accountParam :AccountParam,
+										filial :filial,
+										card :card,
+										number :number,
+										fio :fio,
+										session :session,
+										amount :amount,
+										amountAll :amountAll,
+										orgname :orgname,
+										docnum :docnum,
+										docdate :docdate,
+										purpose :purpose,
+										contact :contact,
+										comment :comment,
+										inn :inn,
+										address :address,
+										service :service,
+										gateway :gateway,
+										terminal :terminal,
+										terminalType :terminalType,
+										realTerminalId :realTerminalId,
+										transaction :transaction,
+										pcdate :(pcdate == DateTime.MinValue) ? null : (DateTime?)pcdate,
+										terminalDate :terminalDate,
+										tz :Tz,
+										bik :bik,
+										kpp :kpp,
+										payerInn :payerInn,
+										ben :ben,
+										tax :tax,
+										kbk :kbk,
+										okato :okato,
+										payType :payType,
+										reason :reason,
+										attributes :Attributes.SaveToXml());
+			}
+
 		/// <summary>
 		/// Создание новой записи в таблице Queue и Payment
 		/// </summary>
@@ -718,7 +795,7 @@ namespace Oldi.Net
 				{
 					RootLog("{1} GetTerminalInfo: Терминал {0} не зарегистрирован", Terminal, Tid);
 					realTerminalId = terminal;
-					terminal = Settings.FakeTppId;
+					// terminal = Settings.FakeTppId;
 					terminalType = Settings.FakeTppType;
 					// Если терминал не зарегистрирован, время устанавливается по ПЦ
 					tz = Settings.Tz;
@@ -879,17 +956,14 @@ namespace Oldi.Net
 				dp.Read("Price", out price);
 					
 				dp.Read("Ben", out ben);
-				if (!string.IsNullOrEmpty(ben))
-				{
-					dp.Read("KPP", out kpp);
-					dp.Read("Reason", out reason);
-					dp.Read("Tax", out tax);
-					dp.Read("PayINN", out payerInn);
-					dp.Read("KBK", out kbk);
-					dp.Read("OKATO", out okato);
-					dp.Read("PayAddress", out address);
-					dp.Read("BenAcc", out account);
-				}
+				dp.Read("KPP", out kpp);
+				dp.Read("Reason", out reason);
+				dp.Read("Tax", out tax);
+				dp.Read("PayINN", out payerInn);
+				dp.Read("KBK", out kbk);
+				dp.Read("OKATO", out okato);
+				dp.Read("PayAddress", out address);
+				dp.Read("BenAcc", out account);
 
 				return 0;
 			}
@@ -903,23 +977,15 @@ namespace Oldi.Net
 		/// <param name="newLock"></param>
 		public void SetLock(int newLock)
 		{
-			// try
-			// {
-				using (SqlConnection cnn = new SqlConnection(Settings.ConnectionString))
-				using (SqlCommand cmd = new SqlCommand("OldiGW.Ver3_SetLock", cnn))
-				{
-					cmd.Parameters.AddWithValue("Tid", tid);
-					cmd.Parameters.AddWithValue("Lock", newLock);
-					cmd.CommandType = CommandType.StoredProcedure;
-					cmd.Connection.Open();
-					cmd.ExecuteNonQuery();
-				}
-			//	return 0;
-			// }
-			// catch (Exception)
-			// {
-			//	return -1;
-			// }
+			using (SqlConnection cnn = new SqlConnection(Settings.ConnectionString))
+			using (SqlCommand cmd = new SqlCommand("OldiGW.Ver3_SetLock", cnn))
+			{
+				cmd.Parameters.AddWithValue("Tid", tid);
+				cmd.Parameters.AddWithValue("Lock", newLock);
+				cmd.CommandType = CommandType.StoredProcedure;
+				cmd.Connection.Open();
+				cmd.ExecuteNonQuery();
+			}
 		}
 
 
@@ -929,49 +995,49 @@ namespace Oldi.Net
 		public void GetState()
 		{
 
-			// try
-			// {
-				using (SqlConnection cnn = new SqlConnection(Settings.ConnectionString))
-				using (SqlCommand cmd = new SqlCommand("OldiGW.Ver3_GetState", cnn))
+			using (SqlConnection cnn = new SqlConnection(Settings.ConnectionString))
+			using (SqlCommand cmd = new SqlCommand("OldiGW.Ver3_GetState", cnn))
+			{
+				cmd.CommandType = CommandType.StoredProcedure;
+				cmd.Parameters.AddWithValue("Tid", tid);
+				cmd.Connection.Open();
+				using (SqlDataReader dr = cmd.ExecuteReader())
 				{
-					cmd.CommandType = CommandType.StoredProcedure;
-					cmd.Parameters.AddWithValue("Tid", tid);
-					cmd.Connection.Open();
-					using (SqlDataReader dr = cmd.ExecuteReader())
+					if (dr.Read())
 					{
-						if (dr.Read())
-						{
-							Database.Param p = new Database.Param(dr);
-							p.Read("Provider", out provider);
-							p.Read("Operdate", out operdate);
-							p.Read("PCdate", out pcdate);
-							p.Read("TerminalDate", out terminalDate);
-							p.Read("Tz",out tz);
-							p.Read("Tid", out tid);
-							p.Read("Amount", out amount);
-							p.Read("AmountAll", out amountAll);
-							p.Read("State", out state);
-							p.Read("ErrCode", out errCode);
-							p.Read("ErrDesc", out errDesc);
-							p.Read("Result", out result);
-							p.Read("Times", out times);
-							p.Read("Account", out account);
-							p.Read("fio", out fio);
-							p.Read("addinfo", out addinfo);
-							p.Read("Outtid", out outtid);
-							p.Read("Acceptdate", out acceptdate);
-							p.Read("Acceptcode", out acceptCode);
-							p.Read("Opname", out opname);
-							p.Read("Opcode", out opcode);
-							p.Read("Limit", out limit);
-							p.Read("Limitend", out limitend);
-							p.Read("Price", out price);
-						}
-						else
-							state = 255;
+						Database.Param p = new Database.Param(dr);
+						p.Read("Provider", out provider);
+						p.Read("Service", out service);
+						p.Read("Gateway", out gateway);
+						p.Read("Operdate", out operdate);
+						p.Read("PCdate", out pcdate);
+						p.Read("TerminalDate", out terminalDate);
+						p.Read("Tz",out tz);
+						p.Read("Tid", out tid);
+						p.Read("Amount", out amount);
+						p.Read("AmountAll", out amountAll);
+						p.Read("State", out state);
+						p.Read("ErrCode", out errCode);
+						p.Read("ErrDesc", out errDesc);
+						p.Read("Result", out result);
+						p.Read("Times", out times);
+						p.Read("Account", out account);
+						p.Read("fio", out fio);
+						p.Read("addinfo", out addinfo);
+						p.Read("Outtid", out outtid);
+						p.Read("Acceptdate", out acceptdate);
+						p.Read("Acceptcode", out acceptCode);
+						p.Read("Opname", out opname);
+						p.Read("Opcode", out opcode);
+						p.Read("Limit", out limit);
+						p.Read("Limitend", out limitend);
+						p.Read("Price", out price);
 					}
+					else
+						state = 255;
 				}
-				pause = times;
+			}
+			pause = times;
 		}
 
 		/// <summary>

@@ -52,7 +52,8 @@ namespace Oldi.Ekt
 					Enc = Encoding.UTF8;
 					break;
 				default:
-					Enc = Encoding.ASCII;
+					CodePage = "UTF-8";
+					Enc = Encoding.UTF8;
 					break;
 			}
 		}

@@ -122,10 +122,10 @@ namespace Oldi.Net
             public void Read(string p, out string value)
             {
 				// Log("Param name={0}", p);
-				if (dr.IsDBNull(dr.GetOrdinal(p)))
-					value = null;
-				else
-					value = dr.GetString(dr.GetOrdinal(p));
+					if (dr.IsDBNull(dr.GetOrdinal(p)))
+						value = null;
+					else
+						value = dr.GetString(dr.GetOrdinal(p));
 			}
 
 			void Log(string fmt, params object[] _params)

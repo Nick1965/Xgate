@@ -49,7 +49,7 @@ namespace Oldi.Utility
 				case "Decimal":
 					if ((decimal)value == decimal.MinusOne)
 						return;
-					break;
+						break;
 				case "DateTime":
 					if ((DateTime)value == DateTime.MinValue)
 						return;

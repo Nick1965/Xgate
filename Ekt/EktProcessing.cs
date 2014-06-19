@@ -42,6 +42,7 @@ namespace Oldi.Ekt
 		/// <param name="State"></param>
 		/// <param name="ErrCode"></param>
 		/// <param name="ErrDesc"></param>
+		/*
 		public override void Processing(byte State, int ErrCode, string ErrDesc)
 		{
 			state = State;
@@ -49,6 +50,7 @@ namespace Oldi.Ekt
 			errDesc = ErrDesc;
 			Processing(false);
 		}
+		*/
 
 		/// <summary>
 		/// Выролнить цикл проведения/допроведения платежа
@@ -283,38 +285,38 @@ namespace Oldi.Ekt
 		/// <returns></returns>
 		string GetErrDesc()
 		{
-		string msg = Properties.Resources.State60;
+		string msg = Messages.State60;
 
 			switch (result.state)
 			{
 				case -2:
-					msg = Properties.Resources.State_2;
+					msg = Messages.State_minus_2;
 					break;
 				case -1:
-					msg = Properties.Resources.State_1;
+					msg = Messages.State_minus_1;
 					break;
 				case 0:
-					msg = Properties.Resources.State0;
+					msg = Messages.State0;
 					break;
-				case 10: 
-					msg = Properties.Resources.State10;
+				case 10:
+					msg = Messages.State10;
 					times = 11;
 					break;
 				case 20:
 					switch(result.substate)
 					{
 						case 1:
-							msg = Properties.Resources.State201;
+							msg = Messages.State20_1;
 							break;
 						case 2:
 						case 3:
-							msg = Properties.Resources.State202_3;
+							msg = Messages.State20_2_3;
 							break;
 						case 4:
-							msg = Properties.Resources.State204;
+							msg = Messages.State20_4;
 							break;
 						default:
-							msg = Properties.Resources.State20x;
+							msg = string.Format(Messages.State20_X, result.substate, result.code);
 							break;
 					}
 					break;
@@ -322,18 +324,18 @@ namespace Oldi.Ekt
 					switch (result.substate)
 					{
 						case 1:
-							msg = Properties.Resources.State401;
+							msg = Messages.State40_1;
 							break;
 						case 2:
 						case 3:
-							msg = Properties.Resources.State402_3;
+							msg = Messages.State40_2_3;
 							break;
 						case 4:
 						case 5:
-							msg = Properties.Resources.State404_5;
+							msg = Messages.State40_4_5;
 							break;
 						default:
-							msg = Properties.Resources.State40x;
+							msg = string.Format(Messages.State40_X, result.substate, result.code);
 							break;
 					}
 					break;
@@ -343,91 +345,92 @@ namespace Oldi.Ekt
 						case 1:
 						case 2:
 						case 3:
-							msg = Properties.Resources.State801_2_3;
+							msg = Messages.State80_1_2_3;
 							break;
 						default:
 							switch (result.code)
 							{
 								case 1:
 								case 2:
-									msg = Properties.Resources.Code1;
+									msg = Messages.Code1;
 									break;
 								case 3:
-									msg = Properties.Resources.Code3;
+									msg = Messages.Code3;
 									break;
 								case 4:
-									msg = Properties.Resources.Code4;
+									msg = Messages.Code4;
 									break;
 								case 5:
-									msg = Properties.Resources.Code5;
+									msg = Messages.Code5;
 									break;
 								case 6:
-									msg = Properties.Resources.Code6;
+									msg = Messages.Code6;
 									break;
 								case 7:
-									msg = Properties.Resources.Code7;
+									msg = Messages.Code7;
 									break;
 								case 8:
-									msg = Properties.Resources.Code8;
+									msg = Messages.Code8;
 									break;
 								case 9:
-									msg = Properties.Resources.Code9;
+									msg = Messages.Code9;
 									break;
 								case 10:
-									msg = Properties.Resources.Code10;
+									msg = Messages.Code10;
 									break;
 								case 12:
-									msg = Properties.Resources.Code12;
+									msg = Messages.Code12;
 									break;
 								case 13:
-									msg = Properties.Resources.Code13;
+									msg = Messages.Code13;
 									break;
 								case 14:
-									msg = Properties.Resources.Code14;
+									msg = Messages.Code14;
 									break;
 								case 15:
-									msg = Properties.Resources.Code15;
+									msg = Messages.Code15;
 									break;
 								case 16:
-									msg = Properties.Resources.Code16;
+									msg = Messages.Code16;
 									break;
 								case 17:
-									msg = Properties.Resources.Code17;
+									msg = Messages.Code17;
 									break;
 								case 18:
-									msg = Properties.Resources.Code18;
+									msg = Messages.Code18;
 									break;
 								case 19:
-									msg = Properties.Resources.Code19;
+									msg = Messages.Code19;
 									break;
 								case 20:
-									msg = Properties.Resources.Code20;
+									msg = Messages.Code20;
 									break;
 								case 21:
-									msg = Properties.Resources.Code21;
+									msg = Messages.Code21;
 									break;
 								case 22:
-									msg = Properties.Resources.Code22;
+									msg = Messages.Code22;
 									break;
 								case 30:
-									msg = Properties.Resources.Code30;
+									msg = Messages.Code30;
 									times = 51;
 									break;
 								case 33:
-									msg = Properties.Resources.Code33;
+									msg = Messages.Code33;
 									times = 51;
 									break;
 								default:
-									msg = Properties.Resources.State80;
+									msg = string.Format(Messages.State80_X, result.substate, result.code);
 									break;
 							}
 							break;
 					}
 					break;
+				default:
+					msg = string.Format("({0}/{1}/{2})", result.state, result.substate, result.code);
+					break;
 			}
-			return result.state != 60?
-				string.Format("({0}/{1}/{2}) {3}", result.state, result.substate, result.code, msg):
-				msg;
+			return !string.IsNullOrEmpty(msg)? msg: string.Format("({0}/{1}/{2})", result.state, result.substate, result.code);
 		}
 
 		/// <summary>
@@ -441,7 +444,7 @@ namespace Oldi.Ekt
 			{
 				state = 0;
 				errCode = 2;
-				errDesc = string.Format("Ekt.MakeRequest: Не заданы обязательные параметры", state);
+				errDesc = string.Format(Messages.Err_NoDefaults, state);
 				RootLog(ErrDesc);
 				return 1;
 			}
@@ -450,7 +453,7 @@ namespace Oldi.Ekt
 			{
 				state = 0;
 				errCode = 7;
-				errDesc = "Не заполенно поле AMOUNT";
+				errDesc = Messages.Err_NoAmount;
 				return 1;
 			}
 
@@ -458,7 +461,7 @@ namespace Oldi.Ekt
 				pcdate = DateTime.Now;
 			string sDate = XConvert.AsDate(pcdate) + "+0700";
 
-			stRequest = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n";
+			stRequest = Properties.Resources.Template_XmlHeader + "\r\n";
 			if (state == 0) // Payment
 				{
 				if (Gateway == "605")
@@ -505,7 +508,7 @@ namespace Oldi.Ekt
 				stRequest += string.Format(Properties.Resources.Template_Status, Settings.Ekt.Pointid, Tid);
 			else
 				{
-				errDesc = string.Format("Ekt.MakeRequest: Неизвестное состояние {0} при построении запроса", state);
+				errDesc = string.Format(Messages.Err_UnknownState, state);
 				state = 0;
 				errCode = 2;
 				RootLog(ErrDesc);

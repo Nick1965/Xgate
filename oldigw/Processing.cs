@@ -265,13 +265,17 @@ namespace Oldi.Net
 							// И если возможность есть -- првести его
 							gw.Processing(true);
 						}
-						else if (req.State == 11 /* || req.State == 12*/ ) // Платёж отложен, его надо толкнуть. Только отложен!!! Для перепроведения используйте новый тид!!!
+						else if (req.State == 11 || req.State == 12) // Платёж отложен или отменён, его надо толкнуть.
 						{
-							// Создать новый запрос
-							// if (req.Tid != -1 && req.Amount != decimal.MinusOne)
-							// {
-							// Log("Tid={0} st={1} code={2} {3} {4} {5} - перепроведение", req.Tid, req.State, req.Lastcode, req.Lastdesc, req.Amount, req.Phone);
-							// req.ReMakePayment();
+							byte old_state = req.State;
+
+							// Т.к. запрос частично затёрт вызовом GetSate() - сделаем новый разбор
+							// Разбор входного запроса. 0 - запрос разобран.
+							req.Dispose();
+							req = new GWRequest();
+							// Параметры заполнены на основе входного запроса
+							req.Parse(m_data.stRequest);
+
 							// Для начала определимя с провайдером:
 							switch (req.Provider)
 							{
@@ -296,10 +300,10 @@ namespace Oldi.Net
 									req.State = 12;
 									break;
 							}
-
 							// gw.ReportRequest();	
-							gw.Processing(0, 1, "Допроведение отложенного/отмененного платежа");
-							Log("Tid={0} [Допроведение] st={1} code={2} {3} {4} {5}", gw.Tid, gw.State, gw.ErrCode, gw.ErrDesc, gw.Amount, gw.Phone);
+							gw.Processing(old_state, 1, "Допроведение отложенного/отмененного платежа");
+							Log("Tid={0} [Допроведение] state old={1} new={2} code={3} {4} {5} {6}", 
+								gw.Tid, old_state, gw.State, gw.ErrCode, gw.ErrDesc, XConvert.AsAmount(gw.Amount), gw.Phone);
 							// }
 						}
 						else // Найден вернём статус
