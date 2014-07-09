@@ -116,7 +116,19 @@ namespace Oldi.Net
         public int Terminal { get { return terminal; } }
         protected int terminal = int.MinValue;
 
-        /// <summary>
+		/// <summary>
+		/// Номер агента
+		/// </summary>
+		public int AgentId
+			{
+			get
+				{
+				return agentId;
+				}
+			}
+		protected int agentId = int.MinValue;
+
+		/// <summary>
         /// Тип терминала (таблица terminals)
         /// </summary>
         public int TerminalType { get { return terminalType; } }

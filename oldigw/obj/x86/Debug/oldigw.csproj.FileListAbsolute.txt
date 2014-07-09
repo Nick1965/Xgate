@@ -90,3 +90,5 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.exe
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Answer.resources
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Messages.resources

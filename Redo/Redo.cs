@@ -18,7 +18,7 @@ namespace OldiGW.Redo.Net
     {
         string name;
         protected Int16 idle;
-        protected GWRequest gw;
+        // protected GWRequest gw;
 
 		public static int processes = 0;
 		public volatile static bool Canceling = false;
@@ -29,7 +29,8 @@ namespace OldiGW.Redo.Net
 			public GWRequest gw = null;
             public CheckInfo(GWRequest gw/*, ManualResetEvent CancelEvent*/)
             {
-                this.gw = new GWRequest(gw);
+                // this.gw = new GWRequest(gw);
+			this.gw = gw;
 				// this.CancelEvent = CancelEvent;
             }
         }
@@ -61,18 +62,18 @@ namespace OldiGW.Redo.Net
         /// <summary>
         /// Структура GWRequest - запись о платеже
         /// </summary>
-        public GWRequest Gw { get { return gw; } }
+        // public GWRequest Gw { get { return gw; } }
         
         /// <summary>
         /// Локальная копия лога
         /// </summary>
         /// <param name="fmt">string</param>
         /// <param name="_params">object[]</param>
-        public void Log(string fmt, params object[] _params)
+        void Log(string fmt, params object[] _params)
         {
             Utility.Log(Settings.OldiGW.LogFile, fmt, _params);
         }
-		public void Log(string msg)
+		void Log(string msg)
 		{
 			Utility.Log(Settings.OldiGW.LogFile, msg);
 		}
@@ -166,6 +167,8 @@ namespace OldiGW.Redo.Net
 							GWRequest req = new GWRequest();
 							if (req.ReadAll(dr) == 0)
 							{
+								if (string.IsNullOrEmpty(req.Account) && string.IsNullOrEmpty(req.Phone) && string.IsNullOrEmpty(req.Number))
+									Log("{0} [DoREDO] Ошибка. Не задан ни один из параметров счёта!", req.Tid);
 								// Допровести платежи с нефинальными статусами
 								CheckInfo checkinfo = new CheckInfo(req);
 								if (!ThreadPool.QueueUserWorkItem(new WaitCallback(CheckState), checkinfo))
@@ -192,27 +195,27 @@ namespace OldiGW.Redo.Net
 				// Увеличим счетчик процессов
 				RegisterBackgroundProcess();
 
-				gw = ((CheckInfo)stateInfo).gw;
+				// gw = ((CheckInfo)stateInfo).gw;
 
 				// gw.ReportRequest("Redo   ");
 
 				// Платежи Ростелекома не допроводим
-				if (gw.Provider == Settings.Rt.Name)
+				if (((CheckInfo)stateInfo).gw.Provider == Settings.Rt.Name)
 					return;
 
-				gw.SetLock(1);
+				((CheckInfo)stateInfo).gw.SetLock(1);
 
 				// Если отладка не производится...
-				if (gw.Provider == Settings.Cyber.Name)
-					gw = new GWCyberRequest(gw);
-				else if (gw.Provider == Settings.Mts.Name)
-					gw = new GWMtsRequest(gw);
-				else if (gw.Provider == Settings.Ekt.Name)
-					gw = new GWEktRequest(gw);
-				else if (gw.Provider == Settings.Rt.Name)
-					gw = new RT.RTRequest(gw);
-				else if (gw.Provider == "as")
-					gw = new Autoshow.Autoshow(gw);
+				if (((CheckInfo)stateInfo).gw.Provider == Settings.Cyber.Name)
+					gw = new GWCyberRequest(((CheckInfo)stateInfo).gw);
+				else if (((CheckInfo)stateInfo).gw.Provider == Settings.Mts.Name)
+					gw = new GWMtsRequest(((CheckInfo)stateInfo).gw);
+				else if (((CheckInfo)stateInfo).gw.Provider == Settings.Ekt.Name)
+					gw = new GWEktRequest(((CheckInfo)stateInfo).gw);
+				else if (((CheckInfo)stateInfo).gw.Provider == Settings.Rt.Name)
+					gw = new RT.RTRequest(((CheckInfo)stateInfo).gw);
+				else if (((CheckInfo)stateInfo).gw.Provider == "as")
+					gw = new Autoshow.Autoshow(((CheckInfo)stateInfo).gw);
 
 				gw.ReportRequest("REDO - начало");
 				gw.Processing(false);
@@ -226,7 +229,7 @@ namespace OldiGW.Redo.Net
 			}
 			finally
 			{
-				if (gw != null) gw.SetLock(0);
+			if (((CheckInfo)stateInfo).gw != null) ((CheckInfo)stateInfo).gw.SetLock(0);
 				// Уменьшим счетчик процессов 
 				UnregisterBackgroundProcess();
 			}

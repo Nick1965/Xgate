@@ -23,6 +23,8 @@ namespace Oldi.Net
 		public GWRequest()
 		{
 			attributes = new AttributesCollection();
+			errCode = 6;
+			state = 12;
 			InitializeComponents();
 		}
 
@@ -33,6 +35,7 @@ namespace Oldi.Net
 
 			tid = src.Tid;
 			transaction = src.Transaction;
+			agentId = src.AgentId;
 			terminal = src.Terminal;
 			terminalType = src.TerminalType;
 			realTerminalId = src.RealTerminalId;
@@ -344,38 +347,63 @@ namespace Oldi.Net
 		protected virtual bool FinancialCheck()
 			{
 
+			string x = null;
+
+			if (!string.IsNullOrEmpty(Phone))
+				x = Phone;
+			else if (!string.IsNullOrEmpty(Account))
+				x = Account;
+			else if (!string.IsNullOrEmpty(Number))
+				x = Number;
+			else
+				{
+				RootLog("{0} [FINCHK] Не задан номер счёта", Tid);
+				return false;
+				}
+
 			if (State == 0) // Если только новый платёж
+				{
+	
+				if (TerminalType == 1) // Терминал
+					RootLog("{5} [FINCHK - начало] Num={7} {1}/{2} {0} ID={3} Type={4} Amount={6}",
+						Provider, Service, Gateway, Terminal == int.MinValue? "": Terminal.ToString(), TerminalType == int.MinValue? "": TerminalType.ToString(),
+						Tid, XConvert.AsAmount(AmountAll), x);
+				else
+					return false;
+
 				foreach (var item in Settings.CheckedProviders)
 					if (item.Name.ToLower() == Provider.ToLower() 
 						&& item.Service.ToLower() == Service.ToLower() 
 						&& item.Gateway.ToLower() == Gateway.ToLower() 
 						&& AmountAll >= item.Limit 
-						&& TerminalType == 1 // Терминал
 						&& Pcdate.AddHours(Settings.AmountDelay) >= DateTime.Now)
 						{
-							RootLog("\r\nTid={5} [Финансовый контроль] Ph={7} Provider={0} Service={1} Gateway={2} ID={3} Type={4} Amount={6}",
-								Provider, Service, Gateway, Terminal == int.MinValue? "": Terminal.ToString(), TerminalType == int.MinValue? "": TerminalType.ToString(), 
-								Tid, XConvert.AsAmount(AmountAll), Phone);
-							
-							// Если номер телефона в списке исключаемых завершить финансовый контроль
-							if (!string.IsNullOrEmpty(Phone))
-								foreach (string prefix in Settings.Excludes)
-									{
-									if (Phone.Length >= prefix.Length && Phone.Substring(0, prefix.Length) == prefix)
-										{
-										RootLog("\r\nTid={0} Ph=\"{1}\" найден в белом списке \"{2}\"", Tid, Phone, prefix);
-										return false;
-										}
-									}
-							state = 0;
-							errCode = 11;
-							errDesc = string.Format("[Финансовый контроль] Id={0} Type={1} Отложен до {2}", 
-								Terminal, TerminalType, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
-							UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-							RootLog("\r\nTid={0} [Финансовый контроль] {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}. Финансовый контроль", 
-								Tid, Service, Gateway, Amount, AmountAll, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), Phone);
-							return true;
+
+
+						// Если номер телефона в списке исключаемых завершить финансовый контроль
+						foreach (string prefix in Settings.Excludes)
+							{
+							if (x.Length >= prefix.Length && x.Substring(0, prefix.Length) == prefix)
+								{
+								RootLog("{0} [FINCHK] Num=\"{1}\" найден в белом списке \"{2}\" завершение проверки", Tid, x, prefix);
+								return false;
+								}
+							}
+
+						state = 0;
+						errCode = 11;
+						errDesc = string.Format("[FINCHK] Id={0} Type={1} Отложен до {2}",
+							Terminal, TerminalType, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
+						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
+						RootLog("{0} [FINCHK - конец] {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}",
+							Tid, Service, Gateway, Amount, AmountAll, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), x);
+						return true;
 						}
+				}
+
+			RootLog("{5} [FINCHK - конец] Num={7} {1}/{2} {0} ID={3} Type={4} Amount={6} проверка завершена",
+				Provider, Service, Gateway, Terminal == int.MinValue? "": Terminal.ToString(), TerminalType == int.MinValue? "": TerminalType.ToString(),
+				Tid, XConvert.AsAmount(AmountAll), x);
 			return false;
 			}
 
@@ -912,6 +940,8 @@ namespace Oldi.Net
 				dp.Read("Gateway", out gateway);
 				dp.Read("Phone", out phone);
 				dp.Read("PhoneParam", out phoneParam);
+				dp.Read("Account", out account);
+				dp.Read("AccountParam", out accountParam);
 				dp.Read("Number", out number);
 				dp.Read("Card", out card);
 				dp.Read("Amount", out amount);
@@ -946,8 +976,6 @@ namespace Oldi.Net
 				dp.Read("Outtid", out outtid);
 				dp.Read("Acceptdate", out acceptdate);
 				dp.Read("Addinfo", out addinfo);
-				dp.Read("Account", out account);
-				dp.Read("AccountParam", out accountParam);
 				dp.Read("Filial", out filial);
 				dp.Read("Opname", out opname);
 				dp.Read("Opcode", out opcode);
@@ -956,14 +984,18 @@ namespace Oldi.Net
 				dp.Read("Price", out price);
 					
 				dp.Read("Ben", out ben);
-				dp.Read("KPP", out kpp);
-				dp.Read("Reason", out reason);
-				dp.Read("Tax", out tax);
-				dp.Read("PayINN", out payerInn);
-				dp.Read("KBK", out kbk);
-				dp.Read("OKATO", out okato);
-				dp.Read("PayAddress", out address);
-				dp.Read("BenAcc", out account);
+				if (!string.IsNullOrEmpty(Ben))
+					{
+					dp.Read("KPP", out kpp);
+					dp.Read("Reason", out reason);
+					dp.Read("Tax", out tax);
+					dp.Read("PayINN", out payerInn);
+					dp.Read("KBK", out kbk);
+					dp.Read("OKATO", out okato);
+					dp.Read("PayAddress", out address);
+					dp.Read("BenAcc", out account);
+					}
+				
 
 				return 0;
 			}
