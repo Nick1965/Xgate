@@ -217,9 +217,9 @@ namespace OldiGW.Redo.Net
 				else if (((CheckInfo)stateInfo).gw.Provider == "as")
 					gw = new Autoshow.Autoshow(((CheckInfo)stateInfo).gw);
 
-				gw.ReportRequest("REDO - начало");
+				gw.ReportRequest("REDO - strt");
 				gw.Processing(false);
-				gw.ReportRequest("REDO - конец");
+				gw.ReportRequest("REDO - stop");
 			}
 			catch (Exception ex)
 			{

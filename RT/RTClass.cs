@@ -29,7 +29,10 @@ namespace RT
 		string SvcComment = "";
 		string[] states;
 		string queryFlag = "";
+		string agentAccount = ""; // Счёт учёта поставщика услуг
 
+		decimal? Balance = null;
+		decimal? Recpay = null;
 		
 		public RTRequest()
 			: base()
@@ -48,19 +51,28 @@ namespace RT
 		{
 			base.InitializeComponents();
 			CodePage = "utf-8";
-			commonName = Settings.Rt.CN;
 			tz = Settings.Tz;
-			host = Settings.Rt.Host;
 
-			if (Gateway != "0" && Gateway != "")
-			{
-				int filial = 10;
-				if (!int.TryParse(Gateway, out filial))
-					filial = 10;
-				SvcTypeID = string.Format("RT.SIBIR.F{0:d3}.ACCOUNT_NUM", filial);
-			}
-			else 
-				SvcTypeID = Gateway;
+			if (Provider == "rtm")
+				{
+				commonName = Settings.Rtm.CN;
+				host = Settings.Rtm.Host;
+				agentAccount = Gateway;
+				}
+			else
+				{
+				commonName = Settings.Rt.CN;
+				host = Settings.Rt.Host;
+				if (Gateway != "0" && Gateway != "")
+					{
+					int filial = 10;
+					if (!int.TryParse(Gateway, out filial))
+						filial = 10;
+					SvcTypeID = string.Format("RT.SIBIR.F{0:d3}.ACCOUNT_NUM", filial);
+					}
+				else
+					SvcTypeID = Gateway;
+				}
 			
 			if (string.IsNullOrEmpty(Phone))
 			{
@@ -110,7 +122,7 @@ namespace RT
 		/// <returns></returns>
 		protected override string GetLogName()
 		{
-			return Settings.Rt.LogFile;
+			return Provider == "rt"? Settings.Rt.LogFile: Settings.Rtm.LogFile;
 		}
 
 		/// <summary>
@@ -212,6 +224,7 @@ namespace RT
 		/// Создание нового платежа
 		/// </summary>
 		/// <returns></returns>
+		/*
 		public override int MakePayment()
 		{
 			if (state != 255) // Платёж существует
@@ -230,24 +243,22 @@ namespace RT
 				return base.MakePayment();
 			}
 		}
+		*/
 
 		public override int Undo()
 		{
-			/*
-			if (state == 255)
-			{
-				errCode = 2;
-				errDesc = "Платёж не найден";
-				return 1;
-			}
-			*/
 			byte old_state = state;
+			int OK = 1;
+			string x = !string.IsNullOrEmpty(Phone)? Phone: 
+								!string.IsNullOrEmpty(Account)? Account: 
+								!string.IsNullOrEmpty(Number)? Number: "";
 
 			// Log("{0} Попытка отмены платежа", Tid);
+			Log("{0} [UNDO - начало] Num = {1} State = {2}", Tid, State != 255? State.ToString(): "<None>", x);
 			if (MakeRequest(8) == 0 && SendRequest(Host) == 0 && ParseAnswer(stResponse) == 0)
 				{
 					ParseAnswer(stResponse);
-					Log("{0} reqStatus = {1} payStatus = {2}", Tid, ReqStatus, PayStatus);
+					Log("{0} [UNDO - конец] reqStatus = {1} payStatus = {2}", Tid, ReqStatus, PayStatus);
 					if (PayStatus == 3)
 					{
 						errCode = 6;
@@ -273,17 +284,17 @@ namespace RT
 
 					// Log("{0} err={1} desc={2} st={3}", Tid, ErrCode, ErrDesc, State);
 
-					UpdateState(Tid, errCode: ErrCode, errDesc: ErrDesc, locked: 0, state: state);
-					MakeAnswer();
-					return 0;
+					OK = 0;
 				}	
-
-			errCode = 2;
-			state = 11;
+			else
+				{
+				errCode = 2;
+				state = 11;
+				}
 
 			UpdateState(Tid, errCode: ErrCode, errDesc: ErrDesc, locked: 0, state: state);
 			MakeAnswer();
-			return 1;
+			return OK;
 		}
 		
 		/// <summary>
@@ -296,36 +307,42 @@ namespace RT
 
 			StringBuilder p = new StringBuilder();
 
-			if (old_state == 0) // выполнить проверку возможности платежа и вернуть баланс счёта
+			// выполнить проверку возможности платежа и вернуть баланс счёта
+			if (old_state == 0) 
 			{
 				ReqType = "queryPayeeInfo";
 				p.AppendFormat("reqType={0}", ReqType);
 				if (!string.IsNullOrEmpty(SvcTypeID))
 					p.AppendFormat("&svcTypeId={0}", HttpUtility.UrlEncode(SvcTypeID));
-				
-				if (string.IsNullOrEmpty(Account))
+
+				p.AppendFormat("&svcNum={0}", SvcNum);
+				if (!string.IsNullOrEmpty(Phone) && Provider == "rt")
 					p.AppendFormat("&svcNum=7{0}", SvcNum);
-				else
-					p.AppendFormat("&svcNum={0}", SvcNum);
 				
 				if (!string.IsNullOrEmpty(SvcSubNum))
 					p.AppendFormat("&svcSubNum={0}", SvcSubNum);
-				p.Append("&queryFlags=13");									// Остаток на счёте
-			} else if (old_state == 1) // Создать запрос Pay
+				p.Append("&queryFlags=13");	// Остаток на счёте
+			}
+			// Создать запрос Pay
+			else if (old_state == 1) 
 			{
 				ReqType = "createPayment";
 				p.AppendFormat("reqType={0}", ReqType);
 				p.AppendFormat("&srcPayId={0}", Tid);
 				if (!string.IsNullOrEmpty(SvcTypeID))
 					p.AppendFormat("&svcTypeId={0}", HttpUtility.UrlEncode(SvcTypeID));
-				
-				if (string.IsNullOrEmpty(Account))
-					p.AppendFormat("&svcNum=7{0}", SvcNum);
-				else
-					p.AppendFormat("&svcNum={0}", SvcNum);
 
+				p.AppendFormat("&svcNum={0}", SvcNum);
+				if (!string.IsNullOrEmpty(Phone) && Provider == "rt")
+					p.AppendFormat("&svcNum=7{0}", SvcNum);
+					
 				if (!string.IsNullOrEmpty(SvcSubNum))
 					p.AppendFormat("&svcSubNum={0}", SvcSubNum);
+
+				// Непустой для РТ-Мобайл
+				if (!string.IsNullOrEmpty(agentAccount))
+					p.AppendFormat("&agentAccount={0}", agentAccount);
+
 				p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
 				p.AppendFormat("&reqTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
 				p.AppendFormat("&payAmount={0}", (int)(Amount * 100m));
@@ -336,7 +353,8 @@ namespace RT
 				p.AppendFormat("&payComment={0}", HttpUtility.UrlEncode(Comment));
 
 			}
-			else if (old_state == 3) // Создать запрос Status
+			// Создать запрос Status
+			else if (old_state == 3) 
 			{
 				if (queryFlag != "")
 				{
@@ -361,13 +379,24 @@ namespace RT
 					p.AppendFormat("&startDate={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(StartDate, Settings.Tz)));
 				if (EndDate != null)
 					p.AppendFormat("&endDate={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(EndDate, Settings.Tz)));
+
+				// Непустой для РТ-Мобайл
+				if (!string.IsNullOrEmpty(agentAccount))
+					p.AppendFormat("&agentAccount={0}", agentAccount);
+
 			}
-			else if (old_state == 8) // Запрос на отмену платежа
+			// Запрос на отмену платежа
+			else if (old_state == 8) 
 			{
 				ReqType = "abandonPayment";
 				p.AppendFormat("reqType={0}", ReqType);
 				p.AppendFormat("&srcPayId={0}", Tid);
 				p.AppendFormat("&reqTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
+
+				// Непустой для РТ-Мобайл
+				if (!string.IsNullOrEmpty(agentAccount))
+					p.AppendFormat("&agentAccount={0}", agentAccount);
+
 			}
 			else
 			{
@@ -521,6 +550,11 @@ namespace RT
 				sb.AppendFormat("srcPayId = {0} ", Tid);
 			sb.AppendFormat("reqType = {0} svcTypeId = {1} svcNum = {2} svcSubNum = {3} svcPurpose = 0 amount = {4}\r\n\t\t\tsvcComment = {5}\r\n",
 				ReqType, SvcTypeID, SvcNum, SvcSubNum, XConvert.AsAmount(Amount), SvcComment);
+
+			// Непустой для РТ-Мобайл
+			if (!string.IsNullOrEmpty(agentAccount))
+				sb.AppendFormat("\t\t\tagentAccount = {0}\r\n", agentAccount);
+	
 			if (ReqTime != null)
 				sb.AppendFormat("\t\t\treqTime = {0}\r\n", XConvert.AsDateTZ(ReqTime.Value));
 			if (Acceptdate != DateTime.MinValue)
@@ -623,12 +657,12 @@ namespace RT
 						case "payeeRemain":		// Остаток средств на л/с
 							decValue = 0;
 							decimal.TryParse(value, out decValue);
-							balance = decValue / 100M;
+							Balance = decValue / 100M;
 							break;
 						case "payeeRecPay":		// Рекомендуемый платёж
 							decValue = 0m;
 							decimal.TryParse(value, out decValue);
-							price = decValue / 100M;
+							Recpay = decValue / 100M;
 							break;
 						case "payeeName":
 							fio = HttpUtility.UrlDecode(value);		// Инициалы абонента
@@ -728,8 +762,9 @@ namespace RT
 				sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "account", Account);
 			if (!string.IsNullOrEmpty(AddInfo))
 				sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "info", AddInfo.Length <= 250 ? HttpUtility.HtmlEncode(AddInfo) : HttpUtility.HtmlEncode(AddInfo.Substring(0, 250)));
-			if (Price != decimal.MinusOne)
-				sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "recomended", XConvert.AsAmount(Price));
+			
+			if (Recpay != null)
+				sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "recpay", XConvert.AsAmount(Recpay.Value));
 			if (Balance != null)
 				sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "balance", XConvert.AsAmount(Balance.Value));
 

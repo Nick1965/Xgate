@@ -361,16 +361,9 @@ namespace Oldi.Net
 				return false;
 				}
 
-			if (State == 0) // Если только новый платёж
+			if (State == 0 && TerminalType == 1) // Если только новый платёж
 				{
 	
-				if (TerminalType == 1) // Терминал
-					RootLog("{5} [FINCHK - начало] Num={7} {1}/{2} {0} ID={3} Type={4} Amount={6}",
-						Provider, Service, Gateway, Terminal == int.MinValue? "": Terminal.ToString(), TerminalType == int.MinValue? "": TerminalType.ToString(),
-						Tid, XConvert.AsAmount(AmountAll), x);
-				else
-					return false;
-
 				foreach (var item in Settings.CheckedProviders)
 					if (item.Name.ToLower() == Provider.ToLower() 
 						&& item.Service.ToLower() == Service.ToLower() 
@@ -380,20 +373,24 @@ namespace Oldi.Net
 						{
 
 
+						RootLog("{5} [FINCHK - начало] Num={7} {1}/{2} {0} ID={3} Type={4} Amount={6}",
+							Provider, Service, Gateway, Terminal == int.MinValue? "": Terminal.ToString(), TerminalType == int.MinValue? "": TerminalType.ToString(),
+							Tid, XConvert.AsAmount(AmountAll), x);
+
 						// Если номер телефона в списке исключаемых завершить финансовый контроль
 						foreach (string prefix in Settings.Excludes)
 							{
 							if (x.Length >= prefix.Length && x.Substring(0, prefix.Length) == prefix)
 								{
-								RootLog("{0} [FINCHK] Num=\"{1}\" найден в белом списке \"{2}\" завершение проверки", Tid, x, prefix);
+								RootLog("{0} [FINCHK - конец] Num=\"{1}\" найден в белом списке \"{2}\" завершение проверки", Tid, x, prefix);
 								return false;
 								}
 							}
 
 						state = 0;
 						errCode = 11;
-						errDesc = string.Format("[FINCHK] Id={0} Type={1} Отложен до {2}",
-							Terminal, TerminalType, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
+						errDesc = string.Format("[Фин.контроль] Отложен до {0}",
+							XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
 						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
 						RootLog("{0} [FINCHK - конец] {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}",
 							Tid, Service, Gateway, Amount, AmountAll, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), x);
@@ -401,41 +398,13 @@ namespace Oldi.Net
 						}
 				}
 
+			/*
 			RootLog("{5} [FINCHK - конец] Num={7} {1}/{2} {0} ID={3} Type={4} Amount={6} проверка завершена",
 				Provider, Service, Gateway, Terminal == int.MinValue? "": Terminal.ToString(), TerminalType == int.MinValue? "": TerminalType.ToString(),
 				Tid, XConvert.AsAmount(AmountAll), x);
+			*/
 			return false;
 			}
-
-		/// <summary>
-		/// Допроведение платежа
-		/// </summary>
-		/// <param name="State"></param>
-		/// <param name="ErrCode"></param>
-		/// <param name="ErrDesc"></param>
-		public virtual void Processing(byte State, int ErrCode, string ErrDesc)
-		{
-			// Блок try используется исключительно для секции finally
-			// для того, что бы снять блокировку с записи
-			try
-				{
-				state = State;
-				errCode = ErrCode;
-				errDesc = ErrDesc;
-				if (State == 11 || State ==	 12)
-					UpdatePayment(); // Перепроведение
-				state = 0;
-				Processing(false); // Допроведение
-				}
-			catch (Exception ex)
-				{
-				RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
-				}
-			finally
-				{
-				SetLock(0);
-				}
-		}
 
 		public virtual int UpdateState(long tid, byte state = 255, int errCode = -1, string errDesc = null, int result = -1,
 								string opname = null, string opcode = null, string fio = null, string account = null,
@@ -464,80 +433,6 @@ namespace Oldi.Net
 									price: price,
 									result: result);
 		}
-
-		/// <summary>
-		///  Пересоздание платежа
-		/// </summary>
-		/// <returns></returns>
-		public int ReMakePayment()
-		{
-			string text = string.Format("update [OldiGW].[OldiGW].[Queue] set tid = tid * -1 where tid = {0}", Tid);
-			using (SqlConnection cnn = new SqlConnection(Settings.ConnectionString))
-			using (SqlCommand cmd = new SqlCommand(text, cnn))
-			{
-				cmd.CommandType = CommandType.Text;
-				cmd.Connection.Open();
-				cmd.ExecuteNonQuery();
-				cmd.Connection.Close();
-			}
-			return MakePayment();
-		}
-		
-		/// <summary>
-		/// Перепроведение (изменение) платежа
-		/// Статус устанавливается в 0.
-		/// </summary>
-		/// <returns>0 - успех; иначе ошибка в ErrDesc</returns>
-		public virtual int UpdatePayment()
-			{
-			// Установка даты операции
-			operdate = DateTime.Now;
-
-			GetTerminalInfo();
-
-			State = 0; // Новый
-
-			return Exec(sp :"UpdatePayment", tid :Tid,
-										provider :provider,
-										phone :phone,
-										phoneParam :PhoneParam,
-										account :account,
-										accountParam :AccountParam,
-										filial :filial,
-										card :card,
-										number :number,
-										fio :fio,
-										session :session,
-										amount :amount,
-										amountAll :amountAll,
-										orgname :orgname,
-										docnum :docnum,
-										docdate :docdate,
-										purpose :purpose,
-										contact :contact,
-										comment :comment,
-										inn :inn,
-										address :address,
-										service :service,
-										gateway :gateway,
-										terminal :terminal,
-										terminalType :terminalType,
-										realTerminalId :realTerminalId,
-										transaction :transaction,
-										pcdate :(pcdate == DateTime.MinValue) ? null : (DateTime?)pcdate,
-										terminalDate :terminalDate,
-										tz :Tz,
-										bik :bik,
-										kpp :kpp,
-										payerInn :payerInn,
-										ben :ben,
-										tax :tax,
-										kbk :kbk,
-										okato :okato,
-										payType :payType,
-										reason :reason,
-										attributes :Attributes.SaveToXml());
-			}
 
 		/// <summary>
 		/// Создание новой записи в таблице Queue и Payment
@@ -597,6 +492,65 @@ namespace Oldi.Net
 		}
 
 		/// <summary>
+		/// Обновление параметров платежа для перепроведения
+		/// </summary>
+		/// <returns></returns>
+		public virtual int UpdatePayment()
+			{
+
+			// ReportRequest("MakePayment");
+
+			// Установка даты операции
+			operdate = DateTime.Now;
+
+			GetTerminalInfo();
+
+			State = 0; // Новый
+
+			return Exec(sp: "UpdatePayment", tid :Tid,
+										provider :provider,
+										operdate: operdate,
+										phone :phone,
+										phoneParam :PhoneParam,
+										account :account,
+										accountParam :AccountParam,
+										filial :filial,
+										card :card,
+										number :number,
+										fio :fio,
+										session :session,
+										amount :amount,
+										amountAll :amountAll,
+										orgname :orgname,
+										docnum :docnum,
+										docdate :docdate,
+										purpose :purpose,
+										contact :contact,
+										comment :comment,
+										inn :inn,
+										address :address,
+										service :service,
+										gateway :gateway,
+										terminal :terminal,
+										terminalType :terminalType,
+										realTerminalId :realTerminalId,
+										transaction :transaction,
+										pcdate :(pcdate == DateTime.MinValue) ? null : (DateTime?)pcdate,
+										terminalDate :terminalDate,
+										tz :Tz,
+										bik :bik,
+										kpp :kpp,
+										payerInn :payerInn,
+										ben :ben,
+										tax :tax,
+										kbk :kbk,
+										okato :okato,
+										payType :payType,
+										reason :reason,
+										attributes :Attributes.SaveToXml());
+			}
+
+		/// <summary>
 		/// Разбор ответа провайдера
 		/// </summary>
 		/// <param name="stResponse"></param>
@@ -630,6 +584,7 @@ namespace Oldi.Net
 			// string terminalPfx = null,	// Префикс перед номером точки (МТС)
 			// int fakeTppId = int.MinValue,	// Подстановочный номер (если ТПП не зарегистрирован)
 			// int fakeTppType = int.MinValue,	// Тип подстановочного терминала
+			DateTime? operdate = null,	// Время операции
 			DateTime? pcdate = null,       // Дата платежа в ПЦ
 			DateTime? terminalDate = null,	// Дата платежа на терминале
 			int tz = int.MinValue,
@@ -690,6 +645,7 @@ namespace Oldi.Net
 				cmd.AddParam("TppType", terminalType);
 				cmd.AddParam("RealTppId", realTerminalId);
 				cmd.AddParam("Pcdate", XConvert.AsDate(pcdate));
+				cmd.AddParam("Operdate", XConvert.AsDate(operdate));
 				cmd.AddParam("Terminaldate", terminalDate);
 				cmd.AddParam("Tz", tz);
 				cmd.AddParam("Transaction", transaction);

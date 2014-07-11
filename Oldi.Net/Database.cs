@@ -139,6 +139,7 @@ namespace Oldi.Net
 	{
 		SqlConnection cnn = null;
 		SqlCommand cmd = null;
+		DataTable table = null;
 		bool disposed = false;
 		int errCode;
 		string errDesc;
@@ -161,6 +162,43 @@ namespace Oldi.Net
 					cmd.Connection = value; 
 			} 
 		}
+
+		/// <summary>
+		/// Возвращает результирующий набор
+		/// </summary>
+		public DataTable ResultTable
+			{
+			get
+				{
+				return table;
+				}
+			}
+
+		/// <summary>
+		/// Количество строк в ответе
+		/// </summary>
+		public int Count
+			{
+			get
+				{
+				return (table != null)? table.Rows.Count: 0;
+				}
+			}
+
+		/// <summary>
+		/// Возвращает строку таблицы с номером index или null, если результат не получен либо index >= Count
+		/// </summary>
+		/// <param name="index">номер строки</param>
+		/// <returns>Строка DataRow или null</returns>
+		public DataRow this[int index]
+			{
+			get
+				{
+				return index < Count? table.Rows[index]: null;
+				}
+			}
+		
+
 		
 		/// <summary>
 		/// Конструктор
@@ -172,6 +210,7 @@ namespace Oldi.Net
 			cnn = new SqlConnection(connectionString);
 			cmd = new SqlCommand(procName, cnn);
 			cmd.CommandType = System.Data.CommandType.StoredProcedure;
+			table = new DataTable();
 		}
 
 		/// <summary>
@@ -214,7 +253,19 @@ namespace Oldi.Net
 				}
 			return dataReader;
 		}
-		
+
+		/// <summary>
+		/// Заполняет таблицу из возвращённого набора
+		/// </summary>
+		/// <returns></returns>
+		public void Fill()
+			{
+			SqlDataAdapter Adapter = new SqlDataAdapter(cmd);
+			if (Connection.State != ConnectionState.Open)
+				Connection.Open();
+			Adapter.Fill(table);
+			}
+
 		public void Dispose()
 		{
 			Dispose(true);
@@ -231,10 +282,20 @@ namespace Oldi.Net
 				if (disposing)
 				{
 					if (cmd != null)
-					{
+						{
+						if (cmd.Connection != null)
+							{
+							cmd.Connection.Dispose();
+							cmd.Connection = null;
+							}
 						cmd.Dispose();
 						cmd = null;
-					}
+						}
+					if (table!= null)
+						{
+						table.Dispose();
+						table = null;
+						}
 				}
 
 				// Утилизация неуправляемых ресурсов

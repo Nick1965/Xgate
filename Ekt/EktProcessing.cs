@@ -58,7 +58,7 @@ namespace Oldi.Ekt
 		public override void Processing(bool New)
 		{
 
-			int atts = 0;
+			int atts = 1;
 
 			if (New)  // Новый платёж
 			{
@@ -72,18 +72,24 @@ namespace Oldi.Ekt
 					if (DoPay(0, 3) == 0)
 						{
 							// TraceRequest("Sent");
-							for (int i = 0; i < 4; i++)
+							/*
+							for (int i = 0; i < 2; i++)
 							{
 								atts = i + 1;
-								Wait(6);
+								Wait(30);
 								DoPay(3, 6); // Платёж проведён
 								if (result.state == 60 || result.state == 80 || result.state == -2 || result.state == 10) // Финальные статусы и фин.контроль
 									break;
 							}
+							*/
 							//TechInfo = string.Format("Состояние={1}/{2}/{3} запросов={0}", atts + 1, result.state, result.substate, result.code);
+						// Ожидать 30 сек. и повторить запрос
+						atts = 2;
+						Wait(30);
+						DoPay(3, 6); // Платёж проведён
 						}
 				}
-				TechInfo = string.Format("Состояние={1}/{2}/{3} запросов={0}", atts + 1, result.state, result.substate, result.code);
+				TechInfo = string.Format("st={1}/{2}/{3} atts={0}", atts, result.state, result.substate, result.code);
 				// TraceRequest("End");
 			}
 			else // Redo
@@ -338,6 +344,9 @@ namespace Oldi.Ekt
 							msg = string.Format(Messages.State40_X, result.substate, result.code);
 							break;
 					}
+					break;
+				case 60:
+					msg = Messages.State60;
 					break;
 				case 80:
 					switch (result.substate)

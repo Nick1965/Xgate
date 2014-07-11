@@ -222,6 +222,48 @@ namespace Oldi.Utility
 			public static string Hash { get { return Config.Providers["rt"]["hash"]; } }
 		}
 
+		/// <summary>
+		/// RT-Mobile
+		/// </summary>
+		public static class Rtm
+			{
+			public static string Name
+				{
+				get
+					{
+					return Config.Providers["rtm"]["name"];
+					}
+				}
+			public static string Host
+				{
+				get
+					{
+					return Config.Providers["rtm"]["host"];
+					}
+				}
+			public static string Log
+				{
+				get
+					{
+					return Config.Providers["rtm"]["log"];
+					}
+				}
+			public static string CN
+				{
+				get
+					{
+					return Config.Providers["rtm"]["cn"];
+					}
+				}
+			public static string Hash
+				{
+				get
+					{
+					return Config.Providers["rtm"]["hash"];
+					}
+				}
+			}
+
 		public static class Pcc
 		{
 			public static string Name { get { return Config.Providers["pcc"]["name"]; } }
@@ -536,6 +578,48 @@ namespace Oldi.Utility
 			public static string CN { get { return ProvidersSettings.Rt.CN; } }
 			public static string Hash { get { return ProvidersSettings.Rt.Hash.Replace(" ", ""); } }
 		}
+
+		/// <summary>
+		/// Rt-mobile
+		/// </summary>
+		public static class Rtm
+			{
+			public static string Name
+				{
+				get
+					{
+					return ProvidersSettings.Rtm.Name;
+					}
+				}
+			public static string Host
+				{
+				get
+					{
+					return ProvidersSettings.Rtm.Host;
+					}
+				}
+			public static string LogFile
+				{
+				get
+					{
+					return logPath + ProvidersSettings.Rtm.Log;
+					}
+				}
+			public static string CN
+				{
+				get
+					{
+					return ProvidersSettings.Rtm.CN;
+					}
+				}
+			public static string Hash
+				{
+				get
+					{
+					return ProvidersSettings.Rtm.Hash.Replace(" ", "");
+					}
+				}
+			}
 
 		/// <summary>
 		/// Ект
