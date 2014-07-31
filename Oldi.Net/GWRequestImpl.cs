@@ -411,12 +411,12 @@ namespace Oldi.Net
 						// Если номер телефона в списке исключаемых завершить финансовый контроль
 						if (FindInLists(Settings.Lists, x, 2) == 2) // Найден в чёрном списке
 							{
-							state = 0;
-							errCode = 11;
-							errDesc = string.Format("[BLACK] Отложен до {0}", XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
+							state = 12;
+							errCode = 6;
+							errDesc = string.Format("[BLACK] Отменён вручную");
 							UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-							RootLog("{0} [FCHK - BLCK] {1}/{2} Num={6} A={3} S={4} - Платёж отложен до {5}",
-								Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), x);
+							RootLog("{0} [FCHK - BLCK] {1}/{2} Num={5} A={3} S={4} - Отменён вручную",
+								Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), x);
 							return true;
 							}
 
