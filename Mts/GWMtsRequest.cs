@@ -74,7 +74,7 @@ namespace Oldi.Mts
 				errCode = 400;
 				state = 12;
 				errDesc = ex.Message;
-				RootLog("{0}\r\n{1}", errDesc, ex.StackTrace);
+				RootLog("Mts.Init {0}", errDesc);
 			}
 
 			checkHost = Properties.Settings.Default.CheckTemplate;
@@ -130,7 +130,8 @@ namespace Oldi.Mts
 						checkTemplate = check.ReadToEnd();
 					}
 					if (string.IsNullOrEmpty(Phone))
-						stRequest = string.Format(checkTemplate, TimeOut(), XConvert.AsAmount(Amount), Cur, Service, MtsTerminalId, TerminalType, Asvps, Contract, Account, Gateway);
+						stRequest = string.Format(checkTemplate, TimeOut(), XConvert.AsAmount(Amount), Cur, Service, MtsTerminalId, TerminalType, 
+							Asvps, Contract, Account, Gateway);
 					else
 						stRequest = string.Format(checkTemplate, TimeOut(), Phone, XConvert.AsAmount(Amount), Cur, Service, MtsTerminalId, TerminalType, Asvps, Contract, Gateway);
 					break;
@@ -147,7 +148,7 @@ namespace Oldi.Mts
 						XConvert.AsDateTZ(TerminalDate, Tz), string.IsNullOrEmpty(Phone)? Account: "", Gateway);
 
 					
-					if (Settings.LogLevel.IndexOf("REQ") != -1)
+					if (Settings.LogLevel.IndexOf("DEBUG") != -1)
 						Log("DoPay: Cc=\"{0}\"", ControlCode);
 
 					using (Crypto sign = new Crypto(CommonName))
@@ -172,12 +173,9 @@ namespace Oldi.Mts
 					break;
 			}
 
-			if (Settings.LogLevel.IndexOf("REQ") != -1)
-				Log("DoPay: Подготовлен запрос:\r\n{0}", stRequest);
-
 			if (CheckXML(stRequest) != 0)
 			{
-				RootLog("{0}\r\n{1}", ErrDesc, stRequest);
+				RootLog("Mts.MakeRequest {0}", ErrDesc);
 				state = (byte)old_state;
 				errCode = 11;
 			}
@@ -223,8 +221,8 @@ namespace Oldi.Mts
 						errDesc = "(400) " + xe.Message;
 						errCode = 400;
 						state = 12;
-						RootLog("Проверка XML: state={0} error={1} {2} at ({3}, {4})", state, errCode, xe.Message, xe.LineNumber, xe.LinePosition);
-						sb.AppendFormat("{0}Tid={1}: (400) {2}", sb.Length > 0? "\r\n": "", Tid, xe.Message);
+						RootLog("[CXML - stop] {5} Mts.CheckXML: state={0} error={1} {2} at ({3}, {4})", state, errCode, xe.Message, xe.LineNumber, xe.LinePosition, Tid);
+						sb.AppendFormat("{0}(400) {1}", sb.Length > 0? "\r\n": "", xe.Message);
 						retcode = 1;
 					}
 				}
