@@ -120,7 +120,7 @@ namespace Oldi.Net
 					try
 						{
 						// Request.ReportRequest("STATUS - начало");
-						step = "STAT - stop";
+						// step = "STAT - stop";
 						if (Request.Provider == "rt" || Request.Provider == "rtm")
 						{
 							Current = new RTRequest(Request);
@@ -168,8 +168,9 @@ namespace Oldi.Net
 				// Отмена платежа
 				// Отменяет платёж на шлюзе, затем в процессинге
 				case "undo":
-					// Log("{0} [UNDO - начало]", Current.Tid);
+					Request.GetPaymentInfo();
 					Request.ReportRequest("UNDO - strt");
+					Current = Request;
 					step = "UNDO - stop";
 
 					if (Request.Provider == "rt" || Request.Provider == "rtm")
@@ -237,7 +238,7 @@ namespace Oldi.Net
 								Current.Processing(true);
 							}
 						// Платёж существует - вернём его статус
-						else if (Request.State == 11 || Request.State == 12)
+						else if (Request.State == 12 || Request.State == 11)
 							{
 							Current = Reposting(Request);
 							step = "REPT - stop";
@@ -276,8 +277,8 @@ namespace Oldi.Net
             }
 
 
-			// if (Request.RequestType.ToLower() != "status" && Request.RequestType.ToLower() != "payment")
-			Current.ReportRequest(step);
+			if (Request.RequestType.ToLower() != "status")
+				Current.ReportRequest(step);
 			SendAnswer(m_data, Current);
         }
 
@@ -309,7 +310,8 @@ namespace Oldi.Net
 						string addInfo = r.AddInfo ?? "";
 						if (r.Provider == Settings.Mts.Name)
 						{
-							addInfo = string.Format("{0} {1} {2} Limmit={3}", r.Fio, r.Opname, r.Opcode, XConvert.AsAmount(r.Limit));
+							// addInfo = string.Format("{0} {1} {2} Limmit={3}", r.Fio, r.Opname, r.Opcode, XConvert.AsAmount(r.Limit));
+							addInfo = string.Format("{0} {1} {2}", r.Fio, r.Opname, r.Opcode);
 						}
 						else
 						{

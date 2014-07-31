@@ -328,6 +328,9 @@ namespace Oldi.Mts
 					// state = times > 20 ? (byte)12 : old_state;
 					state = 12;
 					break;
+				case 206: // Абонент не найден
+					state = times > 20 ? (byte)12 : old_state;
+					break;
 				case 301: // Нет денег
 				case 354: // Терминал не зарегистрирован
 					state = Pcdate.AddDays(1.0) <= DateTime.Now ? (byte)12 : old_state;

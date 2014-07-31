@@ -19,6 +19,7 @@ namespace OldiGW.Redo.Net
         string name;
         protected Int16 idle;
         // protected GWRequest gw;
+		public static int? ProviderID = null;
 
 		public static int processes = 0;
 		public volatile static bool Canceling = false;

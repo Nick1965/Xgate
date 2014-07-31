@@ -32,6 +32,7 @@ namespace Oldi.Net
 		static bool noredo = false;
 		public static bool Reload = false;
 
+
 		static void Main(string[] args)
 		{
 			try
@@ -59,6 +60,9 @@ namespace Oldi.Net
 				{
 					switch (args[0])
                     {
+						case "--provider":
+						Redo.ProviderID = int.Parse(args[1]);
+							break;
                         case "--noredo":
                             noredo = true;
                             break;
@@ -85,19 +89,24 @@ namespace Oldi.Net
                             return;
                     }
 				}
-				
+
+
 				// Если произойдёт сбой, процесс перезапустится
 				while (!stop)
-				{
+					{
 					try
-					{
+						{
 						Run(noredo);
-					}
+						}
 					catch (Exception ex)
-					{
-						Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+						{
+						Log("Необработанное исключение:\r\n{0}\r\n{1}", ex.Message, ex.StackTrace);
+						}
 					}
-				}
+
+				Console.WriteLine("Служба остановлена оператором");
+				Log("Служба остановлена оператором");
+
 			}
 			catch (Exception se)
 			{
@@ -105,8 +114,8 @@ namespace Oldi.Net
 				// Log("Stack: {0}\r\n{1}", se.Message, se.StackTrace);
 			}
 
-			// Console.WriteLine("Press any key to exit...");
-			// Console.ReadKey();
+			Console.WriteLine("Press any key to exit...");
+			Console.ReadKey();
 		}
 
 		static void Run(bool noredo)

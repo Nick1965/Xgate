@@ -49,6 +49,7 @@ namespace Oldi.Net.Cyber
 		/// Создание запроса CHECK
 		/// </summary>
 		/// <returns></returns>
+		/*
 		public void MakeCheckRequest()
 		{
 			StringBuilder prm = new StringBuilder();
@@ -92,6 +93,6 @@ namespace Oldi.Net.Cyber
 			errDesc = null;
 		}
 
-	
+		*/	
 	}
 }

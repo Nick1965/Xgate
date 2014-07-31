@@ -12,6 +12,7 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Globalization;
 using System.Resources;
+using System.Xml.Linq;
 
 namespace Oldi.Net
 {
@@ -357,14 +358,17 @@ namespace Oldi.Net
 				x = Number;
 			else
 				{
-				RootLog("{0} [FINCHK] Не задан номер счёта", Tid);
+				RootLog("{0} [FCHK] {1}/{2} Не задан номер счёта", Tid, Service, Gateway);
 				return false;
 				}
 
 			if (State == 0 && TerminalType == 1) // Если только новый платёж
 				{
-	
+
+				string trm = Terminal != int.MinValue? Terminal.ToString(): "";
+
 				foreach (var item in Settings.CheckedProviders)
+					// Если сумма платежа больше лимита
 					if (item.Name.ToLower() == Provider.ToLower() 
 						&& item.Service.ToLower() == Service.ToLower() 
 						&& item.Gateway.ToLower() == Gateway.ToLower() 
@@ -372,19 +376,13 @@ namespace Oldi.Net
 						&& Pcdate.AddHours(Settings.AmountDelay) >= DateTime.Now)
 						{
 
-
-						RootLog("{5} [FINCHK - начало] Num={7} {1}/{2} {0} ID={3} Type={4} Amount={6}",
-							Provider, Service, Gateway, Terminal == int.MinValue? "": Terminal.ToString(), TerminalType == int.MinValue? "": TerminalType.ToString(),
-							Tid, XConvert.AsAmount(AmountAll), x);
+						// RootLog("{0} [FCHK - WHTE] {1}/{2} {3} Num={4} Trm={5} Amount={6}", Tid, Service, Gateway, Provider, x, trm, XConvert.AsAmount(AmountAll));
 
 						// Если номер телефона в списке исключаемых завершить финансовый контроль
-						foreach (string prefix in Settings.Excludes)
+						if (FindInLists(Settings.Lists, x, 1) == 1) // Найден в белом списке
 							{
-							if (x.Length >= prefix.Length && x.Substring(0, prefix.Length) == prefix)
-								{
-								RootLog("{0} [FINCHK - конец] Num=\"{1}\" найден в белом списке \"{2}\" завершение проверки", Tid, x, prefix);
-								return false;
-								}
+							// RootLog("{0} [FCHK - stop] {1}/{2} Num=\"{3}\" найден в белом списке, завершение проверки", Tid, Service, Gateway, x);
+							return false;
 							}
 
 						state = 0;
@@ -392,17 +390,138 @@ namespace Oldi.Net
 						errDesc = string.Format("[Фин.контроль] Отложен до {0}",
 							XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
 						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-						RootLog("{0} [FINCHK - конец] {1}/{2} {6} A={3} S={4} - Платёж отложен до {5}",
-							Tid, Service, Gateway, Amount, AmountAll, XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), x);
+						RootLog("{0} [FCHK - stop] {1}/{2} Num={6} A={3} S={4} - Платёж отложен до {5}",
+							Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), x);
 						return true;
 						}
+
+				foreach (var item in Settings.CheckedProviders)
+					{
+
+					// Проверка любой суммы в чёрном списке
+					if (item.Name.ToLower() == Provider.ToLower() 
+						&& item.Service.ToLower() == Service.ToLower() 
+						&& item.Gateway.ToLower() == Gateway.ToLower() 
+						// && AmountAll >= item.Limit -- не проверяем лимит
+						&& Pcdate.AddHours(Settings.AmountDelay) >= DateTime.Now)
+						{
+
+						// RootLog("{0} [FCHK - поиск в чёрном] {1}/{2} {3} Num={4} Trm={5} Amount={6}", Tid, Service, Gateway, Provider, x, trm, XConvert.AsAmount(AmountAll));
+
+						// Если номер телефона в списке исключаемых завершить финансовый контроль
+						if (FindInLists(Settings.Lists, x, 2) == 2) // Найден в чёрном списке
+							{
+							state = 0;
+							errCode = 11;
+							errDesc = string.Format("[BLACK] Отложен до {0}", XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
+							UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
+							RootLog("{0} [FCHK - BLCK] {1}/{2} Num={6} A={3} S={4} - Платёж отложен до {5}",
+								Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), x);
+							return true;
+							}
+
+						// Если номер не найден в чёрном списке закончить поиск
+						// RootLog("{0} [FCHK - stop] {1}/{2} Num=\"{3}\" не найден, или найден в белом списке, завершение проверки", Tid, Service, Gateway, x);
+						break;
+						}
+
+					}
 				}
 
-			/*
-			RootLog("{5} [FINCHK - конец] Num={7} {1}/{2} {0} ID={3} Type={4} Amount={6} проверка завершена",
-				Provider, Service, Gateway, Terminal == int.MinValue? "": Terminal.ToString(), TerminalType == int.MinValue? "": TerminalType.ToString(),
-				Tid, XConvert.AsAmount(AmountAll), x);
-			*/
+			return false;
+			}
+
+		/// <summary>
+		/// Открывает чёрно-белый список и ищет в нём номер
+		/// </summary>
+		/// <param name="Listpath">Путь к списку</param>
+		/// <param name="Number">Номер телефона/счёта</param>
+		/// <returns>
+		/// 0 - не найден; 
+		/// 1 - найден в белом списке;
+		/// 2 - найден в чёрном списке
+		/// </returns>
+		int FindInLists(string Listpath, string Number, int ListType)
+			{
+
+			XDocument doc = null;
+
+			// Открывает файл спсиков с разрешением чтения и записи несколькими процессами
+				try
+					{
+					using (FileStream fs = new FileStream(Listpath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+					{
+						doc = XDocument.Load(fs);
+
+						// Выносится в отдельный файл
+						// Settings.excludes.Clear();
+
+
+						foreach (XElement el in doc.Root.Elements())
+							{
+							string name = el.Name.LocalName;
+							string value = el.Value;
+							// Console.WriteLine("Section: {0}", name);
+							
+							switch (el.Name.LocalName)
+								{
+								// Белый список
+								case "White":
+									if (ListType == 1)
+										{
+										if (FindInList(Number, el))
+											return 1;
+										}
+									break;
+								// Чёрный список
+								case "Black":
+									if (ListType == 2)
+										if (FindInList(Number, el))
+											return 2;
+									break;
+								}
+							}
+						}
+					}
+				catch (Exception ex)
+					{
+					RootLog("[FCHK] White/Black lists: {0}", ex.Message);
+					}
+
+			return 0; // Номер не найден
+			}
+
+
+		/// <summary>
+		/// Поиск номера в чёрном или белом списке
+		/// </summary>
+		/// <param name="Number">Номер, string</param>
+		/// <param name="el">Список, XElement</param>
+		/// <returns>true - найден</returns>
+		bool FindInList(string Number, XElement el)
+			{
+			foreach (XElement s in el.Elements())
+				{
+				switch (s.Name.LocalName)
+					{
+					case "Number":
+						string Prefix = "";
+						foreach (var item in s.Attributes())
+							{
+							if (item.Name.LocalName == "Prefix")
+								{
+								Prefix = item.Value.ToString();
+								// Log("{0} [FCHK - found]  {1}", Tid, Prefix);
+								if (Prefix != "" && Number.Length >= Prefix.Length && Number.Substring(0, Prefix.Length) == Prefix)
+									{
+									// Номер найден в списке
+									return true;
+									}
+								}
+							}
+						break;
+					}
+				}
 			return false;
 			}
 
@@ -1054,33 +1173,6 @@ namespace Oldi.Net
 		}
 
 
-		public void ReportCheck()
-		{
-			string step = "check  ";
-			StringBuilder sb = new StringBuilder();
-
-			sb.AppendFormat("![{0}] Prov={1}/{2}{3}", step, Provider, Service, !string.IsNullOrEmpty(Gateway) ? "/" + Gateway : "");
-			sb.Append("Tid", Tid);
-			sb.Append("Out", Outtid);
-			sb.Append("Acc", Account);
-			sb.Append("FIO", Fio);
-			sb.Append("Op", Opcode);
-			sb.Append("Op", Opname);
-			sb.Append("Lim", Limit);
-			if (Acceptdate != DateTime.MinValue)
-				sb.Append("APD", Acceptdate);
-			sb.Append("APC", AcceptCode);
-			sb.Append(" - разрешение на платёж получено");
-			if (!string.IsNullOrEmpty(AddInfo))
-				sb.AppendFormat("\r\n", AddInfo);
-			RootLog(sb.ToString());
-		}
-		/*
-		UpdateState(tid, state: state, errCode: errCode, errDesc: errDesc,
-						opname: Opname, opcode: Opcode, fio: fio, outtid: Outtid, account: Account, 
-							limit: Limit, limitEnd: XConvert.AsDate(LimitDate),
-							acceptdate: XConvert.AsDate2(Acceptdate), acceptCode: AcceptCode,
-		 */
 		/// <summary>
 		/// Вывод состояния платежа
 		/// </summary>
@@ -1101,9 +1193,9 @@ namespace Oldi.Net
 			sb.Append("A", Amount);
 			sb.Append("S", AmountAll);
 			sb.Append("Ph", Phone);
-			sb.Append("Sub", PhoneParam);
+			sb.Append("Prm", PhoneParam);
 			sb.Append("Acc", Account);
-			sb.Append("Sub", AccountParam);
+			sb.Append("Prm", AccountParam);
 			sb.Append("Num", Number);
 			sb.Append("Crd", Card);
 			sb.Append("Con", Contact);
@@ -1151,15 +1243,14 @@ namespace Oldi.Net
 			
 			StringBuilder sb = new StringBuilder();
 
-			sb.AppendFormat("Prov={1}/{2}{3} ***** {4}", string.IsNullOrEmpty(step) ? RequestType : step, Provider, Service, !string.IsNullOrEmpty(Gateway) ? "/" + Gateway : "", Comment);
+			sb.AppendFormat("Prov={0} {1}/{2} ***** {3}", string.IsNullOrEmpty(step) ? RequestType : step, Provider, Service, !string.IsNullOrEmpty(Gateway) ? "/" + Gateway : "", Comment);
 			sb.Append("Tid", Tid);
-			sb.Append("A", Amount);
-			sb.Append("AParam", AccountParam);
-			sb.Append("S", AmountAll);
+			sb.Append("A", XConvert.AsAmount(Amount));
+			sb.Append("S", XConvert.AsAmount(AmountAll));
 			sb.Append("Ph", Phone);
 			sb.Append("Sub", PhoneParam);
 			sb.Append("Acc", Account);
-			sb.Append("Sub", AccountParam);
+			sb.Append("AParam", AccountParam);
 			sb.Append("Num", Number);
 			sb.Append("Crd", Card);
 			sb.Append("Con", Contact);

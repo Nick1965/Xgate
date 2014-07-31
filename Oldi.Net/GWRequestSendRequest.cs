@@ -260,8 +260,11 @@ namespace Oldi.Net
 				for (int i = 0; i < headers.Count; ++i)
 					s.AppendFormat("{0}={1}\r\n", headers.Keys[i], headers[i]);
 			}
-			s.Append(text);
-			Log(HttpUtility.UrlDecode(s.ToString().Replace("\r\n", "\r\n\t\t\t")));
+			if (Provider != "cyber")
+				{
+				s.Append(text);
+				Log(HttpUtility.UrlDecode(s.ToString().Replace("\r\n", "\r\n\t\t\t")));
+				}
 		}
 	
 	}

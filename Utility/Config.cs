@@ -46,7 +46,9 @@ namespace Oldi.Utility
 				providers.Clear();
 				// Финансовый контроль
 				Settings.checkedProviders.Clear();
-				Settings.excludes.Clear();
+				
+				// Выносится в отдельный файл
+				// Settings.excludes.Clear();
 
 				if (doc.Element("Configuration").HasElements)
 				{
@@ -142,13 +144,16 @@ namespace Oldi.Utility
 												}
 
 											break;
-										case "Exclude":
+										/*
+										Выносится в отдельный файл
+										 case "Exclude":
 											foreach (XAttribute a in s.Attributes())
 												{
 												if (a.Name.LocalName == "Prefix")
 													Settings.Excludes.Add(a.Value);
 												}
 											break;
+										*/
 										}
 									}
 								break;
@@ -356,6 +361,7 @@ namespace Oldi.Utility
 		static int delivery = 0;
 		internal static decimal amountLimit = decimal.MinusOne;
 		internal static int amountDelay = 0;
+		static string lists = "";
 		
 		/// <summary>
 		/// Контролируемые поставщики
@@ -371,6 +377,7 @@ namespace Oldi.Utility
 		/// <summary>
 		/// Список номеров, исключаемых из проверки
 		/// </summary>
+		/*
 		public static List<string> Excludes
 			{
 			get
@@ -379,6 +386,7 @@ namespace Oldi.Utility
 				}
 			}
 		internal static List<string> excludes = new List<string>();
+		*/
 
         static int connectionLimit = 2;
 		// static int deliveryStart;
@@ -520,6 +528,17 @@ namespace Oldi.Utility
 			get
 				{
 				return amountDelay;
+				}
+			}
+
+		/// <summary>
+		/// Белый и чёрный списки
+		/// </summary>
+		public static string Lists
+			{
+			get
+				{
+				return root + lists;
 				}
 			}
 
@@ -729,6 +748,10 @@ namespace Oldi.Utility
 			if (!string.IsNullOrEmpty(Config.AppSettings["Delivery"]))
 				delivery = int.Parse(Config.AppSettings["Delivery"]);
 
+			// Белые, чёрные списки
+			if (!string.IsNullOrEmpty(Config.AppSettings["Lists"]))
+				lists = Config.AppSettings["Lists"];
+			
 			if (LogLevel.IndexOf("CONF") != -1)
 				Log();
 			
@@ -792,11 +815,14 @@ namespace Oldi.Utility
 					Oldi.Net.Utility.Log(log, "\tProvider = \"{0}\" Service = \"{1}\" Gateway = \"{2}\" Limit = \"{3}\"",
 						item.Name, item.Service, item.Gateway, item.Limit);
 					}
-				foreach(string prefix in Excludes)
-					{
-					Oldi.Net.Utility.Log(log, "\tExclude prefix \"{0}\"", prefix);
-					}
-				
+			
+				Oldi.Net.Utility.Log(log, "\tLst: \"{0}\"", Lists);
+			/*
+			foreach(string prefix in Excludes)
+				{
+				Oldi.Net.Utility.Log(log, "\tExclude prefix \"{0}\"", prefix);
+				}
+			*/
 			}
 		}
 

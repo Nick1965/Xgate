@@ -44,7 +44,8 @@ namespace Oldi.Net.Cyber
 		public string BankSerial { get { return serial; } }
 		protected string serial = "";
 
-        
+		static Object TheLock = new object();
+
 #if __TEST
 		public string TestString1 = "";
 #endif
@@ -107,11 +108,13 @@ namespace Oldi.Net.Cyber
 				payHost = GetPayHost();
 				statusHost = GetStatusHost();
 
+				session = "OLDIGW" + Tid.ToString();
+
 			}
 			catch (Exception ex)
 			{
-				RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
-				Console.WriteLine("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				RootLog("{0} {1}\r\n{2}", Tid, ex.Message, ex.StackTrace);
+				// Console.WriteLine("{0}\r\n{1}", ex.Message, ex.StackTrace);
 			}
 
 			// base.InitializeComponents();
@@ -254,23 +257,6 @@ namespace Oldi.Net.Cyber
 						prm.AppendLine("NUMBER", number);
 						prm.AppendLine("CARD", card);
 						prm.AppendLine("FIO", fio);
-
-						// Исправление удалено, после внесения изменений в меню терминалов.
-						/*
-						if (Service == "ge".ToLower() && Gateway == "484")
-						{
-							if (Account.Substring(0, 3) == "1||")
-							{
-								account = "21||";;
-								RootLog("{0} Триколор. Замена услуги 1 на 21");
-							}
-							else if (Account.Substring(0, 3) == "7||")
-							{
-								account = "21||"; ;
-								RootLog("{0} Триколор. Замена услуги 7 на 21");
-							}
-						}
-						*/
 						prm.AppendLine("ACCOUNT", Account);
 						
 						prm.AppendLine("DOCNUM", docnum);
@@ -288,13 +274,19 @@ namespace Oldi.Net.Cyber
 
 				prm.AppendLine("ACCEPT_KEYS", ProvidersSettings.Cyber.BankKeySerial);
 
-				IPriv.SignMessage(prm.ToString(), out stRequest, out s_text, secret_key_path, passwd);
+				lock(TheLock)
+					{
+					IPriv.SignMessage(prm.ToString(), out stRequest, out s_text, secret_key_path, passwd);
+					}
 
 				/*
 				if (Settings.LogLevel.IndexOf("REQ") != -1)
 					Log("\r\nПодготовлен запрос:\r\n{0}\r\n", s_text);
 				*/
 
+				Log("{0} Подготовлен запрос:\r\n{1}", Session, prm.ToString());
+				// Log("Подписан запрос\r\n{0}", stRequest);
+				
 				errCode = 0;
 				errDesc = null;
 				return 0;
@@ -302,13 +294,26 @@ namespace Oldi.Net.Cyber
             }
             catch (IPrivException ie)
             {
-                errDesc = string.Format("IPRIV: Sign={0} {1}", ie.code, ie.ToString());
-				errCode = ie.code;
-				/*
-				if (state == 1)
-					state = 0;
-				*/
-				state = 11;
+				errDesc = string.Format("IPRIV: Sign={0} {1}", ie.code, ie.ToString());
+				if (ie.code == -13)
+					{
+					if (status)
+						{
+						state = 3;
+						errCode = 1;
+						}
+					else
+						{
+						state = 0;
+						errCode = 7;
+						}
+					return 0;
+					}
+				else
+					{
+					errCode = ie.code;
+					state = 11;
+					}
 			}
             catch (Exception ex)
             {
@@ -320,7 +325,7 @@ namespace Oldi.Net.Cyber
 				state = 11;
             }
 
-			RootLog("Cyber: {0}", errDesc);
+			RootLog("{0} Cyber.MakeRequest: {1}", Tid, errDesc);
 
 			return 1;
 
@@ -347,7 +352,13 @@ namespace Oldi.Net.Cyber
             // Проверка подписи сервера
 			try
 			{
-				IPriv.VerifyMessage(stResponse, public_key_path, serial);
+				Log("{0} Получен ответ:\r\n{1}", Session, stResponse);
+			
+				lock (TheLock)
+					{
+					IPriv.VerifyMessage(stResponse, public_key_path, serial);
+					}
+				
 				// Log("Подпись проверена");
 
 				// Ответы Киберплат.ком
@@ -430,6 +441,7 @@ namespace Oldi.Net.Cyber
 				ErrCode = ie.code;
 				ErrDesc = string.Format("({0}) {1}", ie.code, ie.ToString());
 				state = state == 1 ? (byte)0 : (byte)3;
+				RootLog("{0} Cyber.ParseAnswer {1}", Tid, errDesc);
 			}
 			catch (Exception ex)
 			{
@@ -469,7 +481,7 @@ namespace Oldi.Net.Cyber
             catch (Exception ex)
                 {
 					errCode = 100;	
-					errDesc = string.Format("GetAnswer: {0}", ex.Message);
+					errDesc = string.Format("Cyber.GetAnswer: {0}", ex.Message);
 					return 1;
                 }
 
@@ -547,7 +559,7 @@ namespace Oldi.Net.Cyber
 					break;
 			}
 
-			Log("\r\nHost: {0}", host);
+			Log("\r\n{0} Host: {1}", Session, host);
 
 			// Создание шаблона сообщения pay_check
 
@@ -556,62 +568,62 @@ namespace Oldi.Net.Cyber
 				if (MakeRequest(status: old_state == 3? true: false) == 0)
 					if (SendRequest(host) == 0)
 						if (ParseAnswer(stResponse) == 0)
-						{
+							{
 							// Log("DoPay: error={0} result={1}", errCode, result);
 							if (old_state == 0 || old_state == 1)
-							{
-								if (result == 0 && errCode == 0)
 								{
+								if (result == 0 && errCode == 0)
+									{
 									errCode = 0;
 									state = try_state;
 									errDesc = old_state == 0 ? "Разрешение на платеж получено" : "Платеж отправлен";
 									// PrintParams("DoPay");
-									UpdateState(tid: Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, result: result,
-										outtid: outtid, acceptdate: XConvert.AsDate2(acceptdate),
-										price: price, addinfo: addinfo);
+									UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
+										outtid :outtid, acceptdate :XConvert.AsDate2(acceptdate),
+										price :price, addinfo :addinfo);
 									// Log("Обработан: {0}", ToString());
 									return 0;
+									}
 								}
-							}
 							else if (old_state == 3)
-							{
-								if (errCode == 0)
 								{
-									if (result == 7)
+								if (errCode == 0)
 									{
+									if (result == 7)
+										{
 										state = 6;
 										errDesc = "Платеж проведен";
 										// PrintParams("DoPay");
-										UpdateState(tid: Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, result: result,
-											acceptCode: acceptCode, acceptdate: XConvert.AsDate2(acceptdate));
+										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
+											acceptCode :acceptCode, acceptdate :XConvert.AsDate2(acceptdate));
 										// Log("Обработан: {0}", ToString());
-									}
+										}
 									if (result == 1) // Платеж не зарегистраирован
-									{
+										{
 										state = 0;
 										errDesc = "Платеж не зарегистрирован";
 										// PrintParams("DoPay");
-										UpdateState(tid: Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, result: result);
+										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
 										// Log("Обработан: {0}", ToString());
-									}
+										}
 									else if (result != 7)
-									{
+										{
 										state = 3;
 										errDesc = "Платеж проводится";
 										// PrintParams("DoPay");
-										UpdateState(tid: Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, result: result);
+										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
 										// Log("Обработан: {0}", ToString());
-									}
+										}
 									errCode = 0;
 									return 0;
-								}
-							}
+									}
 
 							ChangeState(old_state); // state 1 или 0 или 12
 							// PrintParams("DoPay");
-							UpdateState(tid: Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, result: result);
+							UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
 							// Log("Не обработан: {0}", ToString());
 							return 1;
+							}
 						}
 			}
 			catch (Exception ex)
@@ -660,7 +672,7 @@ namespace Oldi.Net.Cyber
 			catch (Exception ex)
 			{
 				reason = null;
-				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
 			}
 
 		}

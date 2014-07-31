@@ -68,26 +68,7 @@ namespace Oldi.Ekt
 
 					// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
 					if (FinancialCheck()) return;
-
-					if (DoPay(0, 3) == 0)
-						{
-							// TraceRequest("Sent");
-							/*
-							for (int i = 0; i < 2; i++)
-							{
-								atts = i + 1;
-								Wait(30);
-								DoPay(3, 6); // Платёж проведён
-								if (result.state == 60 || result.state == 80 || result.state == -2 || result.state == 10) // Финальные статусы и фин.контроль
-									break;
-							}
-							*/
-							//TechInfo = string.Format("Состояние={1}/{2}/{3} запросов={0}", atts + 1, result.state, result.substate, result.code);
-						// Ожидать 30 сек. и повторить запрос
-						atts = 2;
-						Wait(30);
-						DoPay(3, 6); // Платёж проведён
-						}
+					DoPay(0, 3);
 				}
 				TechInfo = string.Format("st={1}/{2}/{3} atts={0}", atts, result.state, result.substate, result.code);
 				// TraceRequest("End");
@@ -137,9 +118,16 @@ namespace Oldi.Ekt
 
 					switch (result.state)
 					{
-						case 10:
+						case 10: // Финансовый контроль
 							errCode = 11;
 							state = 3;
+							break;
+						case 40:
+							if (result.substate == 7)
+								errCode = 11;
+							else
+								state = 3;
+								errCode = 1;
 							break;
 						case 80:
 							if (result.code == 30 /*|| result.code == 33*/ ) // Нет денег/ Сервис не подключен (отменяем платёж)
