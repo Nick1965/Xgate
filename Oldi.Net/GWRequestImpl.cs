@@ -1215,6 +1215,7 @@ namespace Oldi.Net
 			if (ErrCode != int.MinValue)
 			{
 				sb.Append("Err", ErrCode);
+				if (string.IsNullOrEmpty(errDesc) && state == 0) errDesc = "Новый";
 				if (errCode != 3)
 					{
 					sb.Append("Res", Result);

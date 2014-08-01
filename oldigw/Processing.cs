@@ -336,10 +336,10 @@ namespace Oldi.Net
 					{
 						stResponse = string.Format(Properties.Settings.Default.FailResponse, r.ErrCode, errDesc);
 					}
-					// else if (r.ErrCode == 11 || r.ErrCode == 12) // Передача управляющих кодов 11, 12
-					// {
-					//	stResponse = string.Format(Properties.Settings.Default.FailResponse, r.ErrCode, errDesc);
-					// }
+					else if (r.ErrCode == 11 || r.ErrCode == 12) // Передача управляющих кодов 11, 12
+					{
+						stResponse = string.Format(Properties.Settings.Default.FailResponse, r.ErrCode, errDesc);
+					}
 					else if (r.State == 11) // Отложен
 					{
 						stResponse = string.Format(Properties.Settings.Default.FailResponse, 2, errDesc);
