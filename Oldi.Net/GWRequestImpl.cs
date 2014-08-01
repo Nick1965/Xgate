@@ -1215,10 +1215,13 @@ namespace Oldi.Net
 			if (ErrCode != int.MinValue)
 			{
 				sb.Append("Err", ErrCode);
-				sb.Append("Res", Result);
-				sb.AppendFormat(" - {0}", ErrDesc);
-				if (!string.IsNullOrEmpty(TechInfo))
-					sb.AppendFormat(" ({0})", TechInfo);
+				if (errCode != 3)
+					{
+					sb.Append("Res", Result);
+					sb.AppendFormat(" - {0}", ErrDesc);
+					if (!string.IsNullOrEmpty(TechInfo))
+						sb.AppendFormat(" ({0})", TechInfo);
+					}
 			}
 			if (!string.IsNullOrEmpty(ErrMsg))
 				sb.AppendFormat("\r\n{0}", ErrMsg);
