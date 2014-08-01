@@ -381,7 +381,7 @@ namespace Oldi.Net
 						// Если номер телефона в списке исключаемых завершить финансовый контроль
 						if (FindInLists(Settings.Lists, x, 1) == 1) // Найден в белом списке
 							{
-							// RootLog("{0} [FCHK - stop] {1}/{2} Num=\"{3}\" найден в белом списке, завершение проверки", Tid, Service, Gateway, x);
+							RootLog("{0} [FCHK - stop] {1}/{2} Num=\"{3}\" найден в белом списке, завершение проверки", Tid, Service, Gateway, x);
 							return false;
 							}
 
@@ -415,7 +415,7 @@ namespace Oldi.Net
 							errCode = 6;
 							errDesc = string.Format("[BLACK] Отменён вручную");
 							UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-							RootLog("{0} [FCHK - BLCK] {1}/{2} Num={5} A={3} S={4} - Отменён вручную",
+							RootLog("{0} [FCHK - BLCK] {1}/{2} Num={5} A={3} S={4} - Найден в чёрном списке. Отменён.",
 								Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), x);
 							return true;
 							}
