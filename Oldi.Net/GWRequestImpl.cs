@@ -378,6 +378,8 @@ namespace Oldi.Net
 
 						// RootLog("{0} [FCHK - WHTE] {1}/{2} {3} Num={4} Trm={5} Amount={6}", Tid, Service, Gateway, Provider, x, trm, XConvert.AsAmount(AmountAll));
 
+						RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" поиск в белом списке", Tid, Service, Gateway, x);
+
 						// Если номер телефона в списке исключаемых завершить финансовый контроль
 						if (FindInLists(Settings.Lists, x, 1) == 1) // Найден в белом списке
 							{
@@ -385,8 +387,15 @@ namespace Oldi.Net
 							return false;
 							}
 
+						// Не найден в белом списке, но может быть в чёрном
+						// Проверим
+						if (FindInBlackList(x))
+							{
+							return true;
+							}
+
 						state = 0;
-						errCode = 11;
+						errCode = 1;
 						errDesc = string.Format("[Фин.контроль] Отложен до {0}",
 							XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
 						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
@@ -395,42 +404,47 @@ namespace Oldi.Net
 						return true;
 						}
 
-				foreach (var item in Settings.CheckedProviders)
-					{
-
-					// Проверка любой суммы в чёрном списке
-					if (item.Name.ToLower() == Provider.ToLower() 
-						&& item.Service.ToLower() == Service.ToLower() 
-						&& item.Gateway.ToLower() == Gateway.ToLower() 
-						// && AmountAll >= item.Limit -- не проверяем лимит
-						&& Pcdate.AddHours(Settings.AmountDelay) >= DateTime.Now)
-						{
-
-						// RootLog("{0} [FCHK - поиск в чёрном] {1}/{2} {3} Num={4} Trm={5} Amount={6}", Tid, Service, Gateway, Provider, x, trm, XConvert.AsAmount(AmountAll));
-
-						// Если номер телефона в списке исключаемых завершить финансовый контроль
-						if (FindInLists(Settings.Lists, x, 2) == 2) // Найден в чёрном списке
-							{
-							state = 12;
-							errCode = 6;
-							errDesc = string.Format("[BLACK] Отменён вручную");
-							UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-							RootLog("{0} [FCHK - BLCK] {1}/{2} Num={5} A={3} S={4} - Найден в чёрном списке. Отменён.",
-								Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), x);
-							return true;
-							}
-
-						// Если номер не найден в чёрном списке закончить поиск
-						// RootLog("{0} [FCHK - stop] {1}/{2} Num=\"{3}\" не найден, или найден в белом списке, завершение проверки", Tid, Service, Gateway, x);
-						break;
-						}
-
-					}
+				// Проверим в чёрном списке
+				return FindInBlackList(x);
 				}
 
 			return false;
 			}
 
+		bool FindInBlackList(string x)
+			{
+			RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" поиск в чёрном списке", Tid, Service, Gateway, x);
+
+			foreach (var item in Settings.CheckedProviders)
+				{
+
+				// Проверка любой суммы в чёрном списке
+				if (item.Name.ToLower() == Provider.ToLower() 
+						&& item.Service.ToLower() == Service.ToLower() 
+						&& item.Gateway.ToLower() == Gateway.ToLower() 
+						// && AmountAll >= item.Limit -- не проверяем лимит
+						&& Pcdate.AddHours(Settings.AmountDelay) >= DateTime.Now)
+					{
+
+					// Если номер телефона в списке исключаемых завершить финансовый контроль
+					if (FindInLists(Settings.Lists, x, 2) == 2) // Найден в чёрном списке
+						{
+						state = 12;
+						errCode = 6;
+						errDesc = string.Format("[BLACK] Отменён вручную");
+						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
+						RootLog("{0} [FCHK - BLCK] {1}/{2} Num={5} A={3} S={4} - Найден в чёрном списке. Отменён.",
+							Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), x);
+						return true;
+						}
+
+					}
+
+				}
+
+			return false;
+			}
+	
 		/// <summary>
 		/// Открывает чёрно-белый список и ищет в нём номер
 		/// </summary>
