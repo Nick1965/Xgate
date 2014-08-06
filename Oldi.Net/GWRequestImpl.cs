@@ -395,7 +395,7 @@ namespace Oldi.Net
 							}
 
 						state = 0;
-						errCode = 1;
+						errCode = 11;
 						errDesc = string.Format("[Фин.контроль] Отложен до {0}",
 							XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
 						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);

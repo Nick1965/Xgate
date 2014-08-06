@@ -169,7 +169,7 @@ namespace Oldi.Ekt
 				}
 				else if (retcode > 0) // Ошибка TCP или таймаут
 				{
-					errCode = 1;
+					errCode = 11;
 					state = old_state;
 				}
 				else
