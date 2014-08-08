@@ -141,6 +141,9 @@
   <data name="SumWait" xml:space="preserve">
     <value>Ожидается платёж на сумму</value>
   </data>
+  <data name="UndoImposible" xml:space="preserve">
+    <value>Отмена отправленного платежа невозможна</value>
+  </data>
   <data name="UndoRequest" xml:space="preserve">
     <value>{0} [UNDO] Запрос отмены платежа в ЕСПП</value>
   </data>

@@ -133,6 +133,15 @@ namespace Oldi.Net {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Отмена отправленного платежа невозможна.
+        /// </summary>
+        internal static string UndoImposible {
+            get {
+                return ResourceManager.GetString("UndoImposible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на {0} [UNDO] Запрос отмены платежа в ЕСПП.
         /// </summary>
         internal static string UndoRequest {

@@ -180,9 +180,17 @@ namespace Oldi.Net
 					}
 					else
 					{
-						Current.State = 12;
-						Current.errCode = 6;
-						Current.errDesc = Messages.ManualUndo;
+						if (Current.State != 1 && Current.State != 3)
+							{
+							Current.State = 12;
+							Current.errCode = 6;
+							Current.errDesc = Messages.ManualUndo;
+							}
+						else
+							{
+							Current.errCode = 1;
+							Current.errDesc = Messages.UndoImposible;
+							}
 					}
 					Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
 					break;
