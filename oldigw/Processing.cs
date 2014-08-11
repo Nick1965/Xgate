@@ -246,6 +246,13 @@ namespace Oldi.Net
 								Current.Processing(true);
 							}
 						// Платёж существует - вернём его статус
+						else if (Request.Provider == "rt" || Request.Provider == "rtm")
+							{
+							Current = new RTRequest(Request);
+							Current.GetPaymentStatus();
+							Current.UpdateState(Current.Tid, state :Current.State, errCode :Current.ErrCode, errDesc :Current.ErrDesc);
+							// gw.ReportRequest("status".ToUpper());
+							}
 						else if (Request.State == 12 || Request.State == 11)
 							{
 							Current = Reposting(Request);

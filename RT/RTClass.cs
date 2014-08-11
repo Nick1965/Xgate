@@ -212,7 +212,7 @@ namespace RT
 				}
 				 
 				 */
-				UpdateState(Tid, locked: 0);
+				UpdateState(Tid, locked: 0, state: State);
 			}
 
 			// Трассировка запроса ЕСПП
@@ -439,7 +439,7 @@ namespace RT
 				// Log(" \r\n\t\t\t{0}", HttpUtility.UrlDecode(stRequest));
 				// Log("------------------------------------------\r\n\t\t\t{0}", /*HttpUtility.UrlDecode*/(stResponse));
 
-				ParseAnswer(stResponse);
+			ParseAnswer(stResponse);
 
 				// Log("Количество строк: {0}", states.Length);
 				// Log("------------------------------------------\r\n\t\t\tReqStatus={0}", ReqStatus);
@@ -592,9 +592,15 @@ namespace RT
 			string[] keys = stResponse.Split(new char[] { '&', '\r', '\n' }, MaxStrings, StringSplitOptions.RemoveEmptyEntries);
 			int val;
 
+			Log("********************");
+			Log(stResponse);
+			Log("********************");
+	
 			states = new string[0]; // Строки состояний
 			int statep = 0;
 			decimal decValue;
+			ReqStatus = null;
+			PayStatus = null;
 
 			foreach (string key in keys)
 			{
