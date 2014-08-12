@@ -362,7 +362,8 @@ namespace Oldi.Net
 				return false;
 				}
 
-			if (State == 0 && TerminalType == 1) // Если только новый платёж
+			// Если тип терминала не определён: считаем терминал и включаем финюконтроль
+			if (State == 0 && (TerminalType == 1 || TerminalType == int.MinValue)) // Если только новый платёж
 				{
 
 				string trm = Terminal != int.MinValue? Terminal.ToString(): "";
