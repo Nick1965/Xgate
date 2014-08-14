@@ -578,7 +578,7 @@ namespace Oldi.Mts
 				if (MakePayment() == 0)
 				{
 					// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-					if (FinancialCheck()) return;
+					if (FinancialCheck(New)) return;
 				
 					// ReportRequest("Begin");
 					if (DoPay(0, 1) == 0)
@@ -595,7 +595,7 @@ namespace Oldi.Mts
 
 				if (State == 0) // Новый платеж, получить разрешение
 				{
-					if (FinancialCheck()) return;
+					if (FinancialCheck(New)) return;
 					if (DoPay(0, 1) == 0)
 						DoPay(1, 6);
 				}

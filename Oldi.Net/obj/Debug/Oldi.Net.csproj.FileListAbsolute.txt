@@ -37,3 +37,5 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.Pr
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\WcfSmpp.dll
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\WcfSmpp.pdb

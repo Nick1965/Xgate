@@ -40,3 +40,5 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\obj\Debug\Oldi.Net.Cyber
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\obj\Debug\Cyber.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\obj\Debug\Cyber.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\obj\Debug\Cyber.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\WcfSmpp.dll
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\WcfSmpp.pdb

@@ -41,3 +41,5 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.csproj.Gener
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Oldi.Ekt.Messages.resources
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\WcfSmpp.dll
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\WcfSmpp.pdb

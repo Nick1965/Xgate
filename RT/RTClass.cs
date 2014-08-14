@@ -31,7 +31,7 @@ namespace RT
 		string queryFlag = "";
 		string agentAccount = ""; // Счёт учёта поставщика услуг
 
-		decimal? Balance = null;
+		new decimal? Balance = null;
 		decimal? Recpay = null;
 		
 		public RTRequest()

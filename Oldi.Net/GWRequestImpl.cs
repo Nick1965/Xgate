@@ -317,7 +317,7 @@ namespace Oldi.Net
 				if (MakePayment() != 0) return;
 
 				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-				if (FinancialCheck()) return;
+				if (FinancialCheck(New)) return;
 
 				if (DoPay(0, 1) != 0) return;
 				if (DoPay(1, 3) != 0) return;
@@ -327,7 +327,7 @@ namespace Oldi.Net
 			{
 				if (State == 0)
 					{
-					if (FinancialCheck()) return;
+					if (FinancialCheck(New)) return;
 					if (DoPay(0, 1) != 0) return;
 					if (DoPay(1, 3) != 0) return;
 					}
@@ -345,14 +345,14 @@ namespace Oldi.Net
 		/// <summary>
 		/// Финансовы контроль
 		/// </summary>
-		protected virtual bool FinancialCheck()
+		protected virtual bool FinancialCheck(bool newPay)
 			{
 
 			string x = null;
 
 			if (!string.IsNullOrEmpty(Phone))
 				x = Phone;
-			else if (!string.IsNullOrEmpty(Account))
+			else if (!string.IsNullOrEmpty(Account) && Provider != "cyber")
 				x = Account;
 			else if (!string.IsNullOrEmpty(Number))
 				x = Number;
@@ -368,13 +368,32 @@ namespace Oldi.Net
 
 				string trm = Terminal != int.MinValue? Terminal.ToString(): "";
 
+				int i = 0;
 				foreach (var item in Settings.CheckedProviders)
+					{
+					// Ищем есть ли переопределение для агента
+
+					decimal AmountLimit = item.Limit;
+					int AmountDelay = Settings.AmountDelay;
+					string Notify = "";
+					
+					// Если передан номер агента из ОЕ
+					if (!FindAgentInList(out AmountLimit, out AmountDelay, out Notify))
+						{
+						AmountLimit = item.Limit;
+						AmountDelay = Settings.AmountDelay;
+						}
+					if (i == 0)
+						RootLog("{0} [FCHK] Для агента AgentID=\"{1}\" заданы переопределения: Limit={2} Delay={3} Notify={4}", 
+							Tid, AgentId < 0? "*": AgentId.ToString(), AmountLimit, AmountDelay, Notify);
+					i++;
+
 					// Если сумма платежа больше лимита
 					if (item.Name.ToLower() == Provider.ToLower() 
 						&& item.Service.ToLower() == Service.ToLower() 
 						&& item.Gateway.ToLower() == Gateway.ToLower() 
-						&& AmountAll >= item.Limit 
-						&& Pcdate.AddHours(Settings.AmountDelay) >= DateTime.Now)
+						&& AmountAll >= AmountLimit
+						&& Pcdate.AddHours(AmountDelay) >= DateTime.Now) // Проверка отправки СМС
 						{
 
 						// RootLog("{0} [FCHK - WHTE] {1}/{2} {3} Num={4} Trm={5} Amount={6}", Tid, Service, Gateway, Provider, x, trm, XConvert.AsAmount(AmountAll));
@@ -398,12 +417,23 @@ namespace Oldi.Net
 						state = 0;
 						errCode = 11;
 						errDesc = string.Format("[Фин.контроль] Отложен до {0}",
-							XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)));
+							XConvert.AsDate(Pcdate.AddHours(AmountDelay)));
 						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-						RootLog("{0} [FCHK - stop] {1}/{2} Num={6} A={3} S={4} - Платёж отложен до {5}",
-							Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(Settings.AmountDelay)), x);
+						RootLog("{0} [FCHK - stop] {1}/{2} Trm={7} Num={6} A={3} S={4} - Платёж отложен до {5}",
+							Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(AmountDelay)), x, Terminal);
+
+						// Отправить СМС-уведомление, усли список уведомлений не пуст
+						if (newPay && !string.IsNullOrEmpty(Notify))
+							{
+							RootLog("[SMSC] отправляется сообщение к {0}", Notify);
+							WcfSmpp.NotifyService Sms = new WcfSmpp.NotifyService();
+							Sms.Notify(Notify, string.Format("{0}/{1} Trm={2} Num={3} S={4} на контроле до {5}", 
+								Service, Gateway, Terminal, x, XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(AmountDelay))));
+							}
+		
 						return true;
 						}
+					}
 
 				// Проверим в чёрном списке
 				return FindInBlackList(x);
@@ -414,7 +444,7 @@ namespace Oldi.Net
 
 		bool FindInBlackList(string x)
 			{
-			RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" поиск в чёрном списке", Tid, Service, Gateway, x);
+			// RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" поиск в чёрном списке", Tid, Service, Gateway, x);
 
 			foreach (var item in Settings.CheckedProviders)
 				{
@@ -443,9 +473,83 @@ namespace Oldi.Net
 
 				}
 
+			RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" в чёрном списке не найден", Tid, Service, Gateway, x);
 			return false;
 			}
 	
+		/// <summary>
+		/// Поиск переопределений для агента
+		/// </summary>
+		/// <param name="Limit"></param>
+		/// <param name="Notify"></param>
+		/// <returns></returns>
+		bool FindAgentInList(out decimal Limit, out int AmountDelay, out string Notify)
+			{
+			XDocument doc = null;
+			Limit = decimal.MinusOne;
+			AmountDelay = int.MinValue;
+			Notify = "";
+			int Id = 0;
+			string NotifyDefault = "";
+			bool IsDefault = false;
+
+			// Открывает файл спсиков с разрешением чтения и записи несколькими процессами
+			try
+				{
+				using (FileStream fs = new FileStream(Settings.Lists, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+					{
+					doc = XDocument.Load(fs);
+
+					foreach (XElement el in doc.Root.Elements())
+						{
+						string name = el.Name.LocalName;
+						string value = el.Value;
+						switch (el.Name.LocalName)
+							{
+							// Секция переопределения агентов
+							case "Agents":
+								// Ищем агента
+								foreach (XElement s in el.Elements())
+									{
+									switch (s.Name.LocalName)
+										{
+										case "Agent":
+											foreach (var item in s.Attributes())
+												{
+												if (item.Name.LocalName == "ID")
+													if (item.Value == "*") 
+														IsDefault = true;
+													else
+														{
+														Id = int.Parse(item.Value);
+														IsDefault = false;
+														}
+												if (item.Name.LocalName == "Limit") Limit = decimal.Parse(item.Value);
+												if (item.Name.LocalName == "AmountDelay") AmountDelay = int.Parse(item.Value);
+												if (item.Name.LocalName == "Notify") Notify = item.Value;
+												}
+											if (Id == AgentId)
+												return true;
+											if (IsDefault)
+												NotifyDefault = Notify;
+											break;
+										}
+									}
+								break;
+							}
+						}
+					}
+				}
+			catch (Exception ex)
+				{
+				RootLog("[FCHK] Agents lists: {0}", ex.Message);
+				}
+
+			Notify = NotifyDefault;
+			return false; // Агент не найден
+
+			}
+
 		/// <summary>
 		/// Открывает чёрно-белый список и ищет в нём номер
 		/// </summary>
@@ -606,6 +710,7 @@ namespace Oldi.Net
 										address: address,
 										service: service,
 										gateway: gateway,
+										agentId: agentId,
 										terminal: terminal,
 										terminalType: terminalType,
 										realTerminalId: realTerminalId,
@@ -665,6 +770,7 @@ namespace Oldi.Net
 										address :address,
 										service :service,
 										gateway :gateway,
+										agentId: agentId,
 										terminal :terminal,
 										terminalType :terminalType,
 										realTerminalId :realTerminalId,
@@ -712,6 +818,7 @@ namespace Oldi.Net
 			string currency = null,     // Валюта (всегда 810)
 			string service = null,      // Номер платежного инстр. для ЕСПП, RecId для ЦУП, код шлюза для Кибера
 			string gateway = null,      // Номер шлюза
+			int agentId = int.MinValue, // Номер агента
 			int terminal = int.MinValue,     // Номер терминала (точки)
 			int terminalType = int.MinValue,		// Тип терминала
 			int realTerminalId = int.MinValue,
@@ -775,6 +882,7 @@ namespace Oldi.Net
 				cmd.AddParam("amountAll", amountAll);
 				cmd.AddParam("Currency", currency);
 				cmd.AddParam("Service", service);
+				cmd.AddParam("AgentId", agentId);
 				cmd.AddParam("TppId", terminal);
 				cmd.AddParam("TppType", terminalType);
 				cmd.AddParam("RealTppId", realTerminalId);
@@ -840,7 +948,11 @@ namespace Oldi.Net
 			
 			// Если номер терминала не задан выйти.
 			if (Terminal == int.MinValue)
+				{
+				terminal = Settings.FakeTppId;
+				terminal = Settings.FakeTppType;
 				return 0;
+				}
 
 			Random rnd = new Random((int)DateTime.Now.Ticks);
 			// Если PCdate не задан или ситарше 120 сек, скорректируем Pcdate
@@ -862,7 +974,7 @@ namespace Oldi.Net
 				if (cmd.Parameters["TppType"].Value != DBNull.Value)
 					terminalType = Convert.ToInt32(cmd.Parameters["TppType"].Value);
 				else
-					terminalType = int.MinValue;
+					terminalType = 0;
 
 				if (terminalType > 0)
 				{
@@ -911,9 +1023,10 @@ namespace Oldi.Net
 				}
 				else // Терминал не зарегистрирован
 				{
+					// Если тип не задан установить его как тип из конфига
 					RootLog("{1} GetTerminalInfo: Терминал {0} не зарегистрирован", Terminal, Tid);
 					realTerminalId = terminal;
-					// terminal = Settings.FakeTppId;
+					terminal = Settings.FakeTppId;
 					terminalType = Settings.FakeTppType;
 					// Если терминал не зарегистрирован, время устанавливается по ПЦ
 					tz = Settings.Tz;
@@ -1053,6 +1166,7 @@ namespace Oldi.Net
 				dp.Read("Purpose", out purpose);
 				dp.Read("Address", out address);
 				dp.Read("Fio", out fio);
+				dp.Read("AgentId", out agentId);
 				dp.Read("TppId", out terminal);
 				dp.Read("TppType", out terminalType);
 				dp.Read("RealTppId", out realTerminalId);

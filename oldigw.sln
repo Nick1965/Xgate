@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMPP", "SMPP\SMPP.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RT", "RT\RT.csproj", "{55733427-A15A-4424-8165-7232F7BA2A7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WcfSmpp", "WcfSmpp\WcfSmpp.csproj", "{76BD2A70-3B41-467E-85D2-5F54DA040A38}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -201,6 +203,18 @@ Global
 		{55733427-A15A-4424-8165-7232F7BA2A7E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{55733427-A15A-4424-8165-7232F7BA2A7E}.Release|Win32.ActiveCfg = Release|Any CPU
 		{55733427-A15A-4424-8165-7232F7BA2A7E}.Release|x86.ActiveCfg = Release|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Release|Win32.ActiveCfg = Release|Any CPU
+		{76BD2A70-3B41-467E-85D2-5F54DA040A38}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

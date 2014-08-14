@@ -167,7 +167,11 @@ namespace Oldi.Net
 							if (!int.TryParse(el.Value, out terminal))
 								terminal = Settings.FakeTppId;
                             break;
-                        case "transaction":
+						case "agent-id":
+							if (!int.TryParse(el.Value, out agentId))
+								agentId = 0;
+							break;
+						case "transaction":
                             transaction = (string)el.Value;
                             break;
                         case "pc-date":

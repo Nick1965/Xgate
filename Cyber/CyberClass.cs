@@ -265,6 +265,7 @@ namespace Oldi.Net.Cyber
 						prm.AppendLine("ADDRESS", address);
 					}
 
+					prm.AppendLine("INN", Inn);
 					prm.AppendLine("CONTACT", contact);
 					prm.AppendLine("AMOUNT", XConvert.AsAmount(amount));
 					prm.AppendLine("AMOUNT_ALL", XConvert.AsAmount(amountAll));

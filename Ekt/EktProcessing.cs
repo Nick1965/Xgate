@@ -67,7 +67,7 @@ namespace Oldi.Ekt
 					// TraceRequest("New");
 
 					// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-					if (FinancialCheck()) return;
+					if (FinancialCheck(New)) return;
 					DoPay(0, 3);
 				}
 				TechInfo = string.Format("st={1}/{2}/{3} atts={0}", atts, result.state, result.substate, result.code);
@@ -77,7 +77,7 @@ namespace Oldi.Ekt
 			{
 				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
 				if (State == 0)
-					if (FinancialCheck()) return;
+					if (FinancialCheck(New)) return;
 				DoPay(state, 6);
 			}
 		}

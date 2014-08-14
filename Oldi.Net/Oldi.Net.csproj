@@ -84,14 +84,19 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SMPP\SMPP.csproj">
-      <Project>{E3E4C85D-839F-42AE-BA65-E54B29261510}</Project>
+      <Project>{e3e4c85d-839f-42ae-ba65-e54b29261510}</Project>
       <Name>SMPP</Name>
     </ProjectReference>
     <ProjectReference Include="..\Utility\Utility.csproj">
       <Project>{4DD1FC16-9135-4B14-BCF0-3749D548F52E}</Project>
       <Name>Utility</Name>
     </ProjectReference>
+    <ProjectReference Include="..\WcfSmpp\WcfSmpp.csproj">
+      <Project>{76bd2a70-3b41-467e-85d2-5f54da040a38}</Project>
+      <Name>WcfSmpp</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>

@@ -34,3 +34,5 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Utility.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\WcfSmpp.dll
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\WcfSmpp.pdb
