@@ -349,10 +349,13 @@ namespace Oldi.Net
 			{
 
 			string x = null;
-
+			decimal AmountLimit = Settings.AmountLimit;
+			int AmountDelay = Settings.AmountDelay;
+			string Notify = "";
+	
 			if (!string.IsNullOrEmpty(Phone))
 				x = Phone;
-			else if (!string.IsNullOrEmpty(Account) && Provider != "cyber")
+			else if (!string.IsNullOrEmpty(Account) && string.IsNullOrEmpty(Number)) // Если задан Number, то используется он
 				x = Account;
 			else if (!string.IsNullOrEmpty(Number))
 				x = Number;
@@ -363,80 +366,62 @@ namespace Oldi.Net
 				}
 
 			// Если тип терминала не определён: считаем терминал и включаем финюконтроль
-			if (State == 0 && (TerminalType == 1 || TerminalType == int.MinValue)) // Если только новый платёж
+			if (State == 0 && TerminalType != 2) // Если только новый платёж
 				{
 
-				string trm = Terminal != int.MinValue? Terminal.ToString(): "";
-
-				int i = 0;
-				foreach (var item in Settings.CheckedProviders)
-					{
-					// Ищем есть ли переопределение для агента
-
-					decimal AmountLimit = item.Limit;
-					int AmountDelay = Settings.AmountDelay;
-					string Notify = "";
-					
-					// Если передан номер агента из ОЕ
-					if (!FindAgentInList(out AmountLimit, out AmountDelay, out Notify))
-						{
-						AmountLimit = item.Limit;
-						AmountDelay = Settings.AmountDelay;
-						}
-					if (i == 0)
-						RootLog("{0} [FCHK] Для агента AgentID=\"{1}\" заданы переопределения: Limit={2} Delay={3} Notify={4}", 
-							Tid, AgentId < 0? "*": AgentId.ToString(), AmountLimit, AmountDelay, Notify);
-					i++;
-
-					// Если сумма платежа больше лимита
-					if (item.Name.ToLower() == Provider.ToLower() 
-						&& item.Service.ToLower() == Service.ToLower() 
-						&& item.Gateway.ToLower() == Gateway.ToLower() 
-						&& AmountAll >= AmountLimit
-						&& Pcdate.AddHours(AmountDelay) >= DateTime.Now) // Проверка отправки СМС
-						{
-
-						// RootLog("{0} [FCHK - WHTE] {1}/{2} {3} Num={4} Trm={5} Amount={6}", Tid, Service, Gateway, Provider, x, trm, XConvert.AsAmount(AmountAll));
-
-						RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" поиск в белом списке", Tid, Service, Gateway, x);
-
-						// Если номер телефона в списке исключаемых завершить финансовый контроль
-						if (FindInLists(Settings.Lists, x, 1) == 1) // Найден в белом списке
-							{
-							RootLog("{0} [FCHK - stop] {1}/{2} Num=\"{3}\" найден в белом списке, завершение проверки", Tid, Service, Gateway, x);
-							return false;
-							}
-
-						// Не найден в белом списке, но может быть в чёрном
-						// Проверим
-						if (FindInBlackList(x))
-							{
-							return true;
-							}
-
-						state = 0;
-						errCode = 11;
-						errDesc = string.Format("[Фин.контроль] Отложен до {0}",
-							XConvert.AsDate(Pcdate.AddHours(AmountDelay)));
-						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-						RootLog("{0} [FCHK - stop] {1}/{2} Trm={7} Num={6} A={3} S={4} - Платёж отложен до {5}",
-							Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(AmountDelay)), x, Terminal);
-
-						// Отправить СМС-уведомление, усли список уведомлений не пуст
-						if (newPay && !string.IsNullOrEmpty(Notify))
-							{
-							RootLog("[SMSC] отправляется сообщение к {0}", Notify);
-							WcfSmpp.NotifyService Sms = new WcfSmpp.NotifyService();
-							Sms.Notify(Notify, string.Format("{0}/{1} Trm={2} Num={3} S={4} на контроле до {5}", 
-								Service, Gateway, Terminal, x, XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(AmountDelay))));
-							}
-		
-						return true;
-						}
-					}
+				string trm = Terminal != int.MinValue? Terminal.ToString(): "NOREG";
 
 				// Проверим в чёрном списке
-				return FindInBlackList(x);
+				if (FindInBlackList(x))
+					return true;
+				// Если номер телефона в списке исключаемых завершить финансовый контроль
+				if (FindInLists(Settings.Lists, x, 1) == 1) // Найден в белом списке
+					{
+					RootLog("{0} [FCHK - stop] {1}/{2} Num=\"{3}\" найден в белом списке, завершение проверки", Tid, Service, Gateway, x);
+					return false;
+					}
+
+				foreach (var item in Settings.CheckedProviders)
+					{
+					// Если реквизиты платежа (провайдер/сервис/получатель) совпадают с эталонным
+					if (item.Name.ToLower() == Provider.ToLower() && item.Service.ToLower() == Service.ToLower() && item.Gateway.ToLower() == Gateway.ToLower())
+						{
+						// Ищем переопределения для агента
+						if (!FindAgentInList(out AmountLimit, out AmountDelay, out Notify))
+							{
+							AmountLimit = item.Limit;
+							AmountDelay = Settings.AmountDelay;
+							}
+
+						if (AmountAll >= AmountLimit && Pcdate.AddHours(AmountDelay) >= DateTime.Now) // Проверка отправки СМС
+							{
+							RootLog("{0} [FCHK] Для агента AgentID=\"{1}\" заданы параметры: Limit={2} Delay={3} Notify={4}",
+								Tid, AgentId < 0? "*": AgentId.ToString(), AmountLimit, AmountDelay, Notify);
+
+							state = 0;
+							errCode = 11;
+							errDesc = string.Format("[Фин.контроль] Отложен до {0}",
+								XConvert.AsDate(Pcdate.AddHours(AmountDelay)));
+							UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
+							RootLog("{0} [FCHK - stop] {1}/{2} Trm={7} Num={6} A={3} S={4} - Платёж отложен до {5}",
+								Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(AmountDelay)), x, Terminal);
+
+							// Отправить СМС-уведомление, усли список уведомлений не пуст
+							if (newPay && !string.IsNullOrEmpty(Notify))
+								{
+								RootLog("[SMSC] отправляется сообщение к {0}", Notify);
+								WcfSmpp.NotifyService Sms = new WcfSmpp.NotifyService();
+								Sms.Notify(Notify, string.Format("{0}/{1} Trm={2} Num={3} S={4} на контроле до {5}",
+									Service, Gateway, Terminal, x, XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(AmountDelay))));
+								}
+
+							// Не найден  в белом списке - на контроль!
+							return true;
+							}
+						}
+		
+					}
+		
 				}
 
 			return false;
@@ -473,7 +458,7 @@ namespace Oldi.Net
 
 				}
 
-			RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" в чёрном списке не найден", Tid, Service, Gateway, x);
+			// RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" в чёрном списке не найден", Tid, Service, Gateway, x);
 			return false;
 			}
 	

@@ -50,6 +50,7 @@ namespace WcfSmpp
 					{
 					if (Client != null)
 						Client.Close();
+					PermissiveCertificatePolicy.Deact();
 					}
 			
 				});
@@ -64,8 +65,11 @@ namespace WcfSmpp
 	/// </summary>
 	class PermissiveCertificatePolicy
 		{
-		string log = ".\\log\\oldigw.log"; string subjectName;
 		static PermissiveCertificatePolicy currentPolicy;
+		string log = ".\\log\\oldigw.log"; string subjectName;
+		static object TheLock = new object();
+		static int Processes = 0;
+
 		/// <summary>
 		/// Регистрирует событие провеки сертификата службы
 		/// </summary>
@@ -73,13 +77,28 @@ namespace WcfSmpp
 		PermissiveCertificatePolicy(string subjectName)
 			{
 			this.subjectName = subjectName;
-			ServicePointManager.ServerCertificateValidationCallback +=
-                new System.Net.Security.RemoteCertificateValidationCallback(RemoteCertValidate);
+			lock (TheLock)
+				{
+				if (ServicePointManager.ServerCertificateValidationCallback != null)
+					ServicePointManager.ServerCertificateValidationCallback +=
+						new System.Net.Security.RemoteCertificateValidationCallback(RemoteCertValidate);
+				Processes++;
+				}
 			}
 
 		public static void Enact(string subjectName)
 			{
 			currentPolicy = new PermissiveCertificatePolicy(subjectName);
+			}
+
+		public static void Deact()
+			{
+			lock (TheLock)
+				{
+				--Processes;
+				if (Processes == 0)
+					ServicePointManager.ServerCertificateValidationCallback = null;
+				}
 			}
 
 		/// <summary>
@@ -93,7 +112,8 @@ namespace WcfSmpp
 		bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, System.Net.Security.SslPolicyErrors error)
 			{
 
-			Utility.Log(log, "RemoteCertValidate: CN={0} Hash={1}", cert.Subject, cert.GetCertHashString().ToLower());
+			Utility.Log(log, "[CRTV] Issuer={0}", cert.Issuer);
+			Utility.Log(log, "[CRTV] Hash={0}", cert.GetCertHashString().ToLower());
 			// Console.WriteLine("{0} [{1:d2}] RemoteCertValidate: Hash: {2}",
 			//	DateTime.Now.ToLongTimeString(), Thread.CurrentThread.ManagedThreadId, cert.GetCertHashString().ToLower());
 
