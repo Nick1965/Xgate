@@ -18,7 +18,7 @@ using System.IO.Compression;
 
 namespace Oldi.Net
 {
-	class InternalContext
+	class InternalContext: IDisposable
 	{
 		public HttpListenerContext context;
 		public RequestInfo ri;
@@ -33,10 +33,21 @@ namespace Oldi.Net
 		{
 			this.RunCollect = RunCollect;
 		}
-		~InternalContext()
-		{
-			context = null;
-		}
+
+		bool disposed = false;
+		public void Dispose()
+			{
+			Dispose(true);
+			GC.SuppressFinalize(this);
+			}
+		public virtual void Dispose(bool disposing)
+			{
+			if (!disposed)
+				{
+				context = null;
+				disposed = true;
+				}
+			}
 	}
 
 	public class TaskInfo
@@ -183,6 +194,7 @@ namespace Oldi.Net
 				task = new Task(RequestProcessing, ti, TaskCreationOptions.LongRunning | TaskCreationOptions.AttachedToParent | TaskCreationOptions.PreferFairness);
 				task.Start();
 			}
+			Log("Запущено {0} процессов конвейера", Settings.ConveyorSize);
 				
 			// Запускаем первый запрос
             m_HttpListener.BeginGetContext(new AsyncCallback(ContextReceivedCallback), null);
@@ -201,11 +213,8 @@ namespace Oldi.Net
 					// Если нажаты C или Ctrl-C завершим работу слушателя
 					// Остановим слушатель
 					Stop();
-					if (Conveyor.Count > 0 || processes > 0)
-					{
-						Log("GWListener: Заврешение. {0} запросов в очереди {1} обрабатываются", Conveyor.Count, processes);
-						Console.WriteLine("GWListener: Заврешение. {0} запросов в очереди {1} обрабатываются", Conveyor.Count, processes);
-					}
+					Log("GWListener: Заврешение. {0} запросов в очереди {1} обрабатываются", Conveyor.Count, processes);
+					Console.WriteLine("GWListener: Заврешение. {0} запросов в очереди {1} обрабатываются", Conveyor.Count, processes);
 					// Пока выполняются фоновые процессы будем ждать завершения
 					WaitHandle.WaitAll(me);
 					if (c.Key == ConsoleKey.R)
@@ -280,26 +289,33 @@ namespace Oldi.Net
 				return;
 			
 			HttpListenerContext listenerContext = null;
-			// Получим контекст
-			if (m_HttpListener != null && asyncResult != null)
-				listenerContext = m_HttpListener.EndGetContext(asyncResult);
-			else
-				return;
+			try
+				{
+				// Получим контекст
+				if (m_HttpListener != null && asyncResult != null)
+					listenerContext = m_HttpListener.EndGetContext(asyncResult);
+				else
+					return;
 
 
-			// Пусть слушатель слушает следующий запрос. Он вернется в другом потоке
-			m_HttpListener.BeginGetContext(new AsyncCallback(ContextReceivedCallback), null);
+				// Пусть слушатель слушает следующий запрос. Он вернется в другом потоке
+				m_HttpListener.BeginGetContext(new AsyncCallback(ContextReceivedCallback), null);
 
-			// Подготовка объекта RequestInfo, который будет передан в обработку
-			dataHolder = new RequestInfo(listenerContext);
+				// Подготовка объекта RequestInfo, который будет передан в обработку
+				dataHolder = new RequestInfo(listenerContext);
 
-			// Добавим контекст запроса в очередь конвейера
-			Conveyor.Add(new InternalContext(listenerContext, dataHolder));
+				// Добавим контекст запроса в очередь конвейера
+				Conveyor.Add(new InternalContext(listenerContext, dataHolder));
 
-			// После 1000 запросов добавим задание сборщика мусора
-			// Interlocked.Increment(ref requests);
-			// if (Interlocked.CompareExchange(ref requests, 0, 1000) == 1000)
-			//	Conveyor.Add(new InternalContext(true));
+				// После 1000 запросов добавим задание сборщика мусора
+				// Interlocked.Increment(ref requests);
+				// if (Interlocked.CompareExchange(ref requests, 0, 1000) == 1000)
+				//	Conveyor.Add(new InternalContext(true));
+				}
+			catch(Exception ex)
+				{
+				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				}
 
         }
 
@@ -312,60 +328,59 @@ namespace Oldi.Net
 		void RequestProcessing(Object objectState)
 		{
 			TaskInfo ti = (TaskInfo)objectState;
-			Log("Процесс {0} запущен", Thread.CurrentThread.ManagedThreadId);
+			// Log("Процесс {0} запущен", Thread.CurrentThread.ManagedThreadId);
 
 			InternalContext cntx;
 
-			while (true)
-			{
-
-				if (Canceling)
+			try
 				{
-					Log("Обработчик запросов {0} остановлен", Thread.CurrentThread.ManagedThreadId);
-					ti.Cancel();
-					return;
-				}
-				
-				if (Conveyor.TryTake(out cntx))
-				{
-					if (cntx == null)
-						continue;
-
-					if (cntx.RunCollect)
+				while (true)
 					{
-						// Log("Запуск сборщика мусора для MaxGeneration={0}", GC.MaxGeneration);
-						// GC.Collect(GC.MaxGeneration > 1 ? GC.MaxGeneration - 1 : GC.MaxGeneration, GCCollectionMode.Forced);
-						// GC.Collect();
-						continue;
-					}
 
-					lock (SyncLock)
-					{
-						processes++;
-						if (processes > maxprocesses)
-							maxprocesses = processes;
-					}
+					if (Canceling)
+						{
+						Log("Обработчик запросов {0} остановлен", Thread.CurrentThread.ManagedThreadId);
+						ti.Cancel();
+						return;
+						}
 
-					if (Interlocked.CompareExchange(ref cnt, 0, 50) == 50)
-					{
-						double pag = (double)System.Diagnostics.Process.GetCurrentProcess().PagedMemorySize64 / 1048576.0;
-						double vir = (double)System.Diagnostics.Process.GetCurrentProcess().VirtualMemorySize64 / 1048576.0;
-						double mem = (double)System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 / 1048576.0;
-						Log("Memory={0}Mb Paged={1}Mb, Vitualr={2}Mb processed {3} max {4}",
-							mem.ToString("#,###.##"), pag.ToString("#,###.##"), vir.ToString("#,###.##"), processes + Redo.processes, maxprocesses + Redo.maxprocesses);
-					}
-					Interlocked.Increment(ref cnt);
-					
+					if (Conveyor.TryTake(out cntx))
+						{
+						if (cntx == null)
+							continue;
 
-					try
-					{
+						if (cntx.RunCollect)
+							{
+							// Log("Запуск сборщика мусора для MaxGeneration={0}", GC.MaxGeneration);
+							// GC.Collect(GC.MaxGeneration > 1 ? GC.MaxGeneration - 1 : GC.MaxGeneration, GCCollectionMode.Forced);
+							// GC.Collect();
+							continue;
+							}
+
+						lock (SyncLock)
+							{
+							processes++;
+							if (processes > maxprocesses)
+								maxprocesses = processes;
+							if (cnt == 50)
+								{
+								double pag = (double)System.Diagnostics.Process.GetCurrentProcess().PagedMemorySize64 / 1048576.0;
+								double vir = (double)System.Diagnostics.Process.GetCurrentProcess().VirtualMemorySize64 / 1048576.0;
+								double mem = (double)System.Diagnostics.Process.GetCurrentProcess().WorkingSet64 / 1048576.0;
+								Log("Memory={0}Mb Paged={1}Mb, Vitualr={2}Mb processed {3} max {4}",
+									mem.ToString("#,###.##"), pag.ToString("#,###.##"), vir.ToString("#,###.##"), processes + Redo.processes, maxprocesses + Redo.maxprocesses);
+								cnt = 0;
+								}
+							else
+								cnt++;
+							}
 
 						// Загрузим сертификат клиента, если он есть.
 						if (cntx.context.Request.IsSecureConnection)
-						{
+							{
 							cntx.ri.GetClientCertificate();
 							Log("{0}", Properties.Resources.clientCertificateReceived);
-						}
+							}
 
 						// Получим кодировку клиента
 						cntx.ri.ClientEncoding = cntx.context.Request.ContentEncoding ?? Encoding.GetEncoding(1251);
@@ -378,21 +393,22 @@ namespace Oldi.Net
 							// По завершении выполнения будет отправлен ответ на входной запрос
 							processing.Run();
 
-					}
-					catch (Exception ex)
-					{
-						Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
-					}
-					finally
-					{
-						Interlocked.Decrement(ref processes);
+						}
+
+					// Дадим возможность выполнятся другим процессам
+					Thread.Sleep(100);
+
 					}
 				}
+			catch (Exception ex)
+				{
+				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				}
+			finally
+				{
+				Interlocked.Decrement(ref processes);
+				}
 
-				// Дадим возможность выполнятся другим процессам
-				Thread.Sleep(100);
-
-			}
 
 		}
 

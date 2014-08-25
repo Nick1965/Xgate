@@ -155,11 +155,18 @@ namespace Oldi.Net
 			}
 
 			// Запуск слушателя
-			GWListener listener = new GWListener(Settings.OldiGW.LogFile, Settings.Port, Settings.SslPort);
-            listener.Run();
-			stop = true;
-			// Остановить слушатель
-			listener.Dispose();
+			try
+				{
+				GWListener listener = new GWListener(Settings.OldiGW.LogFile, Settings.Port, Settings.SslPort);
+				listener.Run();
+				stop = true;
+				// Остановить слушатель
+				listener.Dispose();
+				}
+			catch (Exception ex)
+				{
+				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				}
 
 			Console.WriteLine("{0} останавливается...", Settings.Title);
 			Log("{0} останавливается...", Settings.Title);
