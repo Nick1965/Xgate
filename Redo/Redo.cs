@@ -125,8 +125,8 @@ namespace OldiGW.Redo.Net
 				{
 					Log("Redo: {0}\r\n{1}", ex.Message, ex.StackTrace);
 				}
-				// Ожидать 20 сек.
-				Thread.Sleep(20 * 1000);
+				// Ожидать 60 сек.
+				Thread.Sleep(60000);
 			}
 
 			// Завершение дочерних процессов
@@ -142,7 +142,7 @@ namespace OldiGW.Redo.Net
 			{
 				Console.WriteLine("{1} Работающих процессов: {0}", processes, XConvert.AsDate2(DateTime.Now));
 				// Ждем 1 секунду
-				Thread.Sleep(100);
+				Thread.Sleep(1000);
 			}
 
 			Console.WriteLine("Redo: Процесс {0} завершен", Name);
@@ -157,28 +157,29 @@ namespace OldiGW.Redo.Net
 		private void DoRedo()
 		{
 
+			GWRequest req = null;
+
 			using (SqlParamCommand cmd = new SqlParamCommand(Settings.ConnectionString, "OldiGW.ver3_ReadHolded"))
-			{
+				{
 				cmd.ConnectionOpen();
 				using (SqlDataReader dr = cmd.ExecuteReader(System.Data.CommandBehavior.CloseConnection))
 					while (dr.Read())
-						if (cmd.ErrCode == 0)
 						{
-							// Прочитаем отложенный платеж
-							GWRequest req = new GWRequest();
-							if (req.ReadAll(dr) == 0)
+						// Прочитаем отложенный платеж
+						req = new GWRequest();
+						if (req.ReadAll(dr) == 0)
 							{
-								if (string.IsNullOrEmpty(req.Account) && string.IsNullOrEmpty(req.Phone) && string.IsNullOrEmpty(req.Number))
-									Log("{0} [DoREDO] Ошибка. Не задан ни один из параметров счёта!", req.Tid);
-								// Допровести платежи с нефинальными статусами
-								CheckInfo checkinfo = new CheckInfo(req);
-								if (!ThreadPool.QueueUserWorkItem(new WaitCallback(CheckState), checkinfo))
-									Log("Redo: Не удалось запустить процесс допроведения для tid={0}, state={1}", req.Tid, req.State);
+							if (string.IsNullOrEmpty(req.Account) && string.IsNullOrEmpty(req.Phone) && string.IsNullOrEmpty(req.Number))
+								Log("{0} [DoREDO] Ошибка. Не задан ни один из параметров счёта!", req.Tid);
+							// Допровести платежи с нефинальными статусами
+							CheckInfo checkinfo = new CheckInfo(req);
+							if (!ThreadPool.QueueUserWorkItem(new WaitCallback(CheckState), checkinfo))
+								Log("Redo: Не удалось запустить процесс допроведения для tid={0}, state={1}", req.Tid, req.State);
 							}
-							else
-								Log("Redo: Ошибка чтения БД");
-					}
-			}
+						else
+							Log("DoRedo: Ошибка чтения БД");
+						}
+				}
 
 		}
 
@@ -189,49 +190,34 @@ namespace OldiGW.Redo.Net
         {
 			if (Canceling) return; // Запущен процесс остановки службы
 
-			GWRequest gw = null;
+			GWRequest gw = ((CheckInfo)stateInfo).gw;
 			
 			try
 			{
 				// Увеличим счетчик процессов
 				RegisterBackgroundProcess();
 
-				// gw = ((CheckInfo)stateInfo).gw;
-
-				// gw.ReportRequest("Redo   ");
-
-				// Платежи Ростелекома не допроводим
-				if (((CheckInfo)stateInfo).gw.Provider == Settings.Rt.Name)
-					return;
-
-				((CheckInfo)stateInfo).gw.SetLock(1);
-
 				// Если отладка не производится...
-				if (((CheckInfo)stateInfo).gw.Provider == Settings.Cyber.Name)
-					gw = new GWCyberRequest(((CheckInfo)stateInfo).gw);
-				else if (((CheckInfo)stateInfo).gw.Provider == Settings.Mts.Name)
-					gw = new GWMtsRequest(((CheckInfo)stateInfo).gw);
-				else if (((CheckInfo)stateInfo).gw.Provider == Settings.Ekt.Name)
-					gw = new GWEktRequest(((CheckInfo)stateInfo).gw);
-				else if (((CheckInfo)stateInfo).gw.Provider == Settings.Rt.Name)
-					gw = new RT.RTRequest(((CheckInfo)stateInfo).gw);
-				else if (((CheckInfo)stateInfo).gw.Provider == "as")
-					gw = new Autoshow.Autoshow(((CheckInfo)stateInfo).gw);
+				if (gw.Provider == Settings.Cyber.Name)
+					gw = new GWCyberRequest(gw);
+				else if (gw.Provider == Settings.Mts.Name)
+					gw = new GWMtsRequest(gw);
+				else if (gw.Provider == Settings.Ekt.Name)
+					gw = new GWEktRequest(gw);
 
-				gw.ReportRequest("REDO - strt");
-				gw.Processing(false);
-				gw.ReportRequest("REDO - stop");
-			}
-			catch (Exception ex)
-			{
-				// Log("{0} state={2} error={3}\r\n{1}", gw.Provider, gw.Service, gw.Gateway, gw.State, gw.ErrCode, ex.Message, ex.StackTrace);
-				// gw.ReportRequest("REDO ");
-				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				if (gw != null)
+					{
+					gw.SetLock(1);
+					gw.ReportRequest("REDO - strt");
+					gw.Processing(false);
+					gw.ReportRequest("REDO - stop");
+					}
 			}
 			finally
 			{
-			if (((CheckInfo)stateInfo).gw != null) ((CheckInfo)stateInfo).gw.SetLock(0);
-				// Уменьшим счетчик процессов 
+				if (gw != null) 
+					gw.SetLock(0);
+					// Уменьшим счетчик процессов 
 				UnregisterBackgroundProcess();
 			}
         
