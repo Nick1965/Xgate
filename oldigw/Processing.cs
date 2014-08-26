@@ -295,6 +295,7 @@ namespace Oldi.Net
 			if (Request.RequestType.ToLower() != "status")
 				Current.ReportRequest(step);
 			SendAnswer(m_data, Current);
+			Interlocked.Decrement(ref GWListener.processes);
         }
 
 		/// <summary>

@@ -352,13 +352,15 @@ namespace Oldi.Net
 			decimal AmountLimit = Settings.AmountLimit;
 			int AmountDelay = Settings.AmountDelay;
 			string Notify = "";
-	
+
 			if (!string.IsNullOrEmpty(Phone))
 				x = Phone;
-			else if (!string.IsNullOrEmpty(Account) && string.IsNullOrEmpty(Number)) // Если задан Number, то используется он
+			else if (!string.IsNullOrEmpty(Account) && string.IsNullOrEmpty(Number) && string.IsNullOrEmpty(Card)) // Если задан Number, то используется он
 				x = Account;
 			else if (!string.IsNullOrEmpty(Number))
 				x = Number;
+			else if (!string.IsNullOrEmpty(Card))
+				x = Card;
 			else
 				{
 				RootLog("{0} [FCHK] {1}/{2} Не задан номер счёта", Tid, Service, Gateway);

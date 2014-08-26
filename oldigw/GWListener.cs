@@ -404,10 +404,6 @@ namespace Oldi.Net
 				{
 				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
 				}
-			finally
-				{
-				Interlocked.Decrement(ref processes);
-				}
 
 
 		}

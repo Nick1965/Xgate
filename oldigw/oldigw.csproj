@@ -138,6 +138,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="app.config">
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

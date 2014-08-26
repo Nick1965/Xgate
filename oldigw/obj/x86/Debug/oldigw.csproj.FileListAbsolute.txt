@@ -94,3 +94,4 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Messages.resources
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\WcfSmpp.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\WcfSmpp.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\app.config
