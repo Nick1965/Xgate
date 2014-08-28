@@ -28,6 +28,7 @@ D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Smtp\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Smtp\obj\Debug\Smtp.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Smtp\obj\Debug\Smtp.dll
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Smtp\obj\Debug\Smtp.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\obj\Debug\Smtp.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\OldiGW.xml
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\Smtp.dll.config
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\Smtp.dll
@@ -35,13 +36,12 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\Smtp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\Oldi.Net.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\SocialExplorer.FastDbf.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\Utility.dll
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\WcfSmpp.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\SMPP.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\Oldi.Net.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\SocialExplorer.FastDbf.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\Utility.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\SMPP.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\obj\Debug\Smtp.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\obj\Debug\Smtp.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\obj\Debug\Smtp.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\WcfSmpp.dll
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\WcfSmpp.pdb

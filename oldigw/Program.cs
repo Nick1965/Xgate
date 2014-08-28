@@ -31,7 +31,7 @@ namespace Oldi.Net
 		static bool stop = false;
 		static bool noredo = false;
 		public static bool Reload = false;
-
+		static string SubjectName = "CN=apitest.regplat.ru";
 
 		static void Main(string[] args)
 		{
@@ -157,6 +157,9 @@ namespace Oldi.Net
 			// Запуск слушателя
 			try
 				{
+				Log("Регистрация сертифика службы SMPP: {0}", SubjectName);
+				PermissiveCertificatePolicy.Enact(SubjectName);
+
 				GWListener listener = new GWListener(Settings.OldiGW.LogFile, Settings.Port, Settings.SslPort);
 				listener.Run();
 				stop = true;
@@ -235,32 +238,6 @@ namespace Oldi.Net
         
         }
 
-
-        /// <summary>
-        /// Проверка загружен ли процесс -- больше не используется
-        /// </summary>
-        /// <returns></returns>
-		/*
-		private static bool Jobrunning()
-        {
-			Console.WriteLine("\r\nПроверка работоспособности процесса {0}", Settings.Jobname);
-			Log("\r\nПроверка работоспособности процесса {0}", Settings.Jobname);
-
-			Process[] Jobs = Process.GetProcessesByName(Settings.Jobname);
-
-			if (Jobs.Length > 1)
-            {
-				Console.WriteLine("{0}: {1}", Settings.Jobname, Properties.Resources.MsgJobAlreadyRunning);
-				Log("{0}: {1}", Settings.Jobname, Properties.Resources.MsgJobAlreadyRunning);
-                return true;
-            }
-
-			Console.WriteLine(Settings.Title);
-			Utility.Log(Settings.OldiGW.LogFile, "\r\n{0}\r\n", Settings.Title);
-
-            return false;
-        }
-		*/
         
         /// <summary>
         /// Локальная копия лога

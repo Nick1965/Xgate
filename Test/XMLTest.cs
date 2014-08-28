@@ -32,7 +32,7 @@ namespace Test
 			this.Service = Service;
 			this.Gateway = Gateway;
 			}
-		public string ToString()
+		public override string ToString()
 			{
 			return string.Format("Name = \"{0}\" Service = \"{1}\" Gateway = \"{2}\"", Name, Service, Gateway);
 			}
