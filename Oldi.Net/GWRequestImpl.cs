@@ -357,7 +357,7 @@ namespace Oldi.Net
 				x = Phone;
 			else if (!string.IsNullOrEmpty(Account) && string.IsNullOrEmpty(Number) && string.IsNullOrEmpty(Card)) // Если задан Number, то используется он
 				x = Account;
-			else if (!string.IsNullOrEmpty(Number))
+			else if (!string.IsNullOrEmpty(Number) && string.IsNullOrEmpty(Card)) // Если только не задан Card
 				x = Number;
 			else if (!string.IsNullOrEmpty(Card))
 				x = Card;
@@ -376,6 +376,15 @@ namespace Oldi.Net
 				// Проверим в чёрном списке
 				if (FindInBlackList(x))
 					return true;
+				
+				// Если меньше допустимого лимита, не ставить на контроль
+				if (AmountAll < AmountLimit)
+					{
+					RootLog("{0} [FCHK - stop] {1}/{2} Num=\"{3}\" сумма платежа меньше общего лимита {4}, завершение проверки", 
+						Tid, Service, Gateway, x,XConvert.AsAmount(AmountLimit));
+					return false;
+					}
+
 				// Если номер телефона в списке исключаемых завершить финансовый контроль
 				if (FindInLists(Settings.Lists, x, 1) == 1) // Найден в белом списке
 					{

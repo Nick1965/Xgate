@@ -158,7 +158,6 @@ namespace Oldi.Net
 			try
 				{
 				Log("Регистрация сертифика службы SMPP: {0}", SubjectName);
-				PermissiveCertificatePolicy.Enact(SubjectName);
 
 				GWListener listener = new GWListener(Settings.OldiGW.LogFile, Settings.Port, Settings.SslPort);
 				listener.Run();
