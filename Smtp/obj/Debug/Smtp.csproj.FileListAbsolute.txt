@@ -45,3 +45,4 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\obj\Debug\Smtp.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\obj\Debug\Smtp.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\App.config

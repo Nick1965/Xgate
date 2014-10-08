@@ -39,3 +39,4 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Utility.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\App.config

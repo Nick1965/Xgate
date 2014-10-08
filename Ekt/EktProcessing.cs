@@ -496,10 +496,18 @@ namespace Oldi.Ekt
 							Account);
 						}
 					}
+				else if (!string.IsNullOrEmpty(Account) && !string.IsNullOrEmpty(Number)) // Id1 и Id2
+					{
+					stRequest += string.Format(Properties.Resources.Template_Payment_Id1Id2, 
+						Settings.Ekt.Pointid, Gateway, Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(), sDate,
+						// Атрибуты: id1, id2
+						Account, Number);
+					}
 				else
 					stRequest += string.Format(Properties.Resources.Template_Payment, Settings.Ekt.Pointid,
 						string.IsNullOrEmpty(Phone) ? Account : Phone, Gateway, // Номер сервиса ЕКТ, 
 						Math.Round(Amount * 100), Tid.ToString(), MakeCheckNumber(), sDate, Attributes.SaveToXml());
+
 				}
 			else if (state == 3) // Status
 				stRequest += string.Format(Properties.Resources.Template_Status, Settings.Ekt.Pointid, Tid);

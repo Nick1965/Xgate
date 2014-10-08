@@ -144,6 +144,14 @@
     <value>&lt;request point="{0}"&gt;&lt;payment account="{1}" service="{2}" sum="{3}" sum-in="{4}" id="{5}" check="{6}" date="{7}"&gt;&lt;attribute name="id2" value="{8}" /&gt;&lt;attribute name="fio" value="{9}" /&gt;&lt;attribute name="address" value="{10}" /&gt;&lt;attribute name="ee" value="{11}" /&gt;&lt;/payment&gt;&lt;/request&gt;</value>
     <comment>Сервис 605 ХакасЭнергосбыт</comment>
   </data>
+  <data name="Template_Payment_Id1Id2" xml:space="preserve">
+    <value>&lt;request point="{0}"&gt;
+	&lt;payment service="{1}" sum="{2}" sum-in="{3}" id="{4}" check="{5}" date="{6}"&gt;
+		&lt;attribute name="id1" value="{7}" /&gt;
+		&lt;attribute name="id2" value="{8}" /&gt;
+	&lt;/payment&gt;
+&lt;/request&gt;</value>
+  </data>
   <data name="Template_Status" xml:space="preserve">
     <value>&lt;request point="{0}"&gt;&lt;status id="{1}" /&gt;&lt;/request&gt;</value>
     <comment>Шаблон запроса проверки статуса платежа</comment>

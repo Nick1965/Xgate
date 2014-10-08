@@ -543,7 +543,7 @@ namespace Oldi.Net
 
 		protected int? statusType = null;
 		public int? StatusType { get { return statusType; } }
-	
+
 		#endregion
 
 

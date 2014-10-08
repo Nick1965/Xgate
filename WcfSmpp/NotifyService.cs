@@ -27,12 +27,15 @@ namespace WcfSmpp
 			factory.StartNew(() =>
 				{
 					XWcfApiServiceClient Client = null;
-					ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(RemoteCertValidate);
+					RemoteCertificateValidationCallback validator = new RemoteCertificateValidationCallback(RemoteCertValidate);
+					ServicePointManager.ServerCertificateValidationCallback += validator;
 					try
 					{
 					Result r = null;
 					string[] phones;
 					Client = new XWcfApiServiceClient();
+					Client.ClientCredentials.ClientCertificate.SetCertificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindBySubjectName, "nick-pc@regplat.ru");
+
 					if (List.IndexOf(',') != -1 || List.IndexOf(';') != -1 || List.IndexOf('|') != -1 || List.IndexOf(' ') != -1)
 						{
 						phones = List.Split(new Char[] { ' ', ',', ';', '|' });
@@ -68,7 +71,7 @@ namespace WcfSmpp
 					{
 					if (Client != null)
 						Client.Close();
-					ServicePointManager.ServerCertificateValidationCallback -= new RemoteCertificateValidationCallback(RemoteCertValidate);
+					ServicePointManager.ServerCertificateValidationCallback -= validator;
 					}
 			
 				});

@@ -43,3 +43,4 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\App.config

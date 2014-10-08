@@ -36,3 +36,4 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Utility.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\App.config

@@ -34,6 +34,24 @@ namespace Oldi.Net
 		static string SubjectName = "CN=apitest.regplat.ru";
 
 		static void Main(string[] args)
+			{
+			try
+				{
+				Start(args);
+				}
+			catch(Exception ex)
+				{
+				logFile = Settings.OldiGW.LogFile;
+				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				Console.WriteLine("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				}
+			finally
+				{
+				Log("Приложение остановлено");
+				Console.WriteLine("Приложение остановлено");
+				}
+			}
+		static void Start(string[] args)
 		{
 			try
 			{

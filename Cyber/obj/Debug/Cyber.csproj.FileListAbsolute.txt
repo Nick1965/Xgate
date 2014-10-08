@@ -42,3 +42,4 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\obj\Debug\Cyber.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\obj\Debug\Cyber.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\App.config

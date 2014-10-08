@@ -42,3 +42,4 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\RT\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\RT\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\RT\obj\Debug\RT.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\RT\obj\Debug\RT.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\RT\bin\Debug\App.config

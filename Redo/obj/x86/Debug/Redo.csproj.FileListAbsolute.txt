@@ -75,3 +75,4 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\Redo.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\Redo.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\App.config
