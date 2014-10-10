@@ -10,7 +10,6 @@ using Oldi.Utility;
 using Oldi.Mts;
 using Oldi.Ekt;
 using Oldi.Net.Cyber;
-using Autoshow;
 
 namespace OldiGW.Redo.Net
 {
@@ -169,12 +168,16 @@ namespace OldiGW.Redo.Net
 						req = new GWRequest();
 						if (req.ReadAll(dr) == 0)
 							{
+							req.SetLock(1); // Заблокировать ещё до постановки в очередь
 							if (string.IsNullOrEmpty(req.Account) && string.IsNullOrEmpty(req.Phone) && string.IsNullOrEmpty(req.Number))
 								Log("{0} [DoREDO] Ошибка. Не задан ни один из параметров счёта!", req.Tid);
 							// Допровести платежи с нефинальными статусами
 							CheckInfo checkinfo = new CheckInfo(req);
 							if (!ThreadPool.QueueUserWorkItem(new WaitCallback(CheckState), checkinfo))
+								{
+								req.SetLock(0); // Не удалось поставить в очередь - разблокировать
 								Log("Redo: Не удалось запустить процесс допроведения для tid={0}, state={1}", req.Tid, req.State);
+								}
 							}
 						else
 							Log("DoRedo: Ошибка чтения БД");
