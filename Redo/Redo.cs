@@ -11,6 +11,7 @@ using Oldi.Mts;
 using Oldi.Ekt;
 using Oldi.Net.Cyber;
 
+
 namespace OldiGW.Redo.Net
 {
     public class Redo
@@ -207,6 +208,8 @@ namespace OldiGW.Redo.Net
 					gw = new GWMtsRequest(gw);
 				else if (gw.Provider == Settings.Ekt.Name)
 					gw = new GWEktRequest(gw);
+				else if (gw.Provider == Settings.Rtm.Name)
+					gw = new RT.RTRequest(gw);
 
 				if (gw != null)
 					{
@@ -216,6 +219,10 @@ namespace OldiGW.Redo.Net
 					gw.ReportRequest("REDO - stop");
 					}
 			}
+			catch (Exception ex)
+				{
+				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				}
 			finally
 			{
 				if (gw != null) 

@@ -152,10 +152,15 @@ namespace Oldi.Mts
 				errCode = 400;
 				state = 12;
 				errDesc = ex.Message;
-				RootLog("{0}\r\n{1}", errDesc, ex.StackTrace);
+				Log("{0}\r\n{1}", errDesc, ex.StackTrace);
 			}
 
 		}
+
+		protected override string GetLogName()
+			{
+			return "c:\\oldigw\\log\\registers.log";
+			}
 
 		/// <summary>
 		/// Имя файла реестра
@@ -180,7 +185,7 @@ namespace Oldi.Mts
 			bool compressed = false;
 			string stBase64;
 
-			RootLog("Создаётся реестр платежей с {0} по {1}", XConvert.AsDate(Datefrom), XConvert.AsDate(Dateto));
+			Log("Создаётся реестр платежей с {0} по {1}", XConvert.AsDate(Datefrom), XConvert.AsDate(Dateto));
 			Console.WriteLine("Создаётся реестр платежей с {0} по {1}", XConvert.AsDate(Datefrom), XConvert.AsDate(Dateto));
 	
 			// Загрузим записи
@@ -192,7 +197,7 @@ namespace Oldi.Mts
 			CheckXML(template);
 			if (ErrCode == 400)
 			{
-				RootLog("Реестр: err={0} {1}", ErrCode, ErrDesc);
+				Log("Реестр: err={0} {1}", ErrCode, ErrDesc);
 				Console.WriteLine("Реестр: err={0} {1}", ErrCode, ErrDesc);
 				return 1;
 			}
@@ -246,7 +251,7 @@ namespace Oldi.Mts
 			}
 			catch (Exception ex)
 			{
-				RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
 				Console.WriteLine("{0}\r\n{1}", ex.Message, ex.StackTrace);
 			}
 
@@ -302,7 +307,7 @@ namespace Oldi.Mts
 				totalSum = Convert.ToDecimal(cmd.Parameters["TotalSum"].Value, CultureInfo.InvariantCulture);
 				totalDebt = Convert.ToDecimal(cmd.Parameters["TotalDebt"].Value, CultureInfo.InvariantCulture);
 				
-				RootLog("Rid={0} count={1}({4}) sum={2} debt={3}", rid, totalPayments, XConvert.AsAmount(totalSum), XConvert.AsAmount(totalDebt), cnt);
+				Log("Rid={0} count={1}({4}) sum={2} debt={3}", rid, totalPayments, XConvert.AsAmount(totalSum), XConvert.AsAmount(totalDebt), cnt);
 				Console.WriteLine("Rid={0} count={1}({4}) sum={2} debt={3}", rid, totalPayments, XConvert.AsAmount(totalSum), XConvert.AsAmount(totalDebt), cnt);
 			}
 			// r = null;
@@ -435,7 +440,7 @@ namespace Oldi.Mts
 									datefrom = dr.GetDateTime(dr.GetOrdinal("Datefrom"));
 									dateto = dr.GetDateTime(dr.GetOrdinal("Dateto"));
 
-									RootLog("Реестр: state={0} rid={1}", state, rid);
+									Log("Реестр: state={0} rid={1}", state, rid);
 
 									if (state == 0)
 										SendRegister();
@@ -452,14 +457,14 @@ namespace Oldi.Mts
 				}
 				catch (Exception ex)
 				{
-					RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
+					Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
 				}
 
 				Thread.Sleep(100);
 			
 			}
 
-			RootLog("Процесс обработки реестров завершён");
+			Log("Процесс обработки реестров завершён");
 			Console.WriteLine("Процесс обработки реестров завершён");
 
 			stateInfo.CancelEvent.Set();
@@ -476,7 +481,7 @@ namespace Oldi.Mts
 			byte[] buf;
 			int len;
 			
-			RootLog("Отправляется реестр Rid={0} f_01={1} f_02={2} f_03={3}", rid, f_01, f_02, f_03);
+			Log("Отправляется реестр Rid={0} f_01={1} f_02={2} f_03={3}", rid, f_01, f_02, f_03);
 			string fname = Makername("b64");
 
 			using (FileStream fs = new FileStream(fname, FileMode.Open, FileAccess.Read))
@@ -518,7 +523,7 @@ namespace Oldi.Mts
 					state = 12;
 			}
 
-			RootLog("Реестр: state={0} err={1} {2}", State, errCode, errDesc);
+			Log("Реестр: state={0} err={1} {2}", State, errCode, errDesc);
 			
 			// Обновим состояние реестра
 			if (state == 0)
@@ -575,7 +580,7 @@ namespace Oldi.Mts
 					state = 3;
 			}
 
-			RootLog("Реестр: state={0} err={1} {2}", State, errCode, errDesc);
+			Log("Реестр: state={0} err={1} {2}", State, errCode, errDesc);
 
 			// Обновим состояние реестра
 			if (state == 3)
@@ -605,7 +610,7 @@ namespace Oldi.Mts
 			}
 			catch (Exception ex)
 			{
-				RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
 			}
 
 		}
