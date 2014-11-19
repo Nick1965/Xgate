@@ -122,7 +122,7 @@ namespace Oldi.Net
 			try
 			{
 
-				ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
+				ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
 				ServicePointManager.CheckCertificateRevocationList = true;
 				ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(ValidateRemote);
 				ServicePointManager.DefaultConnectionLimit = 10;

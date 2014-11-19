@@ -322,12 +322,10 @@ namespace Oldi.Mts
 				case 202: // Приложение обслуживания не найдено.
 				case 203: // Счет неактивен.
 				case 205: // Описание клиента не найдено.
+				case 206: // Абонент не найден
 					// state = Pcdate.AddDays(1.0) <= DateTime.Now ? (byte)12 : old_state;
 					// state = times > 20 ? (byte)12 : old_state;
 					state = 12;
-					break;
-				case 206: // Абонент не найден
-					state = times > 20 ? (byte)12 : old_state;
 					break;
 				case 301: // Нет денег
 				case 354: // Терминал не зарегистрирован
@@ -336,7 +334,6 @@ namespace Oldi.Mts
 				case 66:  // ПЦ ЕСПП. Техническая ошибка сервера приложений
 				case 362:
 				case 501: // Превышена пропускная способность
-				case 363: // Запрещен прием платежей с будущей датой операции вне допустимого диапазона
 				case 357: // Платеж уже существует
 				case 398: // Истекло время акцептования документа
 				case 651: // Платеж в требуемом состоянии не найден
@@ -344,6 +341,13 @@ namespace Oldi.Mts
 						state = 12;
 					else
 						state = times > 20? (byte)12: (byte)3;
+					break;
+				case 363: // Запрещен прием платежей с будущей датой операции вне допустимого диапазона
+					RootLog("Дата вне диапазона Now={0} Pc={1} TD={2}", 
+						XConvert.AsDate2(DateTime.Now), XConvert.AsDate2(Pcdate), 
+						TerminalDate != null? XConvert.AsDate2(TerminalDate.Value): XConvert.AsDate2(DateTime.Now)
+						);
+					state = 0;
 					break;
 				case 650: // Не определено состояние платежа
 					state = 1; // разрешение получено, отпарвить зфн
@@ -563,6 +567,13 @@ namespace Oldi.Mts
 			{
 				account = phone;
 			}
+
+			// Нельзя допускать чтобы время процессинга было раньше текущего
+			if (Pcdate > DateTime.Now)
+				{
+				Log("Время платежа раньше текущего PD={0} NOW={1}", XConvert.AsDate2(Pcdate), XConvert.AsDate2(DateTime.Now));
+				pcdate = DateTime.Now;
+				}
 
 			return base.MakePayment();
 		}

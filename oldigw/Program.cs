@@ -58,6 +58,10 @@ namespace Oldi.Net
 
 				// Config.Load();
 
+				// Заставляум не печатать лог, если отправляется реестр
+				if (args.Length != 0 && args[0] == "--pays")
+					Settings.logLevel = "";
+
 				Settings.ReadConfig();
 				logFile = Settings.OldiGW.LogFile;
 				Log("\r\n{0}", Settings.Title);

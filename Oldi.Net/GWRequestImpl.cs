@@ -683,7 +683,7 @@ namespace Oldi.Net
 
 			State = 0; // Новый
 
-			return Exec(sp: "MakePayment2", tid: Tid,
+			return Exec(sp :"MakePayment2", tid :Tid,
 										provider: provider,
 										phone: phone,
 										phoneParam: PhoneParam,
@@ -994,18 +994,18 @@ namespace Oldi.Net
 						{
 						DateTime pc = Pcdate.AddHours(-1 * Settings.Tz);
 						DateTime td = TerminalDate.Value.AddHours(-1 * Tz);
-						if (td >= pc)
+						if (td > pc)
 							{
-							RootLog("{3} Корректировка времени PC={0} old TD={1} new TD={2}",
+							RootLog("{3} Корректировка времени [-] PC={0} old TD={1} new TD={2}",
 								XConvert.AsDateTZ(Pcdate, Settings.Tz),
 								XConvert.AsDateTZ(TerminalDate, Tz),
 								XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
 								Tid);
 							terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
 							}
-						else if (td < pc.AddSeconds(-30))
+						else if (td <= pc.AddSeconds(-30))
 							{
-							RootLog("{4} Корректировка времени PC={0} old TD={1} new TD={2} diff={3} sec.",
+							RootLog("{4} Корректировка времени [+] PC={0} old TD={1} new TD={2} diff={3} sec.",
 								XConvert.AsDateTZ(Pcdate, Settings.Tz),
 								XConvert.AsDateTZ(TerminalDate, Tz),
 								XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),

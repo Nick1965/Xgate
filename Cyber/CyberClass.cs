@@ -265,6 +265,34 @@ namespace Oldi.Net.Cyber
 						prm.AppendLine("ADDRESS", address);
 					}
 
+					// Если установлены дополнительные процедуры для шаблона - использовать их
+					if (Attributes != null && Attributes.Count > 0)
+						{
+						StringBuilder sb = new StringBuilder();
+						sb.Append("Дополнительные атрибуты:");
+						foreach (string key in Attributes.Keys)
+							{
+							string name = key;
+							string value = Attributes[key]; 
+							switch(key.ToLower())
+								{
+								case "payer_fio":
+									prm.AppendLine("PAYER_FIO", value);
+									sb.AppendFormat("\r\n\tname=\"{0}\" value=\"{1}\"", "PAYER_FIO", value);
+									break;
+								case "payer_address":
+									prm.AppendLine("PAYER_ADDRESS", value);
+									sb.AppendFormat("\r\nn\tame=\"{0}\" value=\"{1}\"", "PAYER_ADDRESS", value);
+									break;
+								case "payer_doc":
+									prm.AppendLine("PAYER_DOC", value);
+									sb.AppendFormat("\r\n\tname=\"{0}\" value=\"{1}\"", "PAYER_DOC", value);
+									break;
+								}
+							}
+						RootLog(sb.ToString());
+						}
+
 					prm.AppendLine("INN", Inn);
 					prm.AppendLine("CONTACT", contact);
 					prm.AppendLine("AMOUNT", XConvert.AsAmount(amount));

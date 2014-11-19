@@ -18,7 +18,7 @@ namespace WcfSmpp
 	public class NotifyService
 		{
 		string log = Settings.OldiGW.LogFile;
-		string From = "X-Gate";
+		string From = "3822497049";
 		public void Notify(string List, string Message)
 			{
 
@@ -27,8 +27,8 @@ namespace WcfSmpp
 			factory.StartNew(() =>
 				{
 					XWcfApiServiceClient Client = null;
-					RemoteCertificateValidationCallback validator = new RemoteCertificateValidationCallback(RemoteCertValidate);
-					ServicePointManager.ServerCertificateValidationCallback += validator;
+					// RemoteCertificateValidationCallback validator = new RemoteCertificateValidationCallback(RemoteCertValidate);
+					// ServicePointManager.ServerCertificateValidationCallback += validator;
 					try
 					{
 					Result r = null;
@@ -71,7 +71,7 @@ namespace WcfSmpp
 					{
 					if (Client != null)
 						Client.Close();
-					ServicePointManager.ServerCertificateValidationCallback -= validator;
+					// ServicePointManager.ServerCertificateValidationCallback -= validator;
 					}
 			
 				});
