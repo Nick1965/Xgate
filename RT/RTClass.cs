@@ -342,8 +342,8 @@ namespace RT
 				// Непустой для РТ-Мобайл
 				if (!string.IsNullOrEmpty(agentAccount))
 					p.AppendFormat("&agentAccount={0}", agentAccount);
-
-				p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
+				//p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
+				p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(DateTime.Now, Settings.Tz)));
 				p.AppendFormat("&reqTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
 				p.AppendFormat("&payAmount={0}", (int)(Amount * 100m));
 				// PayDetails = string.Format("{0}|{1}|{3}", SvcSubNum, PayAmount, PayPurpose);
