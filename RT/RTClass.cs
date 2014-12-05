@@ -61,17 +61,21 @@ namespace RT
 				}
 			else
 				{
+				agentAccount = "2839";
 				commonName = Settings.Rt.CN;
 				host = Settings.Rt.Host;
-				if (Gateway != "0" && Gateway != "")
-					{
-					int filial = 10;
-					if (!int.TryParse(Gateway, out filial))
-						filial = 10;
-					SvcTypeID = string.Format("RT.SIBIR.F{0:d3}.ACCOUNT_NUM", filial);
-					}
-				else
-					SvcTypeID = Gateway;
+				// if (Gateway != "0" && Gateway != "")
+					// {
+					// int filial = 10;
+					// if (!int.TryParse(Gateway, out filial))
+					// if (Filial != 255)
+					// filial = 10;
+					
+				if (string.IsNullOrEmpty(Gateway))
+					SvcTypeID = string.Format("RT.SIBIR.F{0:d3}.ACCOUNT_NUM", 10);
+					// }
+				// else
+					// SvcTypeID = Gateway;
 				}
 			
 			if (string.IsNullOrEmpty(Phone))
@@ -307,107 +311,117 @@ namespace RT
 
 			StringBuilder p = new StringBuilder();
 
-			// выполнить проверку возможности платежа и вернуть баланс счёта
-			if (old_state == 0) 
-			{
-				ReqType = "queryPayeeInfo";
-				p.AppendFormat("reqType={0}", ReqType);
-				if (!string.IsNullOrEmpty(SvcTypeID))
-					p.AppendFormat("&svcTypeId={0}", HttpUtility.UrlEncode(SvcTypeID));
-
-				p.AppendFormat("&svcNum={0}", SvcNum);
-				if (!string.IsNullOrEmpty(Phone) && Provider == "rt")
-					p.AppendFormat("&svcNum=7{0}", SvcNum);
-				
-				if (!string.IsNullOrEmpty(SvcSubNum))
-					p.AppendFormat("&svcSubNum={0}", SvcSubNum);
-				p.Append("&queryFlags=13");	// Остаток на счёте
-			}
-			// Создать запрос Pay
-			else if (old_state == 1) 
-			{
-				ReqType = "createPayment";
-				p.AppendFormat("reqType={0}", ReqType);
-				p.AppendFormat("&srcPayId={0}", Tid);
-				if (!string.IsNullOrEmpty(SvcTypeID))
-					p.AppendFormat("&svcTypeId={0}", HttpUtility.UrlEncode(SvcTypeID));
-
-				p.AppendFormat("&svcNum={0}", SvcNum);
-				if (!string.IsNullOrEmpty(Phone) && Provider == "rt")
-					p.AppendFormat("&svcNum=7{0}", SvcNum);
-					
-				if (!string.IsNullOrEmpty(SvcSubNum))
-					p.AppendFormat("&svcSubNum={0}", SvcSubNum);
-
-				// Непустой для РТ-Мобайл
-				if (!string.IsNullOrEmpty(agentAccount))
-					p.AppendFormat("&agentAccount={0}", agentAccount);
-				//p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
-				p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(DateTime.Now, Settings.Tz)));
-				p.AppendFormat("&reqTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
-				p.AppendFormat("&payAmount={0}", (int)(Amount * 100m));
-				// PayDetails = string.Format("{0}|{1}|{3}", SvcSubNum, PayAmount, PayPurpose);
-				
-				p.Append("&payCurrId=RUB");
-				p.Append("&payPurpose=0");
-				p.AppendFormat("&payComment={0}", HttpUtility.UrlEncode(Comment));
-
-			}
-			// Создать запрос Status
-			else if (old_state == 3) 
-			{
-				if (queryFlag != "")
+			try
 				{
-					p.Append("reqType=getPaymentStatus");
-					if (!string.IsNullOrEmpty(Account))
-						p.AppendFormat("&svcNum={0}", Account);
-					if (!string.IsNullOrEmpty(AccountParam))
-						p.AppendFormat("&svcSubNum={0}", AccountParam);
-					if (SvcTypeID != "")
+
+				// выполнить проверку возможности платежа и вернуть баланс счёта
+				if (old_state == 0)
+					{
+					ReqType = "queryPayeeInfo";
+					p.AppendFormat("reqType={0}", ReqType);
+					if (!string.IsNullOrEmpty(SvcTypeID))
 						p.AppendFormat("&svcTypeId={0}", HttpUtility.UrlEncode(SvcTypeID));
-					p.AppendFormat("&queryFlags={0}", queryFlag);
-				}
-				else if (Tid != 0 && Tid != int.MinValue)
-					p.Append("reqType=getPaymentStatus");
-				else
-					p.Append("reqType=getPaymentsStatus");
-				if (Tid != 0 && Tid != int.MinValue)
+
+					p.AppendFormat("&svcNum={0}", SvcNum);
+					if (!string.IsNullOrEmpty(Phone) && Provider == "rt")
+						p.AppendFormat("&svcNum=7{0}", SvcNum);
+
+					if (!string.IsNullOrEmpty(SvcSubNum))
+						p.AppendFormat("&svcSubNum={0}", SvcSubNum);
+					p.Append("&queryFlags=13");	// Остаток на счёте
+					p.AppendFormat("&agentAccount={0}", agentAccount);	// Остаток на счёте
+					}
+				// Создать запрос Pay
+				else if (old_state == 1)
+					{
+					ReqType = "createPayment";
+					p.AppendFormat("reqType={0}", ReqType);
 					p.AppendFormat("&srcPayId={0}", Tid);
-				if (StatusType != null)
-					p.AppendFormat("&statusType={0}", StatusType);
-				if (StartDate != null)
-					p.AppendFormat("&startDate={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(StartDate, Settings.Tz)));
-				if (EndDate != null)
-					p.AppendFormat("&endDate={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(EndDate, Settings.Tz)));
+					if (!string.IsNullOrEmpty(SvcTypeID))
+						p.AppendFormat("&svcTypeId={0}", HttpUtility.UrlEncode(SvcTypeID));
 
-				// Непустой для РТ-Мобайл
-				if (!string.IsNullOrEmpty(agentAccount))
+					// p.AppendFormat("&svcNum={0}", SvcNum);
+					if (!string.IsNullOrEmpty(Phone) && Provider == "rt")
+						p.AppendFormat("&svcNum=7{0}", SvcNum);
+					else
+						p.AppendFormat("&svcNum={0}", SvcNum);
+
+					if (!string.IsNullOrEmpty(SvcSubNum))
+						p.AppendFormat("&svcSubNum={0}", SvcSubNum);
+
+					// Непустой для РТ-Мобайл
+					// if (!string.IsNullOrEmpty(agentAccount))
+					// p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
+					p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(DateTime.Now, Settings.Tz)));
+					p.AppendFormat("&reqTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
+					p.AppendFormat("&payAmount={0}", (int)(Amount * 100m));
+					p.AppendFormat("&agentAccount={0}", agentAccount);
+					// PayDetails = string.Format("{0}|{1}|{3}", SvcSubNum, PayAmount, PayPurpose);
+
+					p.Append("&payCurrId=RUB");
+					p.Append("&payPurpose=0");
+					p.AppendFormat("&payComment={0}", HttpUtility.UrlEncode(Comment));
+
+					}
+				// Создать запрос Status
+				else if (old_state == 3)
+					{
+					if (queryFlag != "")
+						{
+						p.Append("reqType=getPaymentStatus");
+						if (!string.IsNullOrEmpty(Account))
+							p.AppendFormat("&svcNum={0}", Account);
+						if (!string.IsNullOrEmpty(AccountParam))
+							p.AppendFormat("&svcSubNum={0}", AccountParam);
+						if (SvcTypeID != "")
+							p.AppendFormat("&svcTypeId={0}", HttpUtility.UrlEncode(SvcTypeID));
+						p.AppendFormat("&queryFlags={0}", queryFlag);
+						}
+					else if (Tid != 0 && Tid != int.MinValue)
+						p.Append("reqType=getPaymentStatus");
+					else
+						p.Append("reqType=getPaymentsStatus");
+					if (Tid != 0 && Tid != int.MinValue)
+						p.AppendFormat("&srcPayId={0}", Tid);
+					if (StatusType != null)
+						p.AppendFormat("&statusType={0}", StatusType);
+					if (StartDate != null)
+						p.AppendFormat("&startDate={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(StartDate, Settings.Tz)));
+					if (EndDate != null)
+						p.AppendFormat("&endDate={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(EndDate, Settings.Tz)));
+
+					// Непустой для РТ-Мобайл
+					// if (!string.IsNullOrEmpty(agentAccount))
 					p.AppendFormat("&agentAccount={0}", agentAccount);
 
-			}
-			// Запрос на отмену платежа
-			else if (old_state == 8) 
-			{
-				ReqType = "abandonPayment";
-				p.AppendFormat("reqType={0}", ReqType);
-				p.AppendFormat("&srcPayId={0}", Tid);
-				p.AppendFormat("&reqTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
+					}
+				// Запрос на отмену платежа
+				else if (old_state == 8)
+					{
+					ReqType = "abandonPayment";
+					p.AppendFormat("reqType={0}", ReqType);
+					p.AppendFormat("&srcPayId={0}", Tid);
+					p.AppendFormat("&reqTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
 
-				// Непустой для РТ-Мобайл
-				if (!string.IsNullOrEmpty(agentAccount))
+					// Непустой для РТ-Мобайл
+					// if (!string.IsNullOrEmpty(agentAccount))
 					p.AppendFormat("&agentAccount={0}", agentAccount);
 
-			}
-			else
-			{
-				errCode = 2;
-				errDesc = string.Format("Неизвестное состояние ({0}) платежа", old_state);
-				state = 11;
-				Log(ErrDesc);
-				RootLog(ErrDesc);
-				return 1;
-			}
-
+					}
+				else
+					{
+					errCode = 2;
+					errDesc = string.Format("Неизвестное состояние ({0}) платежа", old_state);
+					state = 11;
+					Log(ErrDesc);
+					RootLog(ErrDesc);
+					return 1;
+					}
+				}
+			catch (Exception ex)
+				{
+				RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				}
 			// p.AppendFormat("&reqTime={0}", UrlEncode(XConvert.AsDateTZ(Pcdate)));
 			// stRequest = HttpUtility.UrlEncode(p.ToString()).Replace(HttpUtility.UrlEncode("&"), "&").Replace(HttpUtility.UrlEncode("="), "=");
 			stRequest = p.ToString();

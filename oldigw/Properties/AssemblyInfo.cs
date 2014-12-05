@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
 [assembly: AssemblyTitle("X-Gate .Net")]
-[assembly: AssemblyDescription("Build on 18.08.2014")]
+[assembly: AssemblyDescription("December, 3 2014")]
 [assembly: AssemblyConfiguration("DEBUG")]
 [assembly: AssemblyCompany("OLDI L.L.C., Tomsk, Russia")]
 [assembly: AssemblyProduct("X-Gate .Net")]

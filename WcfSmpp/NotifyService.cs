@@ -42,7 +42,7 @@ namespace WcfSmpp
 						StringBuilder sb = new StringBuilder();
 						foreach (string p in phones)
 							sb.AppendFormat("{0}||", p);
-						r = Client.SendTextMass(21, From, Message, phones);
+						r = Client.SendTextMass(21, From, Message, phones, "Tomsk");
 						Utility.Log(log, "[SMSS] Уведомление {0} на {1} отправлено", Message, sb.ToString());
 						}
 					else
