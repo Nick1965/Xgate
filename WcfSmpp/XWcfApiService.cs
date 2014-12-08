@@ -37,6 +37,12 @@ namespace XWcfApiService
         
         private string HashField;
         
+        private string IdentField;
+        
+        private System.Nullable<System.DateTime> LastAccessField;
+        
+        private string LastAccessIpField;
+        
         private System.Nullable<decimal> MaxFeeField;
         
         private System.Nullable<decimal> MinFeeField;
@@ -164,6 +170,45 @@ namespace XWcfApiService
         }
         
         [System.Runtime.Serialization.DataMemberAttribute()]
+        public string Ident
+        {
+            get
+            {
+                return this.IdentField;
+            }
+            set
+            {
+                this.IdentField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public System.Nullable<System.DateTime> LastAccess
+        {
+            get
+            {
+                return this.LastAccessField;
+            }
+            set
+            {
+                this.LastAccessField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
+        public string LastAccessIp
+        {
+            get
+            {
+                return this.LastAccessIpField;
+            }
+            set
+            {
+                this.LastAccessIpField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute()]
         public System.Nullable<decimal> MaxFee
         {
             get
@@ -259,18 +304,21 @@ public interface IXWcfApiService
                 string Flat, 
                 string Email);
     
+    [System.ServiceModel.OperationContractAttribute(Action="api.regplat.ru/IXWcfApiService/AddExternAccount", ReplyAction="api.regplat.ru/IXWcfApiService/AddExternAccountResponse")]
+    XWcfApiService.Result AddExternAccount(int AppCode, string Login, string Email, string Phone, string Password, string ExternSystem, string ExternAccount);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="api.regplat.ru/IXWcfApiService/StartSession", ReplyAction="api.regplat.ru/IXWcfApiService/StartSessionResponse")]
+    XWcfApiService.Result StartSession(int AppCode, string Login, string Password, string HWId, string UserIP);
+    
     [System.ServiceModel.OperationContractAttribute(Action="api.regplat.ru/IXWcfApiService/Test", ReplyAction="api.regplat.ru/IXWcfApiService/TestResponse")]
     [System.ServiceModel.FaultContractAttribute(typeof(XWcfApiService.Result), Action="https://apitest.regplat.ru/Result", Name="Result", Namespace="http://schemas.datacontract.org/2004/07/XWcfApiService")]
     XWcfApiService.Result Test(int AppCode, int k);
-    
-    [System.ServiceModel.OperationContractAttribute(Action="api.regplat.ru/IXWcfApiService/SetUserAccounts", ReplyAction="api.regplat.ru/IXWcfApiService/SetUserAccountsResponse")]
-    XWcfApiService.Result SetUserAccounts(int AppCode, string Login, string Email, string Phone, string Password, string ExternAccount);
     
     [System.ServiceModel.OperationContractAttribute(Action="api.regplat.ru/IXWcfApiService/SendText", ReplyAction="api.regplat.ru/IXWcfApiService/SendTextResponse")]
     XWcfApiService.Result SendText(int AppCode, string From, string To, string Text);
     
     [System.ServiceModel.OperationContractAttribute(Action="api.regplat.ru/IXWcfApiService/SendTextMass", ReplyAction="api.regplat.ru/IXWcfApiService/SendTextMassResponse")]
-    XWcfApiService.Result SendTextMass(int AppCode, string From, string Text, string[] To);
+    XWcfApiService.Result SendTextMass(int AppCode, string From, string Text, string[] To, string Region);
     
     [System.ServiceModel.OperationContractAttribute(Action="api.regplat.ru/IXWcfApiService/GetSections", ReplyAction="api.regplat.ru/IXWcfApiService/GetSectionsResponse")]
     XWcfApiService.Result GetSections(int AppCode, int Parent);
@@ -291,7 +339,13 @@ public interface IXWcfApiService
     XWcfApiService.Result GetCommission(int AppCode, System.Nullable<int> Point_oid, int Template_tid, int Tempalte_sub_tid);
     
     [System.ServiceModel.OperationContractAttribute(Action="api.regplat.ru/IXWcfApiService/MakePrecheck", ReplyAction="api.regplat.ru/IXWcfApiService/MakePrecheckResponse")]
-    XWcfApiService.Result MakePrecheck(int AppCode, bool CheckOnly, string SessionID, System.Nullable<int> PointOid, int Template_tid, int Template_sub_tid, string[] FieldNames, string[] FieldValues);
+    XWcfApiService.Result MakePrecheck(int AppCode, string SessionID, int Template_tid, int Template_sub_tid, string InputFields);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="api.regplat.ru/IXWcfApiService/MakeCheck", ReplyAction="api.regplat.ru/IXWcfApiService/MakeCheckResponse")]
+    XWcfApiService.Result MakeCheck(int AppCode, string SessionID, int Template_tid, int Template_sub_tid, string InputFields);
+    
+    [System.ServiceModel.OperationContractAttribute(Action="api.regplat.ru/IXWcfApiService/MakePayment", ReplyAction="api.regplat.ru/IXWcfApiService/MakePaymentResponse")]
+    XWcfApiService.Result MakePayment(int AppCode, string SessionID, int Template_tid, int Template_sub_tid, string TransactioID, string InputFields);
 }
 
 [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
@@ -355,14 +409,19 @@ public partial class XWcfApiServiceClient : System.ServiceModel.ClientBase<IXWcf
         return base.Channel.NewUserRegistration(AppCode, Phone, Code, Login, Password, LastName, FirstName, MiddleName, BirthDate, AOGuidCityFias, City, AOGuidStreetFias, Street, AOGuidHouseFias, House, Flat, Email);
     }
     
+    public XWcfApiService.Result AddExternAccount(int AppCode, string Login, string Email, string Phone, string Password, string ExternSystem, string ExternAccount)
+    {
+        return base.Channel.AddExternAccount(AppCode, Login, Email, Phone, Password, ExternSystem, ExternAccount);
+    }
+    
+    public XWcfApiService.Result StartSession(int AppCode, string Login, string Password, string HWId, string UserIP)
+    {
+        return base.Channel.StartSession(AppCode, Login, Password, HWId, UserIP);
+    }
+    
     public XWcfApiService.Result Test(int AppCode, int k)
     {
         return base.Channel.Test(AppCode, k);
-    }
-    
-    public XWcfApiService.Result SetUserAccounts(int AppCode, string Login, string Email, string Phone, string Password, string ExternAccount)
-    {
-        return base.Channel.SetUserAccounts(AppCode, Login, Email, Phone, Password, ExternAccount);
     }
     
     public XWcfApiService.Result SendText(int AppCode, string From, string To, string Text)
@@ -370,9 +429,9 @@ public partial class XWcfApiServiceClient : System.ServiceModel.ClientBase<IXWcf
         return base.Channel.SendText(AppCode, From, To, Text);
     }
     
-    public XWcfApiService.Result SendTextMass(int AppCode, string From, string Text, string[] To)
+    public XWcfApiService.Result SendTextMass(int AppCode, string From, string Text, string[] To, string Region)
     {
-        return base.Channel.SendTextMass(AppCode, From, Text, To);
+        return base.Channel.SendTextMass(AppCode, From, Text, To, Region);
     }
     
     public XWcfApiService.Result GetSections(int AppCode, int Parent)
@@ -405,8 +464,18 @@ public partial class XWcfApiServiceClient : System.ServiceModel.ClientBase<IXWcf
         return base.Channel.GetCommission(AppCode, Point_oid, Template_tid, Tempalte_sub_tid);
     }
     
-    public XWcfApiService.Result MakePrecheck(int AppCode, bool CheckOnly, string SessionID, System.Nullable<int> PointOid, int Template_tid, int Template_sub_tid, string[] FieldNames, string[] FieldValues)
+    public XWcfApiService.Result MakePrecheck(int AppCode, string SessionID, int Template_tid, int Template_sub_tid, string InputFields)
     {
-        return base.Channel.MakePrecheck(AppCode, CheckOnly, SessionID, PointOid, Template_tid, Template_sub_tid, FieldNames, FieldValues);
+        return base.Channel.MakePrecheck(AppCode, SessionID, Template_tid, Template_sub_tid, InputFields);
+    }
+    
+    public XWcfApiService.Result MakeCheck(int AppCode, string SessionID, int Template_tid, int Template_sub_tid, string InputFields)
+    {
+        return base.Channel.MakeCheck(AppCode, SessionID, Template_tid, Template_sub_tid, InputFields);
+    }
+    
+    public XWcfApiService.Result MakePayment(int AppCode, string SessionID, int Template_tid, int Template_sub_tid, string TransactioID, string InputFields)
+    {
+        return base.Channel.MakePayment(AppCode, SessionID, Template_tid, Template_sub_tid, TransactioID, InputFields);
     }
 }

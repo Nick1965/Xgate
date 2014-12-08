@@ -1114,10 +1114,11 @@ namespace Oldi.Net
 		/// <returns></returns>
 		public virtual int Undo()
 		{
-			state = 11;
-			errCode = 2;
-			errDesc = "Функция не реализована";
-			return 1;
+			state = 12;
+			errCode = 6;
+			errDesc = "Платёж отменён оператором";
+			UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked: 0);
+			return 0;
 		}
 		
 		/// <summary>

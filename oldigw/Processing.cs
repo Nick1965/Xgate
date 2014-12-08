@@ -173,26 +173,11 @@ namespace Oldi.Net
 					Current = Request;
 					step = "UNDO - stop";
 
-					if (Request.Provider == "rt" || Request.Provider == "rtm")
-					{
+					if (!string.IsNullOrEmpty(Request.Provider) && Request.Provider == "rt" || Request.Provider == "rtm")
 						Current = new RTRequest(Request);
-						Current.Undo();
-					}
-					else
-					{
-						if (Current.State != 1 && Current.State != 3)
-							{
-							Current.State = 12;
-							Current.errCode = 6;
-							Current.errDesc = Messages.ManualUndo;
-							}
-						else
-							{
-							Current.errCode = 1;
-							Current.errDesc = Messages.UndoImposible;
-							}
-					}
-					Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
+
+					Current.Undo();
+					
 					break;
 
 				// Создание и попытка проведения нового платежа
