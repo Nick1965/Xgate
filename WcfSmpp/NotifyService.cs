@@ -33,7 +33,10 @@ namespace WcfSmpp
 					{
 					Result r = null;
 					string[] phones;
-					Client = new XWcfApiServiceClient();
+
+					// Указываем явно файл конфигурации
+					Client = new XWcfApiServiceClient("app.config");
+					
 					Client.ClientCredentials.ClientCertificate.SetCertificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindBySubjectName, "nick-pc@regplat.ru");
 
 					if (List.IndexOf(',') != -1 || List.IndexOf(';') != -1 || List.IndexOf('|') != -1 || List.IndexOf(' ') != -1)
