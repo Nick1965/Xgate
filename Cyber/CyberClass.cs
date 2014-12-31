@@ -257,7 +257,10 @@ namespace Oldi.Net.Cyber
 						prm.AppendLine("NUMBER", number);
 						prm.AppendLine("CARD", card);
 						prm.AppendLine("FIO", fio);
-						prm.AppendLine("ACCOUNT", Account);
+						if (Gateway == "3477" && !string.IsNullOrEmpty(Account) && Account == "-1")
+							prm.Append("ACCOUNT=\r\n");
+						else
+							prm.AppendLine("ACCOUNT", Account);
 						
 						prm.AppendLine("DOCNUM", docnum);
 						prm.AppendLine("DOCDATE", docdate);
@@ -740,8 +743,8 @@ namespace Oldi.Net.Cyber
 						break;
 					case 21: // Недостаточно средств для проведения платежа
 					case 25: // Работа шлюза приостановлена
-						state = 0;
-						errCode = 11;
+						state = 12;
+						errCode = 6;
 						break;
 					case 26: // Платежи данного Контрагента временно блокированы
 					case 30: // Общая ошибка системы.

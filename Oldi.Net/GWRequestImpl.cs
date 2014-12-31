@@ -62,6 +62,7 @@ namespace Oldi.Net
 			account = src.Account;
 			accountParam = src.AccountParam;
 			card = src.Card;
+			filial = src.Filial;
 
 			amount = src.Amount;
 			amountAll = src.AmountAll;
@@ -1118,6 +1119,7 @@ namespace Oldi.Net
 			errCode = 6;
 			errDesc = "Платёж отменён оператором";
 			UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked: 0);
+
 			return 0;
 		}
 		

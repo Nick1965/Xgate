@@ -140,12 +140,15 @@ namespace Oldi.Net
 								Attributes.Add(n, v);
 							break;
 						case "filial":
-							filial = Convert.ToByte(el.Value);
-							foreach (XAttribute attr in el.Attributes())
-							{
-								if (attr.Name.LocalName.ToLower() == "param")
-									filialParam = (string)attr.Value;
-							}
+							if (!byte.TryParse(el.Value, out filial))
+								filial = 10;
+							/*
+								foreach (XAttribute attr in el.Attributes())
+								{
+									if (attr.Name.LocalName.ToLower() == "param")
+										filialParam = (string)attr.Value;
+								}
+							*/
 							break;
 						case "card":
 							card = (string)el.Value;

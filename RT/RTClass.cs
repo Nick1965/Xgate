@@ -70,9 +70,18 @@ namespace RT
 					// if (!int.TryParse(Gateway, out filial))
 					// if (Filial != 255)
 					// filial = 10;
-					
-				if (string.IsNullOrEmpty(Gateway))
-					SvcTypeID = string.Format("RT.SIBIR.F{0:d3}.ACCOUNT_NUM", 10);
+
+				Log("****CHECK: Service={0} Filial={1}", Service, Filial);
+				try
+					{
+					if (Service.ToUpper() == "RTK-ACC" && Filial != 255)
+						SvcTypeID = string.Format("RT.SIBIR.F{0:d3}.ACCOUNT_NUM", Filial);
+					}
+				catch (Exception ex)
+					{
+					RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
+					}
+
 					// }
 				// else
 					// SvcTypeID = Gateway;

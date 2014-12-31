@@ -168,16 +168,26 @@ namespace Oldi.Net
 				// Отмена платежа
 				// Отменяет платёж на шлюзе, затем в процессинге
 				case "undo":
-					Request.GetPaymentInfo();
-					Request.ReportRequest("UNDO - strt");
-					Current = Request;
-					step = "UNDO - stop";
+					try
+						{
+						Request.GetPaymentInfo();
+						Request.ReportRequest("UNDO - strt");
+						Current = Request;
+						step = "UNDO - stop";
 
-					if (!string.IsNullOrEmpty(Request.Provider) && Request.Provider == "rt" || Request.Provider == "rtm")
-						Current = new RTRequest(Request);
+						if (!string.IsNullOrEmpty(Request.Provider) && Request.Provider == "rt" || Request.Provider == "rtm")
+							Current = new RTRequest(Request);
 
-					Current.Undo();
-					
+						Current.Undo();
+						Request.ReportRequest("UNDO - stop");
+						}
+					catch (Exception ex)
+						{
+						Log(Messages.LogError, Request.Tid, ex.Message, ex.StackTrace);
+						Request.errDesc = string.Format(Messages.ErrDesc, Request.Tid, ex.Message);
+						Request.errCode = 11;
+						}
+
 					break;
 
 				// Создание и попытка проведения нового платежа

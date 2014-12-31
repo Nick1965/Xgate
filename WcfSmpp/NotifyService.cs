@@ -35,7 +35,7 @@ namespace WcfSmpp
 					string[] phones;
 
 					// Указываем явно файл конфигурации
-					Client = new XWcfApiServiceClient("app.config");
+					Client = new XWcfApiServiceClient(".\app.config");
 					
 					Client.ClientCredentials.ClientCertificate.SetCertificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindBySubjectName, "nick-pc@regplat.ru");
 
