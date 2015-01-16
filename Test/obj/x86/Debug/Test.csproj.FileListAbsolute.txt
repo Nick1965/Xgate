@@ -54,16 +54,13 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Test.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Cyber.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Oldi.Net.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Utility.dll
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\WcfSmpp.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\SMPP.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Cyber.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Oldi.Net.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Utility.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.TrustInfo.xml
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.exe.manifest
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.application
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.exe
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\App.config

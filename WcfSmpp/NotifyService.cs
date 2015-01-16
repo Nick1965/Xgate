@@ -12,118 +12,61 @@ using Oldi.Utility;
 using XWcfApiService;
 using System.Threading.Tasks;
 using System.Net.Security;
+using WcfSmpp.Proxy;
 
 namespace WcfSmpp
 	{
 	public class NotifyService
 		{
 		string log = Settings.OldiGW.LogFile;
-		string From = "3822497049";
 		public void Notify(string List, string Message)
 			{
 
-			TaskFactory factory = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.None);
+			string From = "RegPlat";
+			string[] phones = null;
+			ChannelFactory<IXSMPP> myChannelFactory = null;
 
-			factory.StartNew(() =>
+			try
 				{
-					XWcfApiServiceClient Client = null;
-					// RemoteCertificateValidationCallback validator = new RemoteCertificateValidationCallback(RemoteCertValidate);
-					// ServicePointManager.ServerCertificateValidationCallback += validator;
-					try
+				// Открыть TCP-канал
+				NetTcpBinding binding = new NetTcpBinding(SecurityMode.None);
+				EndpointAddress endPointAddress = new EndpointAddress("net.tcp://odbs1.regplat.ru:1101/sms");
+				myChannelFactory = new ChannelFactory<IXSMPP>(binding, endPointAddress);
+				IXSMPP Client = myChannelFactory.CreateChannel();
+				Response r = null;
+
+				if (List.IndexOf(',') != -1 || List.IndexOf(';') != -1 || List.IndexOf('|') != -1 || List.IndexOf(' ') != -1)
 					{
-					Result r = null;
-					string[] phones;
-
-					// Указываем явно файл конфигурации
-					Client = new XWcfApiServiceClient(".\app.config");
-					
-					Client.ClientCredentials.ClientCertificate.SetCertificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindBySubjectName, "nick-pc@regplat.ru");
-
-					if (List.IndexOf(',') != -1 || List.IndexOf(';') != -1 || List.IndexOf('|') != -1 || List.IndexOf(' ') != -1)
+					phones = List.Split(new Char[] { ' ', ',', ';', '|' });
+					StringBuilder sb = new StringBuilder();
+					foreach (string p in phones)
 						{
-						phones = List.Split(new Char[] { ' ', ',', ';', '|' });
-						StringBuilder sb = new StringBuilder();
-						foreach (string p in phones)
-							sb.AppendFormat("{0}||", p);
-						r = Client.SendTextMass(21, From, Message, phones, "Tomsk");
-						Utility.Log(log, "[SMSS] Уведомление {0} на {1} отправлено", Message, sb.ToString());
+						r = Client.Send(From, p, Message);
+						if (r.errCode == 0)
+							Utility.Log(log, "[SMSS] Уведомление {0} на {1} отправлено", Message, p);
+						else
+							Utility.Log(log, "[SMSS] Уведомление {0} на {1} не отправлено", Message, p);
 						}
-					else
-						{
-						r = Client.SendText(21, From, List, Message);
+					}
+				else
+					{
+					r = Client.Send(From, List, Message);
+					if (r.errCode == 0)
 						Utility.Log(log, "[SMSS] Уведомление {0} на {1} отправлено", Message, List);
-						}
-					}
-				catch (Exception ex)
-					{
-					if (List.IndexOf(',') != -1 || List.IndexOf(';') != -1 || List.IndexOf('|') != -1 || List.IndexOf(' ') != -1)
-						{
-						string[] phones = List.Split(new Char[] { ' ', ',', ';', '|' });
-						StringBuilder sb = new StringBuilder();
-						foreach (string p in phones)
-							sb.AppendFormat("{0}||", p);
-						Utility.Log(log, "[SMSS] Уведомление {0} на {1} не отправлено", Message, sb.ToString());
-						}
 					else
-						{
 						Utility.Log(log, "[SMSS] Уведомление {0} на {1} не отправлено", Message, List);
-						}
-					Utility.Log(log, "{0}\r\n{1}", ex.Message, ex.StackTrace);
 					}
-				finally
-					{
-					if (Client != null)
-						Client.Close();
-					// ServicePointManager.ServerCertificateValidationCallback -= validator;
-					}
-			
-				});
-			
-
-			}
-
-		/// <summary>
-		/// Проверяет полученный сертификат
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="cert"></param>
-		/// <param name="chain"></param>
-		/// <param name="error"></param>
-		/// <returns></returns>
-		bool RemoteCertValidate(object sender, X509Certificate cert, X509Chain chain, System.Net.Security.SslPolicyErrors error)
-			{
-
-			string ErrDesc = ErrDesc = "Ошибок нет";
-			switch(error)
-				{
-				case SslPolicyErrors.RemoteCertificateChainErrors:
-					ErrDesc = "Chain возвратил непустой массив";
-					break;
-				case SslPolicyErrors.RemoteCertificateNameMismatch:
-					ErrDesc = "Несовпадение имён сертификатов";
-					break;
-				case SslPolicyErrors.RemoteCertificateNotAvailable:
-					ErrDesc = "Сертификат недоступен";
-					break;
 				}
-			Utility.Log(log, "[RCTV] Issuer={0}", cert.Issuer);
-			Utility.Log(log, "[RCTV] Hash={0}", cert.GetCertHashString().ToLower());
-			Utility.Log(log, "[RCTV] {0}", ErrDesc);
-			// Console.WriteLine("{0} [{1:d2}] RemoteCertValidate: Hash: {2}",
-			//	DateTime.Now.ToLongTimeString(), Thread.CurrentThread.ManagedThreadId, cert.GetCertHashString().ToLower());
-
-			return true;
-
-			/*
-			if (cert.Subject == subjectName)
-			{
-				return true;
-			}
-
-			return false;
-			 */
+			catch (Exception ex)
+				{
+				Utility.Log(log, ex.ToString());
+				}
+			finally
+				{
+				if (myChannelFactory != null)
+					myChannelFactory.Close();
+				}
 			}
 
 		}
-
 	}

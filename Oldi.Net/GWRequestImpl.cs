@@ -13,6 +13,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Globalization;
 using System.Resources;
 using System.Xml.Linq;
+using System.ServiceModel;
+using Oldi.Net.Proxy;
 
 namespace Oldi.Net
 {
@@ -422,9 +424,8 @@ namespace Oldi.Net
 							if (newPay && !string.IsNullOrEmpty(Notify))
 								{
 								RootLog("[SMSC] отправляется сообщение к {0}", Notify);
-								WcfSmpp.NotifyService Sms = new WcfSmpp.NotifyService();
-								Sms.Notify(Notify, string.Format("{0}/{1} Trm={2} Num={3} S={4} на контроле до {5}",
-									Service, Gateway, Terminal, x, XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(AmountDelay))));
+								this.Notify(Notify, string.Format("Num={0} S={1} Trm={2} на контроле до {3}",
+									x, XConvert.AsAmount(AmountAll), Terminal, XConvert.AsDate(Pcdate.AddHours(AmountDelay))));
 								}
 
 							// Не найден  в белом списке - на контроль!
@@ -1439,6 +1440,51 @@ namespace Oldi.Net
 			ResourceManager res = Properties.Resources.ResourceManager;
 			return string.Format("({0}) {1}", CyberError, res.GetString("Error" + CyberError.ToString()));
 		}
+
+		/// <summary>
+		/// Отправка уведомления на один или несколько номеров
+		/// </summary>
+		/// <param name="List">Список номеров</param>
+		/// <param name="Message">Сообщение</param>
+		public void Notify(string List, string Message)
+			{
+
+			string From = "RegPlat";
+			string[] phones = null;
+
+			// Открыть TCP-канал
+			NetTcpBinding binding = new NetTcpBinding(SecurityMode.None);
+			EndpointAddress endPointAddress = new EndpointAddress("net.tcp://odbs1.regplat.ru:1101/sms");
+			ChannelFactory<IXSMPP> myChannelFactory = new ChannelFactory<IXSMPP>(binding, endPointAddress);
+			IXSMPP Client = myChannelFactory.CreateChannel();
+			Response r = null;
+
+			if (List.IndexOf(',') != -1 || List.IndexOf(';') != -1 || List.IndexOf('|') != -1 || List.IndexOf(' ') != -1)
+				{
+				phones = List.Split(new Char[] { ' ', ',', ';', '|' });
+				StringBuilder sb = new StringBuilder();
+				foreach (string p in phones)
+					{
+					r = Client.Send(From, p, Message);
+					if (r.errCode == 0)
+						Log("[SMSS] Уведомление {0} на {1} отправлено", Message, p);
+					else
+						Log("[SMSS] Уведомление {0} на {1} не отправлено", Message, p);
+					}
+				}
+			else
+				{
+				r = Client.Send(From, List, Message);
+				if (r.errCode == 0)
+					Log("[SMSS] Уведомление {0} на {1} отправлено", Message, List);
+				else
+					Log("[SMSS] Уведомление {0} на {1} не отправлено", Message, List);
+				}
+
+			myChannelFactory.Close();
+
+			}
+
 
 		/// <summary>
 		/// Запись в основной лог

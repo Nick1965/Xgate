@@ -34,12 +34,9 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\Cyber.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\Cyber.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\Oldi.Net.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\Utility.dll
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\WcfSmpp.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\SMPP.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\Oldi.Net.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\Utility.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\obj\Debug\Cyber.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\obj\Debug\Cyber.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Cyber\bin\Debug\App.config

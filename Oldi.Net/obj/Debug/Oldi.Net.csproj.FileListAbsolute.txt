@@ -33,10 +33,7 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Oldi.Net.dl
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Oldi.Net.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\SMPP.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Utility.dll
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\WcfSmpp.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Utility.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\WcfSmpp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\App.config
