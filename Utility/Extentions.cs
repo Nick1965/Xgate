@@ -114,6 +114,57 @@ namespace Oldi.Utility
 			return sb.AppendFormat(" {0}={1}", name, value);
 		}
 
+		/// <summary>
+		/// Метод расширения. Добавлени ненулевого параметра в строку
+		/// </summary>
+		/// <param name="sb"></param>
+		/// <param name="name">Имя параметра</param>
+		/// <param name="value">Значение параметра</param>
+		public static StringBuilder Append2(this StringBuilder sb, string name, Object value = null)
+			{
+			if (value == null)
+				return sb;
+
+			switch (value.GetType().Name)
+				{
+				case "String":
+					if ((string)value == "")
+						return sb;
+					break;
+				case "Char":
+					if ((char)value == (char)0)
+						return sb;
+					break;
+				case "Byte":
+					if ((byte)value == 255)
+						return sb;
+					break;
+				case "Int16":
+					if ((short)value == short.MinValue)
+						return sb;
+					break;
+				case "Int32":
+					if ((int)value == int.MinValue)
+						return sb;
+					break;
+				case "Int64":
+					if ((long)value == long.MinValue)
+						return sb;
+					break;
+				case "Decimal":
+					if ((decimal)value == decimal.MinusOne)
+						return sb;
+					value = ((decimal)value).ToString("0.00", CultureInfo.InvariantCulture);
+					break;
+				case "DateTime":
+					if ((DateTime)value == DateTime.MinValue)
+						return sb;
+					value = ((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+					break;
+				}
+
+			return sb.AppendFormat("{0}-{1}", name, value);
+			}
 
 		/// <summary>
 		/// Метод расширения. Добавлени ненулевого параметра в строку
@@ -127,7 +178,20 @@ namespace Oldi.Utility
 				return sb;
 			return sb.AppendFormat(" {0}={1}", name, ((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss.zzz", CultureInfo.InvariantCulture));
 		}
-		
+
+		/// <summary>
+		/// Метод расширения. Добавлени ненулевого параметра в строку
+		/// </summary>
+		/// <param name="sb"></param>
+		/// <param name="name">Имя параметра</param>
+		/// <param name="value">Значение параметра</param>
+		public static StringBuilder Append2(this StringBuilder sb, string name, DateTime? value)
+			{
+			if (value == null)
+				return sb;
+			return sb.AppendFormat("{0}-{1}", name, ((DateTime)value).ToString("yyyy-MM-ddTHH:mm:ss.zzz", CultureInfo.InvariantCulture));
+			}
+
 		/// <summary>
 		/// Метод расширения. Добавление ненулевой строки параметров в строку с \r\n на конце
 		/// </summary>
