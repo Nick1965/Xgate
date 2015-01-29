@@ -752,6 +752,9 @@ namespace Oldi.Net.Cyber
 						errCode = 2;
 						break;
 					case 21: // Недостаточно средств для проведения платежа
+						state = 0;
+						errCode = 12;
+						break;
 					case 25: // Работа шлюза приостановлена
 						state = 12;
 						errCode = 6;

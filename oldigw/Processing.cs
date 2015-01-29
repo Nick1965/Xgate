@@ -248,7 +248,7 @@ namespace Oldi.Net
 							Current.UpdateState(Current.Tid, state :Current.State, errCode :Current.ErrCode, errDesc :Current.ErrDesc);
 							// gw.ReportRequest("status".ToUpper());
 							}
-						else if (Request.State == 12 || Request.State == 11)
+						else if (/* Request.State == 12 || */ Request.State == 11)
 							{
 							Current = Reposting(Request);
 							step = "REPT - stop";
