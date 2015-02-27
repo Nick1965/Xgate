@@ -15,6 +15,7 @@ using System.Resources;
 using System.Xml.Linq;
 using System.ServiceModel;
 using Oldi.Net.Proxy;
+using System.IO.Compression;
 
 namespace Oldi.Net
 {
@@ -1453,11 +1454,11 @@ namespace Oldi.Net
 			string[] phones = null;
 
 			// Открыть TCP-канал
-			NetTcpBinding binding = new NetTcpBinding(SecurityMode.None);
-			EndpointAddress endPointAddress = new EndpointAddress("net.tcp://odbs1.regplat.ru:1101/sms");
-			ChannelFactory<IXSMPP> myChannelFactory = new ChannelFactory<IXSMPP>(binding, endPointAddress);
-			IXSMPP Client = myChannelFactory.CreateChannel();
-			Response r = null;
+			// NetTcpBinding binding = new NetTcpBinding(SecurityMode.None);
+			// EndpointAddress endPointAddress = new EndpointAddress("http://odbs1.regplat.ru:1101/sms");
+			// ChannelFactory<IXSMPP> myChannelFactory = new ChannelFactory<IXSMPP>(binding, endPointAddress);
+			// IXSMPP Client = myChannelFactory.CreateChannel();
+			// Response r = null;
 
 			if (List.IndexOf(',') != -1 || List.IndexOf(';') != -1 || List.IndexOf('|') != -1 || List.IndexOf(' ') != -1)
 				{
@@ -1465,8 +1466,7 @@ namespace Oldi.Net
 				StringBuilder sb = new StringBuilder();
 				foreach (string p in phones)
 					{
-					r = Client.Send(From, p, Message);
-					if (r.errCode == 0)
+					if (SendSMS(From, "7" + p, Message))
 						Log("[SMSS] Уведомление {0} на {1} отправлено", Message, p);
 					else
 						Log("[SMSS] Уведомление {0} на {1} не отправлено", Message, p);
@@ -1474,17 +1474,154 @@ namespace Oldi.Net
 				}
 			else
 				{
-				r = Client.Send(From, List, Message);
-				if (r.errCode == 0)
+				if (SendSMS(From, "7" + List, Message))
 					Log("[SMSS] Уведомление {0} на {1} отправлено", Message, List);
 				else
 					Log("[SMSS] Уведомление {0} на {1} не отправлено", Message, List);
 				}
 
-			myChannelFactory.Close();
+			// myChannelFactory.Close();
 
 			}
 
+
+		/// <summary>
+		/// Отправка СМС
+		/// </summary>
+		/// <param name="From"></param>
+		/// <param name="Phone"></param>
+		/// <param name="Message"></param>
+		/// <returns></returns>
+		public bool SendSMS(string From, string Phone, string Message)
+			{
+			string ep = Config.AppSettings["SMPPEndpoint"];
+			Log("Send SMS(\"{3}\") {0} From={1} To={2}", From, Message, Phone, ep);
+
+			string answer = Get(ep, string.Format("from={0}&phone=7{1}&message={2}", From, Phone, Message));
+
+			Log("\r\nПолучен ответ:\r\n{0}", answer);
+			return true;
+
+			/*
+			using (WebChannelFactory<IXSMPP> wcf = new WebChannelFactory<IXSMPP>(new WebHttpBinding(), new Uri(Config.SMPPEndpoint)))
+				{
+				IXSMPP channel = wcf.CreateChannel();
+				XSMPP.Response r = channel.Send("RegPalt", Message, Phone);
+				if (r.ErrCode != 0) 
+					SetError(81);
+				return r.ErrCode == 0;
+				}
+			*/
+
+			}
+
+
+
+		/// <summary>
+		/// Выполнение запроса GET
+		/// </summary>
+		/// <param name="Host"></param>
+		/// <param name="Entry"></param>
+		/// <param name="x"></param>
+		/// <returns></returns>
+		string Get(string Host, params string[] x)
+			{
+			StringBuilder Url = new StringBuilder();
+			Url.Append(Host);
+			if (x != null && x.Length > 0)
+				Url.AppendFormat("?{0}", x[0]);
+			if (x != null && x.Length > 1)
+				for (int i = 1; i < x.Length; i++)
+					Url.AppendFormat("&{0}", x[i]);
+
+			System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(Url.ToString()));
+			request.Method = "GET";
+			request.Accept = "text/xml */*";
+			request.UserAgent = "XNET-test";
+			// request.ContentType = "application/x-www-form-urlencoded; charset=windows-1251";
+			request.ContentType = "application/x-www-form-urlencoded; charset=utf-8";
+			request.Headers.Add("Accept-Encoding", "identity");
+			// request.Headers.Add("Accept-Encoding", "gzip, deflate, identity");
+
+			// Set some reasonable limits on resources used by this request
+			request.MaximumAutomaticRedirections = 4;
+			request.MaximumResponseHeadersLength = 4;
+			// Set credentials to use for this request.
+			// CredentialCache myCache = new CredentialCache();
+			// myCache.Add(new Uri(TargetUri), "Basic", new NetworkCredential(UserName, Password));
+			// request.Credentials = myCache;
+
+			Log("\r\nОбращение к XSMPP: {0}", Url);
+			foreach (string key in request.Headers.AllKeys)
+				Log("{0} = {1}", key, request.Headers[key]);
+
+			System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
+			if (response == null)
+				{
+				// Console.WriteLine("Request faulted.");
+				return "Request faulted.";
+				}
+
+			// Console.WriteLine("Content length is {0}", response.ContentLength);
+			// Console.WriteLine("Content type is {0}", response.ContentType);
+			// Console.WriteLine("The encoding method used is: " + response.ContentEncoding);
+			// Console.WriteLine("The character set used is :" + response.CharacterSet);
+			// Get the stream associated with the response.
+			Stream receiveStream = response.GetResponseStream();
+
+			Log("\r\nПолучен ответ:");
+			foreach (string key in response.Headers.AllKeys)
+				Log("{0} = {1}", key, response.Headers[key]);
+
+			// Pipes the stream to a higher level stream reader with the required encoding format. 
+			Encoding enc;
+			if (!string.IsNullOrEmpty(response.CharacterSet))
+				{
+				if (response.CharacterSet.ToLower() == "windows-1251")
+					enc = Encoding.GetEncoding(1251);
+				else if (response.CharacterSet.ToLower() == "utf-8")
+					enc = Encoding.UTF8;
+				else
+					enc = Encoding.ASCII;
+				}
+			else
+				enc = Encoding.GetEncoding(1251);
+
+			string buf = null;
+
+			string[] ce = response.ContentEncoding.Split(new char[] { ',' });
+			foreach (string c in ce)
+				{
+				Console.WriteLine("touch {0}", c);
+				if (c.ToLower() == "deflate")
+					{
+					using (DeflateStream dfls = new DeflateStream(receiveStream, CompressionMode.Decompress))
+					using (StreamReader reader = new StreamReader(dfls, enc))
+						buf = reader.ReadToEnd();
+					Log("Read Deflate. Charset=\"{0}\", Content-Length={1}", enc.WebName, buf.Length);
+					break;
+					}
+				else if (c.ToLower() == "gzip")
+					{
+					using (GZipStream gzips = new GZipStream(receiveStream, CompressionMode.Decompress))
+					using (StreamReader reader = new StreamReader(gzips, enc))
+						buf = reader.ReadToEnd();
+					Log("Read GZip/{1}. Charset=\"{0}\"", enc.WebName, buf.Length);
+					break;
+					}
+				else
+					{
+					using (StreamReader reader = new StreamReader(receiveStream, enc))
+						buf = reader.ReadToEnd();
+					Log("Read uncompress. Charset=\"{0}\"", enc.WebName);
+					break;
+					}
+				}
+
+			receiveStream.Close();
+
+			return buf;
+			}
 
 		/// <summary>
 		/// Запись в основной лог

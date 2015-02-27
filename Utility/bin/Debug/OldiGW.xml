@@ -99,6 +99,7 @@
       <add key="Port" value="200" />
       <add key="SslPort" value="201" />
       <add key="ConnectionLimit" value="10" />
+      <add key="SMPPEndpoint" value="http://192.168.1.5:1100/sms/send"/>
 
     <add key="ConnectionString" value="Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;" />
       <add key="GorodConnectionString" value="Data Source=odbs1.regplat.ru; Initial Catalog=Gorod; User ID=sa; Password=5;" />
