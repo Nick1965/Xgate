@@ -424,7 +424,6 @@ namespace Oldi.Net
 							// Отправить СМС-уведомление, усли список уведомлений не пуст
 							if (newPay && !string.IsNullOrEmpty(Notify))
 								{
-								RootLog("[SMSC] отправляется сообщение к {0}", Notify);
 								this.Notify(Notify, string.Format("Num={0} S={1} Trm={2} на контроле до {3}",
 									x, XConvert.AsAmount(AmountAll), Terminal, XConvert.AsDate(Pcdate.AddHours(AmountDelay))));
 								}
@@ -1466,18 +1465,18 @@ namespace Oldi.Net
 				StringBuilder sb = new StringBuilder();
 				foreach (string p in phones)
 					{
-					if (SendSMS(From, "7" + p, Message))
-						Log("[SMSS] Уведомление {0} на {1} отправлено", Message, p);
+					if (SendSMS(From, p, Message))
+						RootLog("[SMSC] Уведомление {0} на {1} отправлено", Message, p);
 					else
-						Log("[SMSS] Уведомление {0} на {1} не отправлено", Message, p);
+						RootLog("[SMSC] Уведомление {0} на {1} не отправлено", Message, p);
 					}
 				}
 			else
 				{
-				if (SendSMS(From, "7" + List, Message))
-					Log("[SMSS] Уведомление {0} на {1} отправлено", Message, List);
+				if (SendSMS(From, List, Message))
+					RootLog("[SMSC] Уведомление {0} на {1} отправлено", Message, List);
 				else
-					Log("[SMSS] Уведомление {0} на {1} не отправлено", Message, List);
+					RootLog("[SMSC] Уведомление {0} на {1} не отправлено", Message, List);
 				}
 
 			// myChannelFactory.Close();
@@ -1495,26 +1494,15 @@ namespace Oldi.Net
 		public bool SendSMS(string From, string Phone, string Message)
 			{
 			string ep = Config.AppSettings["SMPPEndpoint"];
-			Log("Send SMS(\"{3}\") {0} From={1} To={2}", From, Message, Phone, ep);
+			RootLog("Send SMS(\"{3}\") {0} From={1} To={2}", From, Message, Phone, ep);
 
 			string answer = Get(ep, string.Format("from={0}&phone=7{1}&message={2}", From, Phone, Message));
 
-			Log("\r\nПолучен ответ:\r\n{0}", answer);
-			return true;
-
-			/*
-			using (WebChannelFactory<IXSMPP> wcf = new WebChannelFactory<IXSMPP>(new WebHttpBinding(), new Uri(Config.SMPPEndpoint)))
-				{
-				IXSMPP channel = wcf.CreateChannel();
-				XSMPP.Response r = channel.Send("RegPalt", Message, Phone);
-				if (r.ErrCode != 0) 
-					SetError(81);
-				return r.ErrCode == 0;
-				}
-			*/
-
+			if (!string.IsNullOrEmpty(answer) && answer.IndexOf("<errCode>0</errCode>") != -1)
+				return true;
+			else
+				return false;
 			}
-
 
 
 		/// <summary>
@@ -1551,15 +1539,15 @@ namespace Oldi.Net
 			// myCache.Add(new Uri(TargetUri), "Basic", new NetworkCredential(UserName, Password));
 			// request.Credentials = myCache;
 
-			Log("\r\nОбращение к XSMPP: {0}", Url);
+			RootLog("\r\nGet: Обращение к XSMPP: {0}", Url);
 			foreach (string key in request.Headers.AllKeys)
-				Log("{0} = {1}", key, request.Headers[key]);
+				RootLog("{0} = {1}", key, request.Headers[key]);
 
 			System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
 			if (response == null)
 				{
-				// Console.WriteLine("Request faulted.");
-				return "Request faulted.";
+				RootLog("Get: Request faulted.");
+				return null;
 				}
 
 			// Console.WriteLine("Content length is {0}", response.ContentLength);
@@ -1569,9 +1557,9 @@ namespace Oldi.Net
 			// Get the stream associated with the response.
 			Stream receiveStream = response.GetResponseStream();
 
-			Log("\r\nПолучен ответ:");
+			RootLog("\r\nGetПолучен ответ:");
 			foreach (string key in response.Headers.AllKeys)
-				Log("{0} = {1}", key, response.Headers[key]);
+				RootLog("{0} = {1}", key, response.Headers[key]);
 
 			// Pipes the stream to a higher level stream reader with the required encoding format. 
 			Encoding enc;
@@ -1592,13 +1580,12 @@ namespace Oldi.Net
 			string[] ce = response.ContentEncoding.Split(new char[] { ',' });
 			foreach (string c in ce)
 				{
-				Console.WriteLine("touch {0}", c);
 				if (c.ToLower() == "deflate")
 					{
 					using (DeflateStream dfls = new DeflateStream(receiveStream, CompressionMode.Decompress))
 					using (StreamReader reader = new StreamReader(dfls, enc))
 						buf = reader.ReadToEnd();
-					Log("Read Deflate. Charset=\"{0}\", Content-Length={1}", enc.WebName, buf.Length);
+					// Log("Read Deflate. Charset=\"{0}\", Content-Length={1}", enc.WebName, buf.Length);
 					break;
 					}
 				else if (c.ToLower() == "gzip")
@@ -1606,14 +1593,14 @@ namespace Oldi.Net
 					using (GZipStream gzips = new GZipStream(receiveStream, CompressionMode.Decompress))
 					using (StreamReader reader = new StreamReader(gzips, enc))
 						buf = reader.ReadToEnd();
-					Log("Read GZip/{1}. Charset=\"{0}\"", enc.WebName, buf.Length);
+					// Log("Read GZip/{1}. Charset=\"{0}\"", enc.WebName, buf.Length);
 					break;
 					}
 				else
 					{
 					using (StreamReader reader = new StreamReader(receiveStream, enc))
 						buf = reader.ReadToEnd();
-					Log("Read uncompress. Charset=\"{0}\"", enc.WebName);
+					// Log("Read uncompress. Charset=\"{0}\"", enc.WebName);
 					break;
 					}
 				}
