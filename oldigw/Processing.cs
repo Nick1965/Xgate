@@ -175,10 +175,16 @@ namespace Oldi.Net
 						Current = Request;
 						step = "UNDO - stop";
 
-						if (!string.IsNullOrEmpty(Request.Provider) && Request.Provider == "rt" || Request.Provider == "rtm")
-							Current = new RTRequest(Request);
+						if (!string.IsNullOrEmpty(Request.Provider))
+							{
+							if (Request.Provider == "rt" || Request.Provider == "rtm")
+								Current = new RTRequest(Request);
+							}
 
-						Current.Undo();
+						// Current.Undo();
+						Current.UpdateState(Request.Tid, state :12, errCode :6, errDesc :"Платёж отменён оператором", locked :0);
+						Current.GetState();
+						
 						Request.ReportRequest("UNDO - stop");
 						}
 					catch (Exception ex)
