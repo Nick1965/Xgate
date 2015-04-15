@@ -372,7 +372,7 @@ namespace Oldi.Net
 				}
 
 			// Если тип терминала не определён: считаем терминал и включаем финюконтроль
-			if (State == 0 && TerminalType != 2) // Если только новый платёж
+			if (State == 0 && TerminalType == 1) // Если только новый платёж
 				{
 
 				string trm = Terminal != int.MinValue? Terminal.ToString(): "NOREG";
@@ -424,7 +424,7 @@ namespace Oldi.Net
 							// Отправить СМС-уведомление, усли список уведомлений не пуст
 							if (newPay && !string.IsNullOrEmpty(Notify))
 								{
-								this.Notify(Notify, string.Format("Num={0} S={1} Trm={2} на контроле до {3}",
+								this.Notify(Notify, string.Format("Num={0} S={1} Trm={2} блок до {3}",
 									x, XConvert.AsAmount(AmountAll), Terminal, XConvert.AsDate(Pcdate.AddHours(AmountDelay))));
 								}
 
