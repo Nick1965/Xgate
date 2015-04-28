@@ -992,7 +992,7 @@ namespace Oldi.Net
 							{
 							RootLog("{0} Установка времени для терминала = {1} TD = {2} TZ={3}",
 								Tid, Terminal, XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz), tz);
-							terminalDate = time - TimeSpan.FromHours(Tz - Settings.Tz);
+							terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
 							return 0;
 							}
 
@@ -1000,7 +1000,7 @@ namespace Oldi.Net
 							{
 							RootLog("{0} Установка времени для терминала = {1} TD = {2} TZ={3}",
 								Tid, Terminal, XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz), Tz);
-							terminalDate = time - TimeSpan.FromHours(Tz - Settings.Tz);
+							terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
 							}
 						else
 							{
@@ -1013,7 +1013,7 @@ namespace Oldi.Net
 									XConvert.AsDateTZ(TerminalDate, Tz),
 									XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
 									Tid, Tz);
-								terminalDate = time - TimeSpan.FromHours(Tz - Settings.Tz);
+								terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
 								}
 							else if (td <= pc.AddSeconds(-10))
 								{
@@ -1022,7 +1022,7 @@ namespace Oldi.Net
 									XConvert.AsDateTZ(TerminalDate, Tz),
 									XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
 									(pc.Ticks - td.Ticks) / TimeSpan.TicksPerSecond, Tid, Tz);
-								terminalDate = time - TimeSpan.FromHours(Tz - Settings.Tz);
+								terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
 								}
 
 							// terminalDate += TimeSpan.FromHours(Tz - Settings.Tz);
@@ -1042,9 +1042,9 @@ namespace Oldi.Net
 					RootLog("{3} Корректировка времени PC={0} old TD={1} new TD={2} TZ={4}",
 						XConvert.AsDateTZ(Pcdate, Settings.Tz),
 						XConvert.AsDateTZ(TerminalDate, Tz),
-						XConvert.AsDateTZ(time - TimeSpan.FromHours(Tz - Settings.Tz), Tz),
+						XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
 						Tid, Tz);
-					terminalDate = time;
+					terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
 				}
 			}
 
