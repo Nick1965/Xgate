@@ -569,11 +569,8 @@ namespace Oldi.Mts
 			}
 
 			// Нельзя допускать чтобы время процессинга было раньше текущего
-			if (Pcdate > DateTime.Now)
-				{
-				Log("Время платежа раньше текущего PD={0} NOW={1}", XConvert.AsDate2(Pcdate), XConvert.AsDate2(DateTime.Now));
-				pcdate = DateTime.Now;
-				}
+			// В этой функции время корректируется
+			// GetTerminalInfo();
 
 			return base.MakePayment();
 		}
@@ -606,9 +603,12 @@ namespace Oldi.Mts
 
 				if (State == 0) // Новый платеж, получить разрешение
 				{
-					if (FinancialCheck(New)) return;
-					if (DoPay(0, 1) == 0)
-						DoPay(1, 6);
+					// Проверим время
+				GetTerminalInfo();
+
+				if (FinancialCheck(New)) return;
+				if (DoPay(0, 1) == 0)
+					DoPay(1, 6);
 				}
 				else if (State == 1) // Разрешение получено
 				{

@@ -41,3 +41,4 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\bin\Debug\Utility.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\obj\Debug\Mts.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\obj\Debug\Mts.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\obj\Debug\Mts.csprojResolveAssemblyReference.cache

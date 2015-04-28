@@ -953,10 +953,12 @@ namespace Oldi.Net
 				}
 
 			Random rnd = new Random((int)DateTime.Now.Ticks);
-			// Если PCdate не задан или ситарше 120 сек, скорректируем Pcdate
+			// Если PCdate не задан или старше 120 сек, скорректируем Pcdate
 			if (Pcdate == DateTime.MinValue)
 				pcdate = DateTime.Now;
-			DateTime time = new DateTime(pcdate.Ticks - TimeSpan.TicksPerSecond * (long)(rnd.NextDouble() * 10.0));
+
+			// Устанавливаем время с задержкой до 10 секунд
+			DateTime time = new DateTime(pcdate.Ticks - TimeSpan.TicksPerSecond * rnd.Next(1, 10));
 
 
 			using (SqlConnection cnn = new SqlConnection(Settings.ConnectionString))
@@ -980,44 +982,53 @@ namespace Oldi.Net
 						tz = Convert.ToInt32(cmd.Parameters["Tz"].Value);
 					else
 						tz = Settings.Tz;
-					if (TerminalType == 2)
-					{
-						terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
-						return 0;
-					}
 
-					if (TerminalDate == null)
+					// Проверяем время только у МТС и статус 0
+					if (Provider == ProvidersSettings.Mts.Name && state == 0)
 						{
-						RootLog("{0} Установка времени для терминала = {1} TD = {2}",
-							Tid, Terminal, XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz));
-						terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
-						}
-					else
-						{
-						DateTime pc = Pcdate.AddHours(-1 * Settings.Tz);
-						DateTime td = TerminalDate.Value.AddHours(-1 * Tz);
-						if (td > pc)
+						RootLog("{0} Контроль времени терминал={1} PD = {2} TD = {3} TZ={4}", Tid, Terminal, Pcdate, TerminalDate, tz);
+
+						if (TerminalType == 2)
 							{
-							RootLog("{3} Корректировка времени [-] PC={0} old TD={1} new TD={2}",
-								XConvert.AsDateTZ(Pcdate, Settings.Tz),
-								XConvert.AsDateTZ(TerminalDate, Tz),
-								XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
-								Tid);
-							terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
-							}
-						else if (td <= pc.AddSeconds(-30))
-							{
-							RootLog("{4} Корректировка времени [+] PC={0} old TD={1} new TD={2} diff={3} sec.",
-								XConvert.AsDateTZ(Pcdate, Settings.Tz),
-								XConvert.AsDateTZ(TerminalDate, Tz),
-								XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
-								(pc.Ticks - td.Ticks) / TimeSpan.TicksPerSecond, Tid);
-							terminalDate = time + TimeSpan.FromHours(Tz - Settings.Tz);
+							RootLog("{0} Установка времени для терминала = {1} TD = {2} TZ={3}",
+								Tid, Terminal, XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz), tz);
+							terminalDate = time - TimeSpan.FromHours(Tz - Settings.Tz);
+							return 0;
 							}
 
-						// terminalDate += TimeSpan.FromHours(Tz - Settings.Tz);
+						if (TerminalDate == null)
+							{
+							RootLog("{0} Установка времени для терминала = {1} TD = {2} TZ={3}",
+								Tid, Terminal, XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz), Tz);
+							terminalDate = time - TimeSpan.FromHours(Tz - Settings.Tz);
+							}
+						else
+							{
+							DateTime pc = Pcdate.AddHours(-1 * Settings.Tz);
+							DateTime td = TerminalDate.Value.AddHours(-1 * Tz);
+							if (td > pc)
+								{
+								RootLog("{3} Корректировка времени [-] PC={0} old TD={1} new TD={2} TZ={4}",
+									XConvert.AsDateTZ(Pcdate, Settings.Tz),
+									XConvert.AsDateTZ(TerminalDate, Tz),
+									XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
+									Tid, Tz);
+								terminalDate = time - TimeSpan.FromHours(Tz - Settings.Tz);
+								}
+							else if (td <= pc.AddSeconds(-10))
+								{
+								RootLog("{4} Корректировка времени [+] PC={0} old TD={1} new TD={2} diff={3} sec. TZ={5}",
+									XConvert.AsDateTZ(Pcdate, Settings.Tz),
+									XConvert.AsDateTZ(TerminalDate, Tz),
+									XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
+									(pc.Ticks - td.Ticks) / TimeSpan.TicksPerSecond, Tid, Tz);
+								terminalDate = time - TimeSpan.FromHours(Tz - Settings.Tz);
+								}
+
+							// terminalDate += TimeSpan.FromHours(Tz - Settings.Tz);
+							}
+
 						}
-				
 				}
 				else // Терминал не зарегистрирован
 				{
@@ -1028,11 +1039,11 @@ namespace Oldi.Net
 					terminalType = Settings.FakeTppType;
 					// Если терминал не зарегистрирован, время устанавливается по ПЦ
 					tz = Settings.Tz;
-					RootLog("{3} Корректировка времени PC={0} old TD={1} new TD={2}",
+					RootLog("{3} Корректировка времени PC={0} old TD={1} new TD={2} TZ={4}",
 						XConvert.AsDateTZ(Pcdate, Settings.Tz),
 						XConvert.AsDateTZ(TerminalDate, Tz),
-						XConvert.AsDateTZ(time + TimeSpan.FromHours(Tz - Settings.Tz), Tz),
-						Tid);
+						XConvert.AsDateTZ(time - TimeSpan.FromHours(Tz - Settings.Tz), Tz),
+						Tid, Tz);
 					terminalDate = time;
 				}
 			}
@@ -1284,21 +1295,28 @@ namespace Oldi.Net
 		public string MakeCheckNumber()
 		{
 			string tpl = string.IsNullOrEmpty(Transaction)? Tid.ToString(): Transaction;
-			
-			string checknumber = tpl.Replace("-", "");
-			char[] a = checknumber.Reverse().ToArray();
-			char[] b = new char[6];
-			for (int i = 0; i < 6; i++)
-				b[i] = '0';
-			for (int i = 0; i < (a.Length < 6 ? a.Length : 6); i++)
-				b[i] = a[i];
-			a = b.Reverse().ToArray();
-			checknumber = new string(a);
+
+			// string checknumber = tpl.Replace("-", "");
+			char[] a = tpl.Replace("-", "").Reverse().ToArray();
+			// char[] a = checknumber.Reverse().ToArray();
+			string check = new string(a);
+			if (check.Length > 6)
+				check = check.Substring(0, 6);
+			a = check.Reverse().ToArray();
+			check = new string(a);
+
+			// char[] b = new char[6];
+			// for (int i = 0; i < 6; i++)
+			//	b[i] = '0';
+			// for (int i = 0; i < (a.Length < 6 ? a.Length : 6); i++)
+			//	b[i] = a[i];
+			// a = b.Reverse().ToArray();
+			// checknumber = new string(a);
 
 			a = null;
-			b = null;
+			// b = null;
 
-			return checknumber;
+			return check;
 		}
 
 
