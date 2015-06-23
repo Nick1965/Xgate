@@ -39,13 +39,15 @@ namespace Oldi.Utility
 			StringBuilder at = new StringBuilder();
 			if (Count > 0)
 			{
-				at.Append("<attributes>\r\n");
+				// at.Append("<attributes>\r\n");
 				foreach (string key in Keys)
-					at.AppendFormat("<attribute name=\"{0}\" value=\"{1}\" />\r\n", key, this[key]);
-				at.Append("</attributes>\r\n");
+					// at.AppendFormat("<attribute name=\"{0}\" value=\"{1}\" />\r\n", key, this[key]);
+					at.AppendFormat("\"{0}\"=\"{1}\";", key, this[key]);
+				// at.Append("</attributes>\r\n");
 			}
 
-			return Count > 0 ? at.ToString() : null;
+			// return Count > 0 ? at.ToString() : null;
+			return at.ToString();
 		}
 
 		/// <summary>
@@ -56,6 +58,14 @@ namespace Oldi.Utility
 		{
 			if (!string.IsNullOrEmpty(src))
 			{
+				string[] paras = src.Split(new Char[] {';'});
+				foreach(string para in paras)
+					{
+					string [] nameValue = para.Split(new Char[] {'='});
+					base.Add(nameValue[0], nameValue[1]);
+					}
+				
+				/*
 				XDocument doc = XDocument.Parse(src);
 
 				if (doc != null)
@@ -64,6 +74,7 @@ namespace Oldi.Utility
 						if ((string)el.Name.ToString() == "attribute")
 							Add((string)el.Attribute("name").Value, (string)el.Attribute("value").Value);
 					}
+				 */
 			}
 		}
 	

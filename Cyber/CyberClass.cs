@@ -327,7 +327,7 @@ namespace Oldi.Net.Cyber
 				*/
 
 				Log("{0} Подготовлен запрос:\r\n{1}", Session, prm.ToString());
-				// Log("Подписан запрос\r\n{0}", stRequest);
+				Log("Подписан запрос\r\n---------------------------------------{0}\r\n---------------------------------------", stRequest);
 				
 				errCode = 0;
 				errDesc = null;

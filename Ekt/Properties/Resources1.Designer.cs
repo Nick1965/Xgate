@@ -85,7 +85,7 @@ namespace Oldi.Ekt.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на &lt;request point=&quot;{0}&quot;&gt;&lt;payment account=&quot;{1}&quot; service=&quot;{2}&quot; sum=&quot;{3}&quot; id=&quot;{4}&quot; check=&quot;{5}&quot; date=&quot;{6}&quot;&gt;{7}&lt;/payment&gt;&lt;/request&gt;.
+        ///   Ищет локализованную строку, похожую на &lt;request point=&quot;{0}&quot;&gt;&lt;payment account=&quot;{1}&quot; service=&quot;{2}&quot; sum=&quot;{3}&quot; sum-in=&quot;{4}&quot; id=&quot;{5}&quot; check=&quot;{6}&quot; date=&quot;{7}&quot;&gt;{8}&lt;/payment&gt;&lt;/request&gt;.
         /// </summary>
         internal static string Template_Payment {
             get {
@@ -117,8 +117,7 @@ namespace Oldi.Ekt.Properties {
         
         /// <summary>
         ///   Ищет локализованную строку, похожую на &lt;request point=&quot;{0}&quot;&gt;
-        ///	&lt;payment service=&quot;{1}&quot; sum=&quot;{2}&quot; sum-in=&quot;{3}&quot; id=&quot;{4}&quot; check=&quot;{5}&quot; date=&quot;{6}&quot;&gt;
-        ///		&lt;attribute name=&quot;id1&quot; value=&quot;{7}&quot; /&gt;
+        ///	&lt;payment service=&quot;{1}&quot; account=&quot;{7}&quot; sum=&quot;{2}&quot; sum-in=&quot;{3}&quot; id=&quot;{4}&quot; check=&quot;{5}&quot; date=&quot;{6}&quot;&gt;
         ///		&lt;attribute name=&quot;id2&quot; value=&quot;{8}&quot; /&gt;
         ///	&lt;/payment&gt;
         ///&lt;/request&gt;.
@@ -126,6 +125,19 @@ namespace Oldi.Ekt.Properties {
         internal static string Template_Payment_Id1Id2 {
             get {
                 return ResourceManager.GetString("Template_Payment_Id1Id2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на &lt;request point=&quot;{0}&quot;&gt;
+        ///	&lt;payment service=&quot;{1}&quot; account=&quot;{7}&quot; sum=&quot;{2}&quot; sum-in=&quot;{3}&quot; id=&quot;{4}&quot; check=&quot;{5}&quot; date=&quot;{6}&quot;&gt;
+        ///		&lt;attribute name=&quot;phone&quot; value=&quot;{8}&quot; /&gt;
+        ///	&lt;/payment&gt;
+        ///&lt;/request&gt;.
+        /// </summary>
+        internal static string Template_Payment_Id1Phone {
+            get {
+                return ResourceManager.GetString("Template_Payment_Id1Phone", resourceCulture);
             }
         }
         

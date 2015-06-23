@@ -456,7 +456,8 @@ namespace Oldi.Ekt
 
 			if (Pcdate == DateTime.MinValue)
 				pcdate = DateTime.Now;
-			string sDate = XConvert.AsDate(pcdate) + "+0700";
+			int lTz = Tz != -1? Tz: Settings.Tz;
+			string sDate = XConvert.AsDate(pcdate) + string.Format("+{0:D2}00", lTz);
 
 			stRequest = Properties.Resources.Template_XmlHeader + "\r\n";
 			if (state == 0) // Payment
@@ -503,11 +504,45 @@ namespace Oldi.Ekt
 						// Атрибуты: id1, id2
 						Account, Number);
 					}
+				else if (!string.IsNullOrEmpty(Account) && !string.IsNullOrEmpty(Phone)) // Id1 и phone
+					{
+					stRequest += string.Format(Properties.Resources.Template_Payment_Id1Phone,
+						Settings.Ekt.Pointid, Gateway, Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(), sDate,
+						// Атрибуты: id1, phone
+						Account, Phone);
+					}
+				else if (string.IsNullOrEmpty(Account) && string.IsNullOrEmpty(Phone) && Attributes != null && Attributes.Count > 0) // Есть дополнительные атрибуты
+					{
+					StringBuilder sb = new StringBuilder();
+					sb.AppendFormat("<request point=\"{0}\">\r\n", Settings.Ekt.Pointid);
+					sb.AppendFormat("\t<payment account=\"{0}\" service=\"{1}\" sum=\"{2}\" sum-in=\"{3}\" id=\"{4}\" check=\"{5}\" date={6}>\r\n",
+						string.IsNullOrEmpty(Phone) ? Account : Phone,	// Номер телефона или счёта
+						Gateway,										// Номер шлюза ЕКТ
+						Math.Round(Amount * 100),						// amount
+						Math.Round(AmountAll * 100),					// summary_amount
+						Tid.ToString(),
+						MakeCheckNumber(),								// Номер чека
+						sDate											// Время платежа
+						);
+					// Добавляется коллекция атрибутов
+					foreach (string name in Attributes.Keys)
+						sb.AppendFormat("\t\t<attribute name=\"{0}\" value=\"{1}\" />\r\n", name, Attributes[name]);
+					sb.Append("\t/<payment>\r\n");
+					sb.Append("/<request>");
+					stRequest += sb.ToString();
+					}
 				else
+					{
+					StringBuilder sb = new StringBuilder();
+					// Добавляется коллекция атрибутов
+					foreach (string name in Attributes.Keys)
+						sb.AppendFormat("\t\t<attribute name=\"{0}\" value=\"{1}\" />\r\n", name, Attributes[name]);
 					stRequest += string.Format(Properties.Resources.Template_Payment, Settings.Ekt.Pointid,
 						string.IsNullOrEmpty(Phone) ? Account : Phone, Gateway, // Номер сервиса ЕКТ, 
-						Math.Round(Amount * 100), Tid.ToString(), MakeCheckNumber(), sDate, Attributes.SaveToXml());
-
+						Math.Round(Amount * 100),
+						AmountAll == -1? Math.Round(Amount * 100): Math.Round(AmountAll * 100), 
+						Tid.ToString(), MakeCheckNumber(), sDate, sb.ToString());
+					}
 				}
 			else if (state == 3) // Status
 				stRequest += string.Format(Properties.Resources.Template_Status, Settings.Ekt.Pointid, Tid);
