@@ -622,10 +622,11 @@ namespace Oldi.Net.Cyber
 									{
 									errCode = 2;
 									state = 11;
-									errDesc = "Сессия существует. требует вмешательства щператора";
+									errDesc = "Сессия существует. требует вмешательства oператора";
 									UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
 										outtid :outtid, acceptdate :XConvert.AsDate2(acceptdate),
 										price :price, addinfo :addinfo);
+									RootLog("Tid={0} Result={1} Error={1} Session={2} {3}", Tid, Result, errCode, Session, errDesc);
 									// Log("Обработан: {0}", ToString());
 									return 0;
 									}
