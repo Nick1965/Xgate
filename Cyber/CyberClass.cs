@@ -430,6 +430,9 @@ namespace Oldi.Net.Cyber
 						return 100;
 					}
 					
+					// Возвращаемый номер сессии
+					session = GetValue("session");
+					
 					// Результат обработки
 					if (!Int32.TryParse(GetValue("Result"), out result)) 
 						result = 0;
@@ -614,6 +617,18 @@ namespace Oldi.Net.Cyber
 							// Log("DoPay: error={0} result={1}", errCode, result);
 							if (old_state == 0 || old_state == 1)
 								{
+								// Сессия с таким номером существует установим статус 11
+								if (result == 1 && errCode == 1 && Session == "-OLDIGW" + tid.ToString())
+									{
+									errCode = 2;
+									state = 11;
+									errDesc = "Сессия существует. требует вмешательства щператора";
+									UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
+										outtid :outtid, acceptdate :XConvert.AsDate2(acceptdate),
+										price :price, addinfo :addinfo);
+									// Log("Обработан: {0}", ToString());
+									return 0;
+									}
 								if (result == 0 && errCode == 0)
 									{
 									errCode = 0;

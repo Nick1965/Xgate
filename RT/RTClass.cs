@@ -232,32 +232,6 @@ namespace RT
 			// TraceRequest();
 		}
 
-
-		/// <summary>
-		/// Создание нового платежа
-		/// </summary>
-		/// <returns></returns>
-		/*
-		public override int MakePayment()
-		{
-			if (state != 255) // Платёж существует
-			{
-				// Log("{0} - Платёж существует. Статус - {1}. Повторный платёж.", Tid, State);
-				RootLog("{0} - Платёж существует. Статус - {1}. Повторный платёж.", Tid, State);
-				// DoPay(3, 6);
-				state = 1;
-				UpdateState(Tid, state: 1, locked: 1);
-				return 0;
-			}
-			else
-			{
-				// Log("{0} - Платёж не существует.", Tid);
-				// RootLog("{0} - Платёж не существует.", Tid);
-				return base.MakePayment();
-			}
-		}
-		*/
-
 		public override int Undo()
 		{
 			byte old_state = state;

@@ -92,9 +92,6 @@ namespace Oldi.Net
 					step = "CHCK - stop";
 					switch (Request.Provider)
 					{
-						case "as":
-							Current = new Autoshow.Autoshow(Request);
-							break;
 						case "cyber":
 							Current = new GWCyberRequest(Request);
 							break;
@@ -111,9 +108,6 @@ namespace Oldi.Net
 					}
 					Current.Check();
 					break;
-					// if (gw.State != 1 && gw.State != 6) gw.ReportRequest();
-					// SendAnswer(m_data, gw);
-					// return;
 
 				case "status":
 					// Прочитать из БД информацию о запросе
@@ -172,26 +166,17 @@ namespace Oldi.Net
 						{
 						Request.GetPaymentInfo();
 						Request.ReportRequest("UNDO - strt");
-						Current = Request;
 						step = "UNDO - stop";
-
-						if (!string.IsNullOrEmpty(Request.Provider))
-							{
-							if (Request.Provider == "rt" || Request.Provider == "rtm")
-								Current = new RTRequest(Request);
-							}
-
-						// Current.Undo();
-						Current.UpdateState(Request.Tid, state :12, errCode :6, errDesc :"Платёж отменён оператором", locked :0);
-						Current.GetState();
-						
-						Request.ReportRequest("UNDO - stop");
+						if (Request.Provider == "rt" || Request.Provider == "rtm")
+							((RTRequest)Request).Undo();
+						else
+							Request.Undo();
 						}
 					catch (Exception ex)
 						{
 						Log(Messages.LogError, Request.Tid, ex.Message, ex.StackTrace);
 						Request.errDesc = string.Format(Messages.ErrDesc, Request.Tid, ex.Message);
-						Request.errCode = 11;
+						Request.errCode = 6;
 						}
 
 					break;
