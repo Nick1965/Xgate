@@ -617,19 +617,21 @@ namespace Oldi.Net.Cyber
 							// Log("DoPay: error={0} result={1}", errCode, result);
 							if (old_state == 0 || old_state == 1)
 								{
-								// Сессия с таким номером существует установим статус 11
-								if (result == 1 && errCode == 1 && Session == "-OLDIGW" + tid.ToString())
-									{
-									errCode = 2;
-									state = 11;
-									errDesc = "Сессия существует. требует вмешательства oператора";
-									UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
-										outtid :outtid, acceptdate :XConvert.AsDate2(acceptdate),
-										price :price, addinfo :addinfo);
-									RootLog("Tid={0} Result={1} Error={1} Session={2} {3}", Tid, Result, errCode, Session, errDesc);
-									// Log("Обработан: {0}", ToString());
-									return 0;
-									}
+									/*
+									// Сессия с таким номером существует установим статус 11
+									if (result == 1 && errCode == 1 && Session == "-OLDIGW" + tid.ToString())
+										{
+										errCode = 2;
+										state = 11;
+										errDesc = "Сессия существует. требует вмешательства oператора";
+										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
+											outtid :outtid, acceptdate :XConvert.AsDate2(acceptdate),
+											price :price, addinfo :addinfo);
+										RootLog("Tid={0} Result={1} Error={1} Session={2} {3}", Tid, Result, errCode, Session, errDesc);
+										// Log("Обработан: {0}", ToString());
+										return 0;
+										}
+									*/ 
 								if (result == 0 && errCode == 0)
 									{
 									errCode = 0;
@@ -761,7 +763,14 @@ namespace Oldi.Net.Cyber
 				switch (errCode)
 				{
 					case 1: // сессия с таким номерорм уже существует. установить state = 1
-						state = 3;
+					case 34:
+						if (Session == "-OLDIGW" + tid.ToString())
+							{
+							state = 11;
+							errCode = 2;
+							}
+						else
+							state = 3;
 						break;
 					case 6: // Неверная АСП (устарел ключ)
 						state = 11;
