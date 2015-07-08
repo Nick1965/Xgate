@@ -54,8 +54,8 @@ namespace Oldi.Net
 					// Console.WriteLine(ex.StackTrace);
 				lock (LockObj)
 					{
-					Log(".\\log\\oldigw.log", "Ошибка при попытке записи в лог. Файл: {0}, Ошибка {1}\r\n{2}", log, ex.Message, ex.StackTrace);
-					Log("Оригинальное сообщение:\r\n{0}", text);
+					Log(".\\log\\error.log", "Ошибка при попытке записи в лог. Файл: {0}, Ошибка {1}\r\n{2}", log, ex.Message, ex.StackTrace);
+					Log(".\\log\\error.log", "Оригинальное сообщение:\r\n{0}", text);
 					}
 				}
 			}
@@ -117,8 +117,8 @@ namespace Oldi.Net
 					// Console.WriteLine(ex.StackTrace);
 					lock(LockObj)
 						{
-						Log(".\\log\\oldigw.log", "Ошибка при попытке записи в лог. Файл: {0}, Ошибка {1}\r\n{2}", log, ex.Message, ex.StackTrace);
-						Log("Оригинальное сообщение:\r\n{0}", text);
+						Log(".\\log\\error.log", "Ошибка при попытке записи в лог. Файл: {0}, Ошибка {1}\r\n{2}", log, ex.Message, ex.StackTrace);
+						Log(".\\log\\error.log", "Оригинальное сообщение:\r\n{0}", text);
 						}
 						
 				}
