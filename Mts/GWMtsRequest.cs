@@ -329,9 +329,12 @@ namespace Oldi.Mts
 					break;
 				case 301: // Нет денег
 				case 354: // Терминал не зарегистрирован
-					state = Pcdate.AddDays(1.0) <= DateTime.Now ? (byte)12 : old_state;
+					// state = Pcdate.AddDays(1.0) <= DateTime.Now ? (byte)12 : old_state;
+					state = 12;
 					break;
 				case 66:  // ПЦ ЕСПП. Техническая ошибка сервера приложений
+					state = 12;
+					break;
 				case 362:
 				case 501: // Превышена пропускная способность
 				case 357: // Платеж уже существует

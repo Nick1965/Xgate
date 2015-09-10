@@ -212,16 +212,18 @@ namespace Oldi.Net
 						state = 0;
 					errDesc = "Не получен ответ от провайдера";
 					Log(ErrDesc);
+					RootLog(ErrDesc);
 				}
 			}
 			catch (WebException we)
 			{
-				errCode = (int)we.Status + 10000;
+				errCode = (int)we.Status + 100;
 				errDesc = string.Format("{0} {1} ({2})", errCode, we.Message, we.Status.ToString());
 				if (state == 1)
 					state = 0;
 				errCode = 502;
 				Log(errDesc);
+				RootLog(errDesc);
 			}
 			catch (Exception ex)
 			{
@@ -230,7 +232,7 @@ namespace Oldi.Net
 				ErrDesc = string.Format("Ошибка шлюза {0}", ex.Message);
 				state = 1;
 				RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
-				Log(ex.Message);
+				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
 			}
 			finally
 			{
