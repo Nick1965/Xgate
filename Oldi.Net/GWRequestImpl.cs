@@ -329,6 +329,9 @@ namespace Oldi.Net
 			}
 			else // Redo
 			{
+			byte GorodState = GetGorodState();
+			RootLog("{0} [SYNC - strt] Gorod/XGate {0}/{1}", Tid, GorodState, State);
+
 				if (State == 0)
 					{
 					if (FinancialCheck(New)) return;

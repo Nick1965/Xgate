@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Crypto.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="GorodState.cs" />
     <Compile Include="GWPccRequest.cs" />
     <Compile Include="GWRequest.cs" />
     <Compile Include="GWRequestImpl.cs" />

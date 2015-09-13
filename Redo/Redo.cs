@@ -215,7 +215,33 @@ namespace OldiGW.Redo.Net
 					{
 					gw.SetLock(1);
 					gw.ReportRequest("REDO - strt");
-					gw.Processing(false);
+
+					//
+					// Запросить состояние платежа в ГОРОДЕ.
+					// Если в  городе платёж в состоянии 3 - выполнить шаг.
+					// Иначе установить состояние как в ГОРОДЕ и вернуться.
+					//
+					byte GorodState = 3;
+					try
+						{
+						GorodState = gw.GetGorodState();
+						// Log("{0} [SYNC - strt] Получение статуса в Gorod {1} XGate: {2}", gw.Tid, GorodState, gw.State);
+						}
+					catch (Exception ex)
+						{
+						Log("{0} [SYNC - stop] {1} Допроведения платежа откладывается", gw.Tid, ex.Message);
+						return; // Не допроводим пока город стоит. Нече.
+						}
+
+
+					if (GorodState == 3)
+						gw.Processing(false);
+					else
+						{
+						byte newState = GorodState > 3? GorodState: (byte)12;
+						Log("{0} [REDO - SYNC] Допроведения платежа прекращается. Новый статус: {1}", gw.Tid, newState);
+						gw.UpdateState(gw.Tid, state :newState, errCode :500, errDesc :"Синхронизирован с ГОРОД", locked :0);
+						}
 					gw.ReportRequest("REDO - stop");
 					}
 			}

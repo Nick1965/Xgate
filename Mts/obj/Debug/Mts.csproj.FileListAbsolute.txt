@@ -29,7 +29,6 @@ D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\obj\Debug\Mts.dll
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Mts\obj\Debug\Mts.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\obj\Debug\Oldi.Mts.Properties.Resources.resources
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\obj\Debug\Mts.csproj.GenerateResource.Cache
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\bin\Debug\OldiGW.xml
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\bin\Debug\Mts.dll.config
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\bin\Debug\Mts.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\bin\Debug\Mts.pdb

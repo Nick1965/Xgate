@@ -130,14 +130,14 @@ namespace Oldi.Ekt
 								errCode = 1;
 							break;
 						case 80:
-							if (result.code == 30 || result.code == 33) // Нет денег/ Сервис не подключен (отменяем платёж)
-							/*
+							if (result.code == 30 /* || result.code == 33 */ ) // Нет денег/ Сервис не подключен (отменяем платёж)
+							
 							{
 								errCode = 12;
 								state = old_state == 0? (byte)0: (byte)3;
 							}
 							else 
-							*/
+							
 							{
 								errCode = 6;
 								state = 12;

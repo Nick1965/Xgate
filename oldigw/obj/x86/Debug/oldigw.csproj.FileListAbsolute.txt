@@ -65,7 +65,6 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Properties.Resources.resources
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csprojResolveAssemblyReference.cache
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\OldiGW.xml
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\app.config
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\oldigw.exe
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\oldigw.pdb

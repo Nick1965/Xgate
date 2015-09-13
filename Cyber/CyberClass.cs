@@ -295,7 +295,7 @@ namespace Oldi.Net.Cyber
 									break;
 								case "payer_address":
 									prm.AppendLine("PAYER_ADDRESS", value);
-									sb.AppendFormat("\r\nn\tame=\"{0}\" value=\"{1}\"", "PAYER_ADDRESS", value);
+									sb.AppendFormat("\r\n\tname=\"{0}\" value=\"{1}\"", "PAYER_ADDRESS", value);
 									break;
 								case "payer_doc":
 									prm.AppendLine("PAYER_DOC", value);
@@ -777,7 +777,7 @@ namespace Oldi.Net.Cyber
 						errCode = 2;
 						break;
 					case 21: // Недостаточно средств для проведения платежа
-						state = 12;
+						state = 0;
 						break;
 					case 25: // Работа шлюза приостановлена
 						state = 12;

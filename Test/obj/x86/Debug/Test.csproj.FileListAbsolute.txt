@@ -45,7 +45,6 @@ D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Test\obj\x86\Debug\Test.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.Properties.Resources.resources
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.csproj.GenerateResource.Cache
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\OldiGW.xml
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Test.exe.config
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Test.exe.manifest
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Test.application

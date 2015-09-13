@@ -486,6 +486,15 @@ namespace Oldi.Utility
 		public static string ConnectionString { get; set; }
 
 		/// <summary>
+		/// Подключение к БД ГОРОД
+		/// </summary>
+		public static string GorodConnectionString
+			{
+			get;
+			set;
+			}
+
+		/// <summary>
 		/// Время попытки проверки БД при старте шлюза
 		/// </summary>
 		public static int DbCheckTimeout { get; set; }
@@ -727,6 +736,9 @@ namespace Oldi.Utility
 				int.TryParse(Config.AppSettings["SslPort"], out sslPort);
 
 			ConnectionString = Config.AppSettings["ConnectionString"];
+			GorodConnectionString = Config.AppSettings["GorodConnectionString"];
+
+
 			DbCheckTimeout = int.Parse(Config.AppSettings["DbCheckTimeout"]);
 			GWHost = Config.AppSettings["GWHost"];
 			logLevel = Config.AppSettings["logLevel"];

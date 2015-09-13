@@ -27,7 +27,6 @@ D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Oldi.Net\obj\Debug\Oldi.Net.pd
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.Properties.Resources.resources
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.csproj.GenerateResource.Cache
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\OldiGW.xml
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Oldi.Net.dll.config
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Oldi.Net.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Oldi.Net.pdb

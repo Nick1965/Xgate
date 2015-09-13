@@ -29,7 +29,6 @@ D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Smtp\obj\Debug\Smtp.csprojReso
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Smtp\obj\Debug\Smtp.dll
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Smtp\obj\Debug\Smtp.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\obj\Debug\Smtp.csprojResolveAssemblyReference.cache
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\OldiGW.xml
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\Smtp.dll.config
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\Smtp.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Smtp\bin\Debug\Smtp.pdb

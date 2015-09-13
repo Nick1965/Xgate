@@ -170,7 +170,13 @@ namespace Oldi.Net
 						if (Request.Provider == "rt" || Request.Provider == "rtm")
 							((RTRequest)Request).Undo();
 						else
-							Request.Undo();
+							{
+							// Request.Undo();
+							Request.ErrCode = 6;
+							Request.State = 12;
+							Request.ErrDesc = string.Format(Messages.ManualUndo, Request.Provider);
+							Request.UpdateState(Current.Tid, state :Request.State, errCode :Request.ErrCode, errDesc :Request.ErrDesc);
+							}
 						}
 					catch (Exception ex)
 						{

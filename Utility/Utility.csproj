@@ -58,12 +58,6 @@
     <Compile Include="XmlBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="OldiGW.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

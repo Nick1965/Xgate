@@ -130,21 +130,21 @@ namespace Oldi.Net
 							string n = null;
 							string v = null;
 							StringBuilder sb = new StringBuilder();
+							n = "";
+							v = "";
 							foreach (XAttribute attr in el.Attributes())
 								{
-								n = "";
-								v = "";
 								if (attr.Name.LocalName.ToLower() == "name")
 									n = (string)attr.Value;
 								else if (attr.Name.LocalName.ToLower() == "value")
 									v = (string)attr.Value;
-								if (!string.IsNullOrEmpty(n))
-									{
-									sb.AppendFormat("{0}={1};", n, v);
-									Attributes.Add(n, v);
-									}
 								}
-							if (Settings.LogLevel.IndexOf("PARS") != -1)
+							if (!string.IsNullOrEmpty(n))
+								{
+								sb.AppendFormat("{0}={1};", n, v);
+								Attributes.Add(n, v);
+								}
+							// if (Settings.LogLevel.IndexOf("PARS") != -1)
 								Log("Parse: atrs={0}", sb.ToString());
 							break;
 						case "filial":
