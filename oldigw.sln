@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "oldigw", "oldigw\oldigw.csproj", "{9CBB6000-8817-4E48-B930-FF5E624F6B62}"
 EndProject
@@ -28,6 +28,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMPP", "SMPP\SMPP.csproj", "{E3E4C85D-839F-42AE-BA65-E54B29261510}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RT", "RT\RT.csproj", "{55733427-A15A-4424-8165-7232F7BA2A7E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedirectPay", "RedirectPay\RedirectPay.csproj", "{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -201,6 +203,18 @@ Global
 		{55733427-A15A-4424-8165-7232F7BA2A7E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{55733427-A15A-4424-8165-7232F7BA2A7E}.Release|Win32.ActiveCfg = Release|Any CPU
 		{55733427-A15A-4424-8165-7232F7BA2A7E}.Release|x86.ActiveCfg = Release|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Release|Win32.ActiveCfg = Release|Any CPU
+		{F55F4DE0-DA6C-425A-8D9E-215D61AAC4F5}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

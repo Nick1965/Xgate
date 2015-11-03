@@ -374,16 +374,16 @@ namespace Oldi.Net
 				return false;
 				}
 
+			// Проверим в чёрном списке (не важно, хоть с сайта)
+			if (FindInBlackList(x))
+				return true;
+
 			// Если тип терминала не определён: считаем терминал и включаем финюконтроль
 			if (State == 0 && TerminalType == 1) // Если только новый платёж
 				{
 
 				string trm = Terminal != int.MinValue? Terminal.ToString(): "NOREG";
 
-				// Проверим в чёрном списке
-				if (FindInBlackList(x))
-					return true;
-				
 				// Если меньше допустимого лимита, не ставить на контроль
 				if (AmountAll < AmountLimit)
 					{
@@ -446,6 +446,9 @@ namespace Oldi.Net
 		bool FindInBlackList(string x)
 			{
 			// RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" поиск в чёрном списке", Tid, Service, Gateway, x);
+
+			// if (TerminalType == 2)
+			//	return false;
 
 			foreach (var item in Settings.CheckedProviders)
 				{
@@ -809,7 +812,7 @@ namespace Oldi.Net
 			string phoneParam = null,	// Наименование параметра
 			string account = null,      // Номер счета (Тип платежа для Кибера)
 			string accountParam = null, // Наименование параметра
-			byte filial = 255,			// Номер филиала Ростелеком Сибирь
+			string filial = null,			// Номер филиала Ростелеком Сибирь
 			string number = null,       // Номер счета для Кибера
 			string card = null,			// Номер банковской карты
 			string fio = null,          // ФИО плательщика
@@ -1152,7 +1155,13 @@ namespace Oldi.Net
 	
 				string attrs;
 				dp.Read("Attributes", out attrs);
-				attributes.LoadFromXml(attrs);
+				if (!string.IsNullOrEmpty(attrs))
+					{
+					if (attrs.Substring(0, 1) == "\"")
+						attrs = attrs.Replace("\"", "");
+					RootLog("Tid={0} Загрузка тарибутов {1}", Tid, attrs);
+					attributes.LoadFromXml(attrs);
+					}
 
 				dp.Read("TerminalDate", out terminalDate);
 				dp.Read("Tz", out tz);

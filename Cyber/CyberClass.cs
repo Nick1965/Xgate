@@ -282,26 +282,33 @@ namespace Oldi.Net.Cyber
 					if (Attributes != null && Attributes.Count > 0)
 						{
 						StringBuilder sb = new StringBuilder();
-						sb.Append("Дополнительные атрибуты:");
+						sb.Append("Дополнительные атрибуты: ");
 						foreach (string key in Attributes.Keys)
 							{
 							string name = key;
-							string value = Attributes[key]; 
+							string value = Attributes[key];
+							if (!string.IsNullOrEmpty(value))
+								{
+								prm.AppendLine(key.ToUpper(), value);
+								sb.AppendFormat("{0}={1};", key.ToUpper(), value);
+								}
+							/*
 							switch(key.ToLower())
 								{
 								case "payer_fio":
 									prm.AppendLine("PAYER_FIO", value);
-									sb.AppendFormat("\r\n\tname=\"{0}\" value=\"{1}\"", "PAYER_FIO", value);
+									sb.AppendFormat("{0}={1};", "PAYER_FIO", value);
 									break;
 								case "payer_address":
 									prm.AppendLine("PAYER_ADDRESS", value);
-									sb.AppendFormat("\r\n\tname=\"{0}\" value=\"{1}\"", "PAYER_ADDRESS", value);
+									sb.AppendFormat("{0}={1};", "PAYER_ADDRESS", value);
 									break;
 								case "payer_doc":
 									prm.AppendLine("PAYER_DOC", value);
-									sb.AppendFormat("\r\n\tname=\"{0}\" value=\"{1}\"", "PAYER_DOC", value);
+									sb.AppendFormat("{0}={1};", "PAYER_DOC", value);
 									break;
 								}
+							 */
 							}
 						RootLog(sb.ToString());
 						}
@@ -804,6 +811,9 @@ namespace Oldi.Net.Cyber
 						// if (state == 0)
 						//	RootLog("{1} Ожидание завершения технологического перерыва до: {0} ", XConvert.AsDate2(dateend), Tid);
 						break;
+					case 36: // Транзакция уже завершена или находится в обработке
+						state = 3;
+						break;
 					case 33: // Карты указанного номинала на данный момент в системе отсутствуют
 					case 35: // Ошибка при изменении состояния платежа
 					case 41: // Ошибка добавления данных платежа в базу данных
@@ -838,6 +848,9 @@ namespace Oldi.Net.Cyber
 							state = 3;
 						*/
 						break;
+					case 36: // Транзакция уже завершена или находится в обработке
+						state = 3;
+						break;
 					case 21: // Недостаточно средств для проведения платежа
 						state = 12;
 						break;
@@ -845,7 +858,6 @@ namespace Oldi.Net.Cyber
 					case 25: // Работа шлюза приостановлена
 					case 26: // Платежи данного Контрагента временно блокированы
 					case 30: // Общая ошибка системы.
-					case 36: // Транзакция уже завершена или находится в обработке
 					case 50: // Проведение платежей в системе временно невозможно
 					case 52: // Возможно, контрагент заблокирован.
 					case 53: // Возможно, точка приема заблокирована.

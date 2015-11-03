@@ -60,11 +60,6 @@ D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\obj\x86\Debug\Oldi.Net.
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.exe
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\oldigw\obj\x86\Debug\oldigw.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Answer.resources
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Messages.resources
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Properties.Resources.resources
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\app.config
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\oldigw.exe
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\oldigw.pdb
@@ -90,5 +85,10 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\Utility.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\Redo.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\SocialExplorer.FastDbf.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csprojResolveAssemblyReference.cache
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Answer.resources
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Messages.resources
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Properties.Resources.resources
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.exe
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.pdb

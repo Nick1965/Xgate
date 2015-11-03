@@ -221,6 +221,7 @@ namespace OldiGW.Redo.Net
 					// Если в  городе платёж в состоянии 3 - выполнить шаг.
 					// Иначе установить состояние как в ГОРОДЕ и вернуться.
 					//
+					/*
 					byte GorodState = 3;
 					try
 						{
@@ -233,7 +234,6 @@ namespace OldiGW.Redo.Net
 						return; // Не допроводим пока город стоит. Нече.
 						}
 
-
 					if (GorodState == 3)
 						gw.Processing(false);
 					else
@@ -242,6 +242,8 @@ namespace OldiGW.Redo.Net
 						Log("{0} [REDO - SYNC] Допроведения платежа прекращается. Новый статус: {1}", gw.Tid, newState);
 						gw.UpdateState(gw.Tid, state :newState, errCode :500, errDesc :"Синхронизирован с ГОРОД", locked :0);
 						}
+					*/
+					gw.Processing(false);
 					gw.ReportRequest("REDO - stop");
 					}
 			}

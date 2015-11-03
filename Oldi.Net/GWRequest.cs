@@ -66,8 +66,8 @@ namespace Oldi.Net
 		/// <summary>
 		/// Номер филиала Ростелеком Сибирь
 		/// </summary>
-		public byte Filial { get { return filial; } }
-		protected byte filial = 255;
+		public string Filial { get { return filial; } }
+		protected string filial = "";
 
 		// Наименование реквизита филиал
 		public string FilialParam { get { return filialParam; } }

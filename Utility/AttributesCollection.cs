@@ -42,7 +42,7 @@ namespace Oldi.Utility
 				// at.Append("<attributes>\r\n");
 				foreach (string key in Keys)
 					// at.AppendFormat("<attribute name=\"{0}\" value=\"{1}\" />\r\n", key, this[key]);
-					at.AppendFormat("\"{0}\"=\"{1}\";", key, this[key]);
+					at.AppendFormat("{0}={1};", key, this[key]);
 				// at.Append("</attributes>\r\n");
 			}
 
@@ -62,7 +62,7 @@ namespace Oldi.Utility
 				foreach(string para in paras)
 					{
 					string [] nameValue = para.Split(new Char[] {'='});
-					base.Add(nameValue[0], nameValue[1]);
+					base.Add(nameValue[0], nameValue.Length > 1? nameValue[1]: "");
 					}
 				
 				/*

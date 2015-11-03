@@ -74,8 +74,71 @@ namespace RT
 				Log("****CHECK: Service={0} Filial={1}", Service, Filial);
 				try
 					{
-					if (Service.ToUpper() == "RTK-ACC" && Filial != 255)
-						SvcTypeID = string.Format("RT.SIBIR.F{0:d3}.ACCOUNT_NUM", Filial);
+					if (!string.IsNullOrEmpty(Filial))
+						{
+
+						if ((Service.ToUpper() == "RTK-ACC") && 
+						(
+							Filial.ToUpper() == "RT.SIBIR.F000.ACCOUNT_NUM" || 
+							Filial.ToUpper() == "RT.SIBIR.F001.ACCOUNT_NUM" || 
+							Filial.ToUpper() == "RT.SIBIR.F002.ACCOUNT_NUM" || 
+							Filial.ToUpper() == "RT.SIBIR.F003.ACCOUNT_NUM" || 
+							Filial.ToUpper() == "RT.SIBIR.F004.ACCOUNT_NUM" || 
+							Filial.ToUpper() == "RT.SIBIR.F005.ACCOUNT_NUM" || 
+							Filial.ToUpper() == "RT.SIBIR.F006.ACCOUNT_NUM" || 
+							Filial.ToUpper() == "RT.SIBIR.F007.ACCOUNT_NUM" ||
+							Filial.ToUpper() == "RT.SIBIR.F008.ACCOUNT_NUM" || 
+							Filial.ToUpper() == "RT.SIBIR.F009.ACCOUNT_NUM" || 
+							Filial.ToUpper() == "RT.SIBIR.F010.ACCOUNT_NUM" || 
+							Filial.ToUpper() == "RT.SIBIR.F011.ACCOUNT_NUM"))
+							SvcTypeID = Filial;
+						// Сибирь-Телеком
+						else if ((Service.ToUpper() == "RTK-ACC"))
+							{
+							switch (filial)
+								{
+								case "1":
+									SvcTypeID = "RT.SIBIR.F001.ACCOUNT_NUM";
+									break;
+								case "2":
+									SvcTypeID = "RT.SIBIR.F002.ACCOUNT_NUM";
+									break;
+								case "3":
+									SvcTypeID = "RT.SIBIR.F003.ACCOUNT_NUM";
+									break;
+								case "4":
+									SvcTypeID = "RT.SIBIR.F004.ACCOUNT_NUM";
+									break;
+								case "5":
+									SvcTypeID = "RT.SIBIR.F005.ACCOUNT_NUM";
+									break;
+								case "6":
+									SvcTypeID = "RT.SIBIR.F006.ACCOUNT_NUM";
+									break;
+								case "7":
+									SvcTypeID = "RT.SIBIR.F007.ACCOUNT_NUM";
+									break;
+								case "8":
+									SvcTypeID = "RT.SIBIR.F008.ACCOUNT_NUM";
+									break;
+								case "9":
+									SvcTypeID = "RT.SIBIR.F009.ACCOUNT_NUM";
+									break;
+								case "10":
+									SvcTypeID = "RT.SIBIR.F010.ACCOUNT_NUM";
+									break;
+								case "11":
+									SvcTypeID = "RT.SIBIR.F011.ACCOUNT_NUM";
+									break;
+								default:
+									// Все остальные филиалы указываются полностью
+									SvcTypeID = Filial;
+									break;
+								}
+							}
+						}
+					else
+						SvcTypeID = "0";
 					}
 				catch (Exception ex)
 					{

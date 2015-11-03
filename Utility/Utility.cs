@@ -54,8 +54,8 @@ namespace Oldi.Net
 					// Console.WriteLine(ex.StackTrace);
 				lock (LockObj)
 					{
-					Log(".\\log\\error.log", "Ошибка при попытке записи в лог. Файл: {0}, Ошибка {1}\r\n{2}", log, ex.Message, ex.StackTrace);
-					Log(".\\log\\error.log", "Оригинальное сообщение:\r\n{0}", text);
+					Log(".\\error.log", "Ошибка при попытке записи в лог. Файл: {0}, Ошибка {1}\r\n{2}", log, ex.Message, ex.StackTrace);
+					Log(".\\error.log", "Оригинальное сообщение:\r\n{0}", text);
 					}
 				}
 			}
@@ -93,7 +93,8 @@ namespace Oldi.Net
 
 				lock (LockObj)
 					{
-					using (sw = new StreamWriter(new FileStream(log, FileMode.Append | FileMode.Create, FileAccess.Write, FileShare.Read)))
+					using (FileStream fs = new FileStream(log, FileMode.Append | FileMode.Create, FileAccess.Write, FileShare.Read))
+					using (sw = new StreamWriter(fs))
 						{
 						if (!string.IsNullOrEmpty(text))
 							{
@@ -117,8 +118,8 @@ namespace Oldi.Net
 					// Console.WriteLine(ex.StackTrace);
 					lock(LockObj)
 						{
-						Log(".\\log\\error.log", "Ошибка при попытке записи в лог. Файл: {0}, Ошибка {1}\r\n{2}", log, ex.Message, ex.StackTrace);
-						Log(".\\log\\error.log", "Оригинальное сообщение:\r\n{0}", text);
+						Log(".\\error.log", "Ошибка при попытке записи в лог. Файл: {0}, Ошибка {1}\r\n{2}", log, ex.Message, ex.StackTrace);
+						Log(".\\error.log", "Оригинальное сообщение:\r\n{0}", text);
 						}
 						
 				}

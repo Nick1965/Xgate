@@ -111,9 +111,9 @@ namespace Oldi.Net
 				if (!String.IsNullOrEmpty(accountParam))
 				{
 					req += accountParam + "=" + account;
-					if (filial != 255 && !String.IsNullOrEmpty(filialParam))
+					if (!string.IsNullOrEmpty(filial) && !String.IsNullOrEmpty(filialParam))
 					{
-						req += filialParam + "=" + filial.ToString();
+						req += filialParam + "=" + filial;
 						stRequest = find + req;
 						ret = 1;
 					}
@@ -122,7 +122,7 @@ namespace Oldi.Net
 			Log("Find/MakeRequest: ID={0}, Param={1}, Filial={2}, Param={3}", 
 				!string.IsNullOrEmpty(phone)? phone: account, 
 				!string.IsNullOrEmpty(phoneParam)?phoneParam:!string.IsNullOrEmpty(accountParam) ? accountParam: "<Empty>",
-				filial != 255 ? filial.ToString() : "Empty", !string.IsNullOrEmpty(filialParam) ? filialParam: "<Empty>");
+				!string.IsNullOrEmpty(filial) ? filial : "Empty", !string.IsNullOrEmpty(filialParam) ? filialParam: "<Empty>");
 			if (ret == 0)
 				Log("Построкн запрос Find: {0}", find);
 			else

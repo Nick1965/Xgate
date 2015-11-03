@@ -74,6 +74,25 @@ namespace Oldi.Utility
 		}
 
 		/// <summary>
+		/// С фиксированной точкой, без лидирующих нулей, 2 знака после точки
+		/// </summary>
+		/// <param name="x">object</param>
+		/// <returns>Строка</returns>
+		public static string AsAmount(object x)
+			{
+			decimal y;
+			try
+				{
+				y = Convert.ToDecimal(x);
+				}
+			catch (Exception)
+				{
+				y = decimal.MinusOne;
+				}
+			return AsAmount(y);
+			}
+
+		/// <summary>
 		/// Дата/время yyyy-mm-ddThh:mm:ss
 		/// </summary>
 		/// <param name="x">Дата/время (DateTime)</param>

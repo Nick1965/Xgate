@@ -48,9 +48,6 @@ D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\obj\x86\Debug\OldiGW.Redo
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\obj\x86\Debug\Redo.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\obj\x86\Debug\Redo.dll
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Redo\obj\x86\Debug\Redo.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\Redo.csprojResolveAssemblyReference.cache
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\OldiGW.Redo.Net.Properties.Resources.resources
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\Redo.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\Redo.dll.config
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\Redo.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\Redo.pdb
@@ -70,5 +67,8 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\Oldi.Net.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\RT.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\Utility.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\SMPP.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\Redo.csprojResolveAssemblyReference.cache
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\OldiGW.Redo.Net.Properties.Resources.resources
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\Redo.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\Redo.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\Redo.pdb

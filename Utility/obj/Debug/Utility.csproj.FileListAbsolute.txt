@@ -20,10 +20,10 @@ D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Utility\obj\Debug\Utility.dll
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Utility\obj\Debug\Utility.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\bin\Debug\Utility.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\bin\Debug\Utility.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\bin\Debug\SMPP.dll
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\bin\Debug\SMPP.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Oldi.Utility.Properties.Resources.resources
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\bin\Debug\SMPP.dll
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\bin\Debug\SMPP.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.csprojResolveAssemblyReference.cache

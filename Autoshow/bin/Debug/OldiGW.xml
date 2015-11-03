@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+
+
+  <!-- 
+    amount-limit: максимальный размер платежа, до постановки на финансовый контроль 
+    amount-delay: время задержки на финансовый контроль (в часах)
+  -->
+  
+  <!-- mode = Gateway, Server -->
+  <!-- redo = yes, no -->
+  <gateway mode="Gateway" redo="yes" />
+
+
+  <Provider name="mts" ott="1_25" xsd="5_02"
+                host="https://espp1.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher/"
+                as-vps="226581085" vps-code="1380200801234" contract="9904000052" security-code="98"
+                certname="1380200801234;98;226581085"
+                terminal-prefix="OLDIT-00001"
+                code-page="utf-8"
+                content-type="text/html"
+                timeout="40"
+                header = ""
+                schemas="schemas\"
+                log="mts.log" />
+
+  <Provider name="ekt" 
+                host="https://dealer.telepayural.ru:8181/external/process"
+                point-id="12415"
+                certname="EBURG-NEW"
+                code-page="utf-8"
+                content-type="text/html"
+                timeout="60"
+                log="ekt.log" />
+
+  <Provider name="cyber" SD="1839361" AP="1354719" OP="1354720"
+                SecretKey="secret.key"
+                PublicKeys="pubkeys.key"
+                Passwd="ЕщрщкщфяР1!"
+                BankKeySerial="904291"
+                host="https://service.cyberplat.ru/cgi-bin/"
+                pay-check="{0}/{1}_pay_check.cgi"
+                pay="{0}/{1}_pay.cgi"
+                pay-status="{0}/{1}_pay_status.cgi"
+                api-check="{0}/pay_check.cgi"
+                api-pay="{0}/pay.cgi"
+                api-status="{0}/pay_status.cgi"
+                timeout="60"
+                log="cyber.log"/>
+
+  <Provider name="rt" host="https://espp-test.rt.ru:8443/uni" 
+                hash="54378b7cdef26ec1de00ee5a5a500da55baa6534"
+                cn="Regplat.ru"
+                log="rt.log" />
+
+    <Provider name="pcc"
+              certname="dealoldit"
+              host="https://www.controlpay.ru:8443/lfc.aspx/"
+              pay-find="{0}?method=custom&amp;payid={1}&amp;addmethod=queryPayeeInfo&amp;recid={2}&amp;pointid={3}"
+              pay-check="{0}?method=paycheck&amp;payid={1}&amp;amount={2}&amp;recid={3}&amp;pointid={4}"
+              pay="{0}?method=pay&amp;payid={1}&amp;amount={2}&amp;recid={3}&amp;pointid={4}"
+              pay-status="{0}?method=paystate&amp;payid={1}"
+              log="pcc.log"/>
+
+    <Provider name="Kinomax" 
+              host="http://localhost:8000/" 
+              pay-check="?session={0}&amp;reserv-id={1}&amp;from={2}&amp;sign={3}"
+              pay="?session={0}&amp;reserv-id={1}&amp;from={2}&amp;sign={3}"
+              log="kinomax.log"
+              />
+
+    <Provider name="smtp" content-type="text/plain;charset=866" code-page="866" log="smtp.log" />
+
+  <Smtp>
+    <host>mail.regplat.ru</host>
+    <port>25</port>
+    <user>outbox</user>
+    <password>outbox</password>
+  </Smtp>
+
+  <!--
+      Финансовый контроль
+        AmountLimit: максимальный размер платежа, до постановки на финансовый контроль 
+        AmountDelay: время задержки на финансовый контроль (в часах)
+        Описание провайдеров находится options.ini Online Exchange
+-->
+  <FinancialCheck>
+    <AmountLimit>1000</AmountLimit>
+    <AmountDelay>24</AmountDelay>
+    <Providers>
+      <Provider Name="ekt" Service="W1-LS" Gateway="458" Limit="3000"/>
+      <Provider Name="ekt" Service="Beeline" Gateway="2" Limit="2000"/>
+      <Provider Name="ekt" Service="Beeline-woc" Gateway="414" Limit="2000"/>
+    </Providers>
+  </FinancialCheck>
+
+  <AppSettings>
+      <add key="GWHost" value="oldigw/" />
+      <add key="Port" value="200" />
+      <add key="SslPort" value="201" />
+      <add key="ConnectionLimit" value="10" />
+      <add key="SMPPEndpoint" value="http://192.168.1.5:1100/sms/send"/>
+
+    <add key="ConnectionString" value="Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;" />
+      <add key="GorodConnectionString" value="Data Source=odbs1.regplat.ru; Initial Catalog=Gorod; User ID=sa; Password=5;" />
+      <add key="DbCheckTimeout" value="2" />
+      <add key="fake-tpp-id" value="281" />
+      <add key="fake-tpp-type" value="2" />
+      <add key="tz" value="7" />
+
+      <add key="Conveyor-Size" value="10" />
+
+      <add key="Root" value=".\" />
+      <add key="LogPath" value="log\" />
+      <add key="Templates" value="templates\" />
+      <add key="Registers" value="registers\" />
+      <add key="XSD" value="xsd\"/>
+      <add key="Attachments" value="attachments\"/>
+
+      <add key="Cyber" value="cyber\" />
+
+      <!-- DEBUG,REQ,OEREQ,HDR,PARS -->
+      <add key="LogLevel" value="DEBUG,REQ,CONF,OEREQ,HDR,PARS" />
+
+      <!-- Номер рассылки. 0 - нет ничего для рассылки -->
+      <add key="Delivery" value="0" />
+  </AppSettings>
+
+</Configuration>

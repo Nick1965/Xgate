@@ -148,8 +148,8 @@ namespace Oldi.Net
 								Log("Parse: atrs={0}", sb.ToString());
 							break;
 						case "filial":
-							if (!byte.TryParse(el.Value, out filial))
-								filial = 10;
+							// if (!byte.TryParse(el.Value, out filial))
+							filial = el.Value;
 							/*
 								foreach (XAttribute attr in el.Attributes())
 								{

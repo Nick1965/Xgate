@@ -22,7 +22,6 @@ D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Autoshow\bin\Debug\Utility.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Autoshow\obj\Debug\Autoshow.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Autoshow\obj\Debug\Autoshow.dll
 D:\MyDocuments\Visual Studio 2013\Projects\oldigw\Autoshow\obj\Debug\Autoshow.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Autoshow.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Autoshow.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Oldi.Net.dll
@@ -31,5 +30,6 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Utility.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Oldi.Net.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Utility.pdb
+D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.pdb

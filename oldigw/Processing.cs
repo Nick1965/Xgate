@@ -128,8 +128,8 @@ namespace Oldi.Net
 							if (Current.State == 255)
 							{
 								// Log(string.Format(Messages.PayNotFound, Current.Tid));
-								Current.State = 0;
-								Current.errCode = 7;
+								Current.State = 12;
+								Current.errCode = 11;
 								Current.errDesc = string.Format(Messages.PayNotFound, Current.Tid);
 							}
 						}
@@ -182,7 +182,7 @@ namespace Oldi.Net
 						{
 						Log(Messages.LogError, Request.Tid, ex.Message, ex.StackTrace);
 						Request.errDesc = string.Format(Messages.ErrDesc, Request.Tid, ex.Message);
-						Request.errCode = 6;
+						Request.errCode = 11;
 						}
 
 					break;
@@ -199,36 +199,57 @@ namespace Oldi.Net
 						if (Request.State == 255)
 							{
 							Request.State = 0;
-
+							Request.GetTerminalInfo();
 							Request.ReportRequest("PAYM - strt");
 							step = "PAYM - stop";
 
-							// Для начала определимя с провайдером:
-							switch (Request.Provider)
+							// Поиск дублей
+							
+							int Doubles = 0;
+							string SubInnertid = "";
+							SubInnertid = Request.GetGorodSub();
+
+							if (!string.IsNullOrEmpty(SubInnertid) && Doubles > 0)
 								{
-								case "rt":
-								case "rtm":
-									Current = new RTRequest(Request);
-									break;
-								case "ekt":
-									Current = new GWEktRequest(Request);
-									break;
-								case "cyber":
-									Current = new GWCyberRequest(Request);
-									break;
-								case "mts":
-									Current = new GWMtsRequest(Request);
-									break;
-								case "smtp":
-									Current = new Oldi.Smtp.Smtp(Request);
-									break;
-								default:
-									// Log(Messages.UnknownProvider, Request.Provider);
-									Request.ErrCode = 6;
-									Request.State = 12;
-									Request.ErrDesc = string.Format(Messages.UnknownProvider, Request.Provider);
-									Current.UpdateState(Current.Tid, state :Current.State, errCode :Current.ErrCode, errDesc :Current.ErrDesc);
-									break;
+								Doubles = Request.CheckDouble();
+								Log("{0} [DOUB - start] sub_inner_tid={1}", Request.Tid, SubInnertid);
+
+								Request.State = 12;
+								Request.errCode = 6;
+								Request.errDesc = string.Format("Найдено {0} подобных платежей в пределах 10 минут. Платёж отменяется.", Doubles);
+								Log("{0}  [DOUB - stop] {1}", Request.Tid, Request.ErrDesc);
+								Request.UpdateState(Request.Tid, state :Request.State, errCode :Request.ErrCode, errDesc :Request.ErrDesc);
+								Log(Request.errDesc);
+								}
+							else
+								{
+								// Для начала определимся с провайдером:
+								switch (Request.Provider)
+									{
+									case "rt":
+									case "rtm":
+										Current = new RTRequest(Request);
+										break;
+									case "ekt":
+										Current = new GWEktRequest(Request);
+										break;
+									case "cyber":
+										Current = new GWCyberRequest(Request);
+										break;
+									case "mts":
+										Current = new GWMtsRequest(Request);
+										break;
+									case "smtp":
+										Current = new Oldi.Smtp.Smtp(Request);
+										break;
+									default:
+										// Log(Messages.UnknownProvider, Request.Provider);
+										Request.ErrCode = 6;
+										Request.State = 12;
+										Request.ErrDesc = string.Format(Messages.UnknownProvider, Request.Provider);
+										Current.UpdateState(Current.Tid, state :Current.State, errCode :Current.ErrCode, errDesc :Current.ErrDesc);
+										break;
+									}
 								}
 
 
