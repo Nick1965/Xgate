@@ -10,6 +10,7 @@ using System.Web;
 using System.Threading;
 using System.Globalization;
 using System.Collections.Specialized;
+using System.Data.Linq;
 
 namespace RT
 {
@@ -34,6 +35,20 @@ namespace RT
 		new decimal? Balance = null;
 		decimal? Recpay = null;
 		
+		public class Oldigw: DataContext
+			{
+			public Oldigw(): base(Settings.ConnectionString)
+				{
+				}
+			}
+
+		class RTFilial
+			{
+			public int Num;
+			public string SvcTypeId;
+			public string Comment;
+			}
+
 		public RTRequest()
 			: base()
 		{
@@ -77,68 +92,33 @@ namespace RT
 					if (!string.IsNullOrEmpty(Filial))
 						{
 
-						if ((Service.ToUpper() == "RTK-ACC") && 
-						(
-							Filial.ToUpper() == "RT.SIBIR.F000.ACCOUNT_NUM" || 
-							Filial.ToUpper() == "RT.SIBIR.F001.ACCOUNT_NUM" || 
-							Filial.ToUpper() == "RT.SIBIR.F002.ACCOUNT_NUM" || 
-							Filial.ToUpper() == "RT.SIBIR.F003.ACCOUNT_NUM" || 
-							Filial.ToUpper() == "RT.SIBIR.F004.ACCOUNT_NUM" || 
-							Filial.ToUpper() == "RT.SIBIR.F005.ACCOUNT_NUM" || 
-							Filial.ToUpper() == "RT.SIBIR.F006.ACCOUNT_NUM" || 
-							Filial.ToUpper() == "RT.SIBIR.F007.ACCOUNT_NUM" ||
-							Filial.ToUpper() == "RT.SIBIR.F008.ACCOUNT_NUM" || 
-							Filial.ToUpper() == "RT.SIBIR.F009.ACCOUNT_NUM" || 
-							Filial.ToUpper() == "RT.SIBIR.F010.ACCOUNT_NUM" || 
-							Filial.ToUpper() == "RT.SIBIR.F011.ACCOUNT_NUM"))
-							SvcTypeID = Filial;
-						// Сибирь-Телеком
-						else if ((Service.ToUpper() == "RTK-ACC"))
+						if (Service.ToLower()  == "rtk-acc")
 							{
-							switch (filial)
+							if (Filial.ToInt() == -1) // не число!
+								SvcTypeID = filial;
+							else
 								{
-								case "1":
-									SvcTypeID = "RT.SIBIR.F001.ACCOUNT_NUM";
-									break;
-								case "2":
-									SvcTypeID = "RT.SIBIR.F002.ACCOUNT_NUM";
-									break;
-								case "3":
-									SvcTypeID = "RT.SIBIR.F003.ACCOUNT_NUM";
-									break;
-								case "4":
-									SvcTypeID = "RT.SIBIR.F004.ACCOUNT_NUM";
-									break;
-								case "5":
-									SvcTypeID = "RT.SIBIR.F005.ACCOUNT_NUM";
-									break;
-								case "6":
-									SvcTypeID = "RT.SIBIR.F006.ACCOUNT_NUM";
-									break;
-								case "7":
-									SvcTypeID = "RT.SIBIR.F007.ACCOUNT_NUM";
-									break;
-								case "8":
-									SvcTypeID = "RT.SIBIR.F008.ACCOUNT_NUM";
-									break;
-								case "9":
-									SvcTypeID = "RT.SIBIR.F009.ACCOUNT_NUM";
-									break;
-								case "10":
-									SvcTypeID = "RT.SIBIR.F010.ACCOUNT_NUM";
-									break;
-								case "11":
-									SvcTypeID = "RT.SIBIR.F011.ACCOUNT_NUM";
-									break;
-								default:
-									// Все остальные филиалы указываются полностью
-									SvcTypeID = Filial;
-									break;
+								// Выберем филиал из таблицы
+								using (Oldigw db = new Oldigw())
+									{
+									IEnumerable<RTFilial> Filials = db.ExecuteQuery<RTFilial>(@"select svcTypeId from oldigw.oldigw.filial where Num={0}", Filial);
+									if (Filials.Count() == 1)
+										{
+										SvcTypeID = Filials.First().SvcTypeId;
+										RootLog("{0} Филилал={1} Найден код филиала={2}", tid, Filial, SvcTypeID);
+										}
+									else
+										{
+										SvcTypeID = "0";
+										RootLog("{0} Филилал={1} Код филиала не найден", tid, Filial);
+										}
+									}
 								}
 							}
+						else
+							SvcTypeID = "0";
+						
 						}
-					else
-						SvcTypeID = "0";
 					}
 				catch (Exception ex)
 					{
