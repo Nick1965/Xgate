@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Text;
 using Oldi.Utility;
 using System.Data.SqlClient;
+using System.Data;
 
 namespace Oldi.Net
 	{
@@ -35,6 +36,50 @@ namespace Oldi.Net
 		}
 	public partial class GWRequest
 		{
+
+		/// <summary>
+		/// Возвращает номер транзакции
+		/// </summary>
+		/// <returns></returns>
+		public string GetGorodSub()
+			{
+
+			string GorodCommandText = "select [sub_inner_tid] from [gorod].[dbo].payment where not sub_inner_tid like 'card-%' and tid = " + Tid.ToString();
+			string Sub_inner_tid = "";
+
+			using (SqlConnection GorodConnection = new SqlConnection(Settings.GorodConnectionString))
+			using (SqlCommand GorodCommand = new SqlCommand(GorodCommandText, GorodConnection))
+				{
+				GorodConnection.Open();
+				using (SqlDataReader DataReader = GorodCommand.ExecuteReader(CommandBehavior.CloseConnection))
+					{
+					if (DataReader.HasRows)
+						{
+						if (DataReader.Read())
+							{
+							Sub_inner_tid = DataReader.GetString(0); // Т.к. параметр 1
+							// Посчитаем еоличество -
+							int Count = 0;
+							for (int i = 0; i < Sub_inner_tid.Length; i++)
+								{
+								if (Sub_inner_tid.Substring(i, 1) == "-")
+									Count++;
+								}
+							if (Count == 3)
+								{
+								RootLog("{0} [GetGorodSub] Check={1}", Tid, Sub_inner_tid);
+								return Sub_inner_tid;
+								}
+							else
+								return "";
+							}
+						}
+					}
+				}
+
+			return "";
+
+			}
 
 		public int CheckDouble()
 			{

@@ -102,15 +102,15 @@ namespace RT
 								using (Oldigw db = new Oldigw())
 									{
 									IEnumerable<RTFilial> Filials = db.ExecuteQuery<RTFilial>(@"select svcTypeId from oldigw.oldigw.filial where Num={0}", Filial);
-									if (Filials.Count() == 1)
+									try
 										{
 										SvcTypeID = Filials.First().SvcTypeId;
-										RootLog("{0} Филилал={1} Найден код филиала={2}", tid, Filial, SvcTypeID);
+										RootLog("Филилал={0} Найден код филиала={1}", Filial, SvcTypeID);
 										}
-									else
+									catch
 										{
 										SvcTypeID = "0";
-										RootLog("{0} Филилал={1} Код филиала не найден", tid, Filial);
+										RootLog("Филилал={0} Код филиала не найден", Filial);
 										}
 									}
 								}

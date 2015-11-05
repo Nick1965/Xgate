@@ -204,16 +204,15 @@ namespace Oldi.Net
 							step = "PAYM - stop";
 
 							// Поиск дублей
-							
+
 							int Doubles = 0;
 							string SubInnertid = "";
+							// Если sub_inner_tid содержит 3 '-' возвращает непустую строку
 							SubInnertid = Request.GetGorodSub();
 
-							if (!string.IsNullOrEmpty(SubInnertid) && Doubles > 0)
+							if (!string.IsNullOrEmpty(SubInnertid) && (Doubles = Request.CheckDouble()) > 0)
 								{
-								Doubles = Request.CheckDouble();
 								Log("{0} [DOUB - start] sub_inner_tid={1}", Request.Tid, SubInnertid);
-
 								Request.State = 12;
 								Request.errCode = 6;
 								Request.errDesc = string.Format("Найдено {0} подобных платежей в пределах 10 минут. Платёж отменяется.", Doubles);
