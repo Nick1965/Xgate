@@ -206,19 +206,18 @@ namespace Oldi.Net
 							// Поиск дублей
 
 							int Doubles = 0;
-							string SubInnertid = "";
 							// Если sub_inner_tid содержит 3 '-' возвращает непустую строку
-							SubInnertid = Request.GetGorodSub();
+							string SubInnertid = Request.GetGorodSub();
+
+							if (!string.IsNullOrEmpty(SubInnertid))
+								Log("{0} [DOUB - start] sub_inner_tid={1} Поиск дублей", Request.Tid, SubInnertid);
 
 							if (!string.IsNullOrEmpty(SubInnertid) && (Doubles = Request.CheckDouble()) > 0)
 								{
-								Log("{0} [DOUB - start] sub_inner_tid={1}", Request.Tid, SubInnertid);
 								Request.State = 12;
 								Request.errCode = 6;
 								Request.errDesc = string.Format("Найдено {0} подобных платежей в пределах 10 минут. Платёж отменяется.", Doubles);
-								Log("{0}  [DOUB - stop] {1}", Request.Tid, Request.ErrDesc);
 								Request.UpdateState(Request.Tid, state :Request.State, errCode :Request.ErrCode, errDesc :Request.ErrDesc);
-								Log(Request.errDesc);
 								}
 							else
 								{
@@ -251,6 +250,8 @@ namespace Oldi.Net
 									}
 								}
 
+							if (!string.IsNullOrEmpty(SubInnertid))
+								Log("{0}  [DOUB - stop] {1}", Request.Tid, Request.ErrDesc);
 
 							// Если статус равен 0
 							// И если возможность есть -- провести его
