@@ -227,19 +227,12 @@ namespace RT
 				}
 				else
 				{
-					DoPay(1, 6);
-					// Если платёж не завершён, попытатья допровести
-					/*
-					if (state == 3)
-					{
-						UpdateState(Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, locked: 1);
-						Log("{0} Ожидается завершение выполнения запроса", Tid);
-						Thread.Sleep(30000); // Повтор не ранее чем через 30 сек.
-						DoPay(3, 6);
-						UpdateState(Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, locked: 0);
-					}
-					*/
-					UpdateState(Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, locked: 0);
+				Sync(false);
+					if (State < 6)
+						{
+						DoPay(1, 6);
+						UpdateState(Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, locked :0);
+						}
 				}
 
 				// Сделать ответ, если он вызван не из цикла REDO

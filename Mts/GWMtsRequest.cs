@@ -339,6 +339,9 @@ namespace Oldi.Mts
 					break;
 				case 362:
 				case 501: // Превышена пропускная способность
+				case 367: // Номер уже обработан в ЕСПП
+					state = old_state;
+					return 0;
 				case 357: // Платеж уже существует
 				case 398: // Истекло время акцептования документа
 				case 651: // Платеж в требуемом состоянии не найден
@@ -604,25 +607,33 @@ namespace Oldi.Mts
 			}
 			else // Redo
 			{
-				// ReportRequest("Redo start");
+				ReportRequest("Redo start");
 
-				if (State == 0) // Новый платеж, получить разрешение
-				{
-					// Проверим время
-				GetTerminalInfo();
+				// Синхронизация с Городом
+				Sync(false);
+				if (State < 6)
+					{
 
-				if (FinancialCheck(New)) return;
-				if (DoPay(0, 1) == 0)
-					DoPay(1, 6);
-				}
-				else if (State == 1) // Разрешение получено
-				{
-					DoPay(1, 6);
-				}
-				else if (State == 3) // Платеж отправлен
-					DoPay(3, 6);
+					if (State == 0) // Новый платеж, получить разрешение
+						{
+						// Проверим время
+						GetTerminalInfo();
 
-				// ReportRequest("Redo stop");
+						if (FinancialCheck(New)) return;
+						if (DoPay(0, 1) == 0)
+							DoPay(1, 6);
+						}
+					else if (State == 1) // Разрешение получено
+						{
+						DoPay(1, 6);
+						}
+					else if (State == 3) // Платеж отправлен
+						DoPay(3, 6);
+					
+					
+					}
+
+				ReportRequest("Redo stop");
 			}
 		}
 

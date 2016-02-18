@@ -16,6 +16,7 @@ using System.Xml.Linq;
 using System.ServiceModel;
 using Oldi.Net.Proxy;
 using System.IO.Compression;
+using System.Collections.Specialized;
 
 namespace Oldi.Net
 {
@@ -311,6 +312,29 @@ namespace Oldi.Net
 		}
 
 		/// <summary>
+		/// Синхронизация с БД Город
+		/// </summary>
+		public void Sync(bool NewPay)
+			{
+			// if (!NewPay)
+			//	{
+				// Сихронизацмя
+				byte GorodState = GetGorodState();
+				// RootLog("{0} [SYNC - strt] GorodState={1} XGate={2}", Tid, GorodState, State);
+
+
+			// Если платёж завершён - не проводить
+			if (GorodState >= 6)
+				{
+				state = GorodState;
+				UpdateState(Tid, state :GorodState, locked :0);
+				RootLog("{0} [SYNC - ****] Установлен статус из БД ГОрод {1} - платёж не проводится", Tid, State);
+				}
+
+				// }
+			}
+		
+		/// <summary>
 		/// Выролнить цикл проведения/допроведения платежа
 		/// </summary>
 		public virtual void Processing(bool New /*= true*/)
@@ -329,22 +353,24 @@ namespace Oldi.Net
 			}
 			else // Redo
 			{
-			byte GorodState = GetGorodState();
-			RootLog("{0} [SYNC - strt] Gorod/XGate {0}/{1}", Tid, GorodState, State);
-
-				if (State == 0)
+				// Синхронизация с городом
+				Sync(false);
+				if (State < 6)
 					{
-					if (FinancialCheck(New)) return;
-					if (DoPay(0, 1) != 0) return;
-					if (DoPay(1, 3) != 0) return;
-					}
 
-				if (State == 1)
-					{
-					if (DoPay(1, 3) != 0) return;
+					if (State == 0)
+						{
+						if (FinancialCheck(New)) return;
+						if (DoPay(0, 1) != 0) return;
+						if (DoPay(1, 3) != 0) return;
+						}
+
+					if (State == 1)
+						if (DoPay(1, 3) != 0) return;
+
+					DoPay(3, 6);
+		
 					}
-	
-				DoPay(3, 6);
 			}
 
 		}
@@ -356,8 +382,8 @@ namespace Oldi.Net
 			{
 
 			string x = null;
-			decimal AmountLimit = Settings.AmountLimit;
-			int AmountDelay = Settings.AmountDelay;
+			decimal AmountLimit;
+			int AmountDelay;
 			string Notify = "";
 
 			if (!string.IsNullOrEmpty(Phone))
@@ -378,17 +404,43 @@ namespace Oldi.Net
 			if (FindInBlackList(x))
 				return true;
 
+			// Получаем тип терминала из БД Город
+			// 1 - Терминал
+			// 2 - Рабочее место
+			// 3 - Сайт
+			List<CheckedProvider> ProviderList = LoadProviderList(out AmountLimit, out AmountDelay);
+			bool check = false;
+
+			// Для service и gateaway найдём параметры
+			if (TerminalType == 1 || Terminal == 281)
+				check = true;
+
+			int tt = TerminalType;
+			if (Terminal == 281)
+				tt = 3;
+			
 			// Если тип терминала не определён: считаем терминал и включаем финюконтроль
-			if (State == 0 && TerminalType == 1) // Если только новый платёж
+			if (State == 0 && (tt == 1 || tt == 3)) // Если только новый платёж
 				{
 
 				string trm = Terminal != int.MinValue? Terminal.ToString(): "NOREG";
 
+				foreach (var item in ProviderList)
+					{
+					if (Service == item.Service && Gateway == item.Gateway && item.TerminalType == tt)
+						{
+						AmountLimit = item.Limit;
+						check = true;
+						RootLog("{0} [FCHK - stop] Найден Service={1} Gateway={2} Type={3} Limit={4} State={5}", Tid, Service, Gateway, tt, AmountLimit, State);
+						break;
+						}
+					}
+
 				// Если меньше допустимого лимита, не ставить на контроль
 				if (AmountAll < AmountLimit)
 					{
-					RootLog("{0} [FCHK - stop] {1}/{2} Num=\"{3}\" сумма платежа меньше общего лимита {4}, завершение проверки", 
-						Tid, Service, Gateway, x,XConvert.AsAmount(AmountLimit));
+					RootLog("{0} [FCHK - stop] {1}/{2} Num=\"{3}\" сумма платежа {4} меньше общего лимита {5}, завершение проверки", 
+						Tid, Service, Gateway, x, XConvert.AsAmount(AmountAll), XConvert.AsAmount(AmountLimit));
 					return false;
 					}
 
@@ -399,7 +451,7 @@ namespace Oldi.Net
 					return false;
 					}
 
-				foreach (var item in Settings.CheckedProviders)
+				foreach (var item in ProviderList)
 					{
 					// Если реквизиты платежа (провайдер/сервис/получатель) совпадают с эталонным
 					if (item.Name.ToLower() == Provider.ToLower() && item.Service.ToLower() == Service.ToLower() && item.Gateway.ToLower() == Gateway.ToLower())
@@ -411,18 +463,22 @@ namespace Oldi.Net
 							AmountDelay = Settings.AmountDelay;
 							}
 
+						RootLog("{0} [FCHK] Для агента AgentID=\"{1}\" заданы параметры: Limit={2} Delay={3} Notify={4}",
+							Tid, AgentId < 0? "*": AgentId.ToString(), AmountLimit, AmountDelay, Notify);
+
 						if (AmountAll >= AmountLimit && Pcdate.AddHours(AmountDelay) >= DateTime.Now) // Проверка отправки СМС
 							{
-							RootLog("{0} [FCHK] Для агента AgentID=\"{1}\" заданы параметры: Limit={2} Delay={3} Notify={4}",
-								Tid, AgentId < 0? "*": AgentId.ToString(), AmountLimit, AmountDelay, Notify);
+
+							RootLog("{0} [FCHK - chck] {1}/{2} Trm={3} Limit={4} A=mount{5}",
+								Tid, Service, Gateway, Terminal, x, XConvert.AsAmount(AmountLimit), XConvert.AsAmount(AmountAll));
 
 							state = 0;
 							errCode = 11;
 							errDesc = string.Format("[Фин.контроль] Отложен до {0}",
 								XConvert.AsDate(Pcdate.AddHours(AmountDelay)));
 							UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
-							RootLog("{0} [FCHK - stop] {1}/{2} Trm={7} Num={6} A={3} S={4} - Платёж отложен до {5}",
-								Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(AmountDelay)), x, Terminal);
+							RootLog("{0} [FCHK - stop] {1}/{2} Trm={3} Num={4} A={5} S={6} - Платёж отложен до {7} State={8}",
+								Tid, Service, Gateway, Terminal, x, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), XConvert.AsDate(Pcdate.AddHours(AmountDelay)), State);
 
 							// Отправить СМС-уведомление, усли список уведомлений не пуст
 							if (newPay && !string.IsNullOrEmpty(Notify))
@@ -443,6 +499,93 @@ namespace Oldi.Net
 			return false;
 			}
 
+		class CheckedProvider
+			{
+
+			public string Name;			// Имя провайдера
+			public string Service;		// услуга
+			public string Gateway;		// шлюз
+			public decimal Limit;		// предельное значение платежа
+			public int TerminalType;	// тип терминала 1, 2 или 3
+			}
+
+		/// <summary>
+		/// Загрузка списка провайдеров
+		/// </summary>
+		List<CheckedProvider> LoadProviderList(out decimal AmountLimit, out int AmountDelay)
+			{
+
+			XDocument doc = XDocument.Load(".\\lists\\fincheck.xml");
+			string provider = "";
+			AmountLimit  = 0m;
+			AmountDelay = 16;
+
+			List<CheckedProvider> CheckedProviders = new List<CheckedProvider>();
+
+			if (doc != null && doc.Element("FinancialCheck").HasElements)
+				{
+				foreach (XElement el in doc.Root.Elements())
+					{
+					string name = el.Name.LocalName;
+					string value = el.Value;
+					Log("FinancialCheck: Section = {0} value = {1}", name, value);
+
+					switch (el.Name.LocalName)
+						{
+						case "AmountLimit":
+							AmountLimit = XConvert.ToDecimal(el.Value.ToString());
+							break;
+						case "AmountDelay":
+							AmountDelay = int.Parse(el.Value.ToString());
+							break;
+						case "Providers":
+							IEnumerable<XElement> elements =
+									from e in el.Elements("Provider")
+									select e;
+							foreach (XElement e in elements)
+								{
+								// Console.WriteLine(e.Name.LocalName);
+								if (e.Name.LocalName == "Provider")
+									{
+									string Name = "";
+									string Service = "";
+									string Gateway = "";
+									decimal Limit = decimal.MinusOne;
+									int Delay = 16;
+									CheckedProvider providerItem = new CheckedProvider();
+
+									foreach (var item in e.Attributes())
+										{
+										if (item.Name.LocalName == "Name")
+											providerItem.Name = item.Value.ToString();
+										if (item.Name.LocalName == "Service")
+											providerItem.Service = item.Value.ToString();
+										if (item.Name.LocalName == "Gateway")
+											providerItem.Gateway = item.Value.ToString();
+										if (item.Name.LocalName == "Limit")
+											providerItem.Limit = XConvert.ToDecimal(item.Value.ToString());
+										if (item.Name.LocalName == "TerminalType")
+											providerItem.TerminalType = int.Parse(item.Value.ToString());
+										}
+									// Settings.checkedProviders.Add(new ProviderItem(Name, Service, Gateway, Limit));
+									CheckedProviders.Add(providerItem);
+									// Log("Заuружен: Name={0} Service={1} Gateway={2} Limit={3} TerminalType={4}");
+									}
+								}
+
+							break;
+						}
+					}
+				}
+			else
+				{
+				RootLog("Нет секции FinancialCheck");
+				}
+
+			return CheckedProviders;
+
+			}
+		
 		bool FindInBlackList(string x)
 			{
 			// RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" поиск в чёрном списке", Tid, Service, Gateway, x);
@@ -647,6 +790,28 @@ namespace Oldi.Net
 				}
 			return false;
 			}
+
+		/// <summary>
+		/// Количество '-' в номере транзакции
+		/// </summary>
+		/// <param name="tid"></param>
+		/// <param name="state"></param>
+		/// <param name="errCode"></param>
+		/// <param name="errDesc"></param>
+		/// <param name="result"></param>
+		/// <param name="opname"></param>
+		/// <param name="opcode"></param>
+		/// <param name="fio"></param>
+		/// <param name="account"></param>
+		/// <param name="outtid"></param>
+		/// <param name="limit"></param>
+		/// <param name="limitEnd"></param>
+		/// <param name="locked"></param>
+		/// <param name="acceptdate"></param>
+		/// <param name="acceptCode"></param>
+		/// <param name="addinfo"></param>
+		/// <param name="price"></param>
+		/// <returns></returns>
 
 		public virtual int UpdateState(long tid, byte state = 255, int errCode = -1, string errDesc = null, int result = -1,
 								string opname = null, string opcode = null, string fio = null, string account = null,

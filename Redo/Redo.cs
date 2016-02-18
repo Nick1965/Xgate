@@ -10,10 +10,31 @@ using Oldi.Utility;
 using Oldi.Mts;
 using Oldi.Ekt;
 using Oldi.Net.Cyber;
+using System.Data.Linq;
+using System.Collections.Concurrent;
 
 
 namespace OldiGW.Redo.Net
 {
+
+	/*
+	public class OldiRec
+		{
+		public int ErrCode;
+		public string ErrDesc;
+		public int LastCode;
+		public string LastDesc;
+		}
+	class Oldigw: DataContext
+		{
+		public Oldigw(): base(Settings.ConnectionString)
+			{
+			}
+
+		}
+
+	 */
+  
     public class Redo
     {
         string name;
@@ -24,7 +45,9 @@ namespace OldiGW.Redo.Net
 		public static int processes = 0;
 		public volatile static bool Canceling = false;
 
-        class CheckInfo
+		ConcurrentDictionary<long, DateTime> RedoDict = null;
+
+		class CheckInfo
         {
 			// public ManualResetEvent CancelEvent;
 			public GWRequest gw = null;
@@ -48,6 +71,8 @@ namespace OldiGW.Redo.Net
             // this.cts = cts;
             this.idle = idle;
             processes = 0;
+
+			RedoDict = new ConcurrentDictionary<long, DateTime>();
         }
 
         /// <summary>
@@ -159,6 +184,25 @@ namespace OldiGW.Redo.Net
 
 			GWRequest req = null;
 
+			/*
+			using (Oldigw db = new Oldigw())
+				{
+				}
+			*/
+
+		
+			// Удалим из очереди платежи старше 1 минуты
+			foreach (long key in RedoDict.Keys)
+				{
+				DateTime d;
+				RedoDict.TryGetValue(key, out d);
+				if (d < DateTime.Now.AddMinutes(-1))
+					{
+					RedoDict.TryRemove(key, out d);
+					Log("{0} [DoREDO] Элемн старше 1 минуты - удаляем из фильтра", key);
+					}
+				}
+
 			using (SqlParamCommand cmd = new SqlParamCommand(Settings.ConnectionString, "OldiGW.ver3_ReadHolded"))
 				{
 				cmd.ConnectionOpen();
@@ -166,22 +210,39 @@ namespace OldiGW.Redo.Net
 					while (dr.Read())
 						{
 						// Прочитаем отложенный платеж
+						
 						req = new GWRequest();
 						if (req.ReadAll(dr) == 0)
 							{
-							req.SetLock(1); // Заблокировать ещё до постановки в очередь
-							if (string.IsNullOrEmpty(req.Account) && string.IsNullOrEmpty(req.Phone) && string.IsNullOrEmpty(req.Number))
-								Log("{0} [DoREDO] Ошибка. Не задан ни один из параметров счёта!", req.Tid);
-							// Допровести платежи с нефинальными статусами
-							CheckInfo checkinfo = new CheckInfo(req);
-							if (!ThreadPool.QueueUserWorkItem(new WaitCallback(CheckState), checkinfo))
+
+							// Проверим наличие платежа в очереди
+							DateTime d;
+							if (RedoDict.TryGetValue(req.Tid, out d))
+								Log("{0} [REDO] Найден в фильтре. Перепроведение откладывается: {1}", req.Tid, Oldi.Utility.XConvert.AsDate2(d));
+							else
 								{
-								req.SetLock(0); // Не удалось поставить в очередь - разблокировать
-								Log("Redo: Не удалось запустить процесс допроведения для tid={0}, state={1}", req.Tid, req.State);
+								// Добавим платёж в фильтр
+								RedoDict.TryAdd(req.Tid, DateTime.Now);
+
+								if (req.State < 6) // Только новые платежи допроводим
+									{
+									req.SetLock(1); // Заблокировать ещё до постановки в очередь
+									if (string.IsNullOrEmpty(req.Account) && string.IsNullOrEmpty(req.Phone) && string.IsNullOrEmpty(req.Number))
+										Log("{0} [REDO] Ошибка. Не задан ни один из параметров счёта!", req.Tid);
+									// Допровести платежи с нефинальными статусами
+									CheckInfo checkinfo = new CheckInfo(req);
+									if (!ThreadPool.QueueUserWorkItem(new WaitCallback(CheckState), checkinfo))
+										{
+										req.SetLock(0); // Не удалось поставить в очередь - разблокировать
+										Log("Redo: Не удалось запустить процесс допроведения для tid={0}, state={1}", req.Tid, req.State);
+										}
+									}
+								else
+									Log("DoRedo: Ошибка чтения БД");
+								
 								}
 							}
-						else
-							Log("DoRedo: Ошибка чтения БД");
+						
 						}
 				}
 
@@ -216,34 +277,13 @@ namespace OldiGW.Redo.Net
 					gw.SetLock(1);
 					gw.ReportRequest("REDO - strt");
 
-					//
-					// Запросить состояние платежа в ГОРОДЕ.
-					// Если в  городе платёж в состоянии 3 - выполнить шаг.
-					// Иначе установить состояние как в ГОРОДЕ и вернуться.
-					//
-					/*
-					byte GorodState = 3;
-					try
-						{
-						GorodState = gw.GetGorodState();
-						// Log("{0} [SYNC - strt] Получение статуса в Gorod {1} XGate: {2}", gw.Tid, GorodState, gw.State);
-						}
-					catch (Exception ex)
-						{
-						Log("{0} [SYNC - stop] {1} Допроведения платежа откладывается", gw.Tid, ex.Message);
-						return; // Не допроводим пока город стоит. Нече.
-						}
+					// Синхронизация с БД Город
+					gw.Sync(false);
 
-					if (GorodState == 3)
+					// Выполнение допроведения
+					if (gw.State < 6)
 						gw.Processing(false);
-					else
-						{
-						byte newState = GorodState > 3? GorodState: (byte)12;
-						Log("{0} [REDO - SYNC] Допроведения платежа прекращается. Новый статус: {1}", gw.Tid, newState);
-						gw.UpdateState(gw.Tid, state :newState, errCode :500, errDesc :"Синхронизирован с ГОРОД", locked :0);
-						}
-					*/
-					gw.Processing(false);
+
 					gw.ReportRequest("REDO - stop");
 					}
 			}

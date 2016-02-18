@@ -355,6 +355,7 @@ namespace Oldi.Utility
 		static string registers = "";
 		static string cyber = "";
 		static int tz = 7;
+		static int siteTppId = 215;
 		static int fakeTppId = 1;
 		static int fakeTppType = 2;
 		static string attachments = "";
@@ -467,6 +468,18 @@ namespace Oldi.Utility
 		/// TZ по умолчанию, если терминал не определён
 		/// </summary>
 		public static int Tz { get { return tz; } }
+
+		/// <summary>
+		/// Номер чточки сайта
+		/// </summary>
+		public static int SiteTppId
+			{
+			get
+				{
+				return siteTppId;
+				}
+			}
+		
 		/// <summary>
 		/// ID терминала поумолчанию, если он не зарегистрирован
 		/// </summary>
@@ -748,6 +761,8 @@ namespace Oldi.Utility
 
 			if (!string.IsNullOrEmpty(Config.AppSettings["tz"]))
 				tz = int.Parse(Config.AppSettings["tz"]);
+			if (!string.IsNullOrEmpty(Config.AppSettings["site-tpp-id"]))
+				siteTppId = int.Parse(Config.AppSettings["site-tpp-id"]);
 			if (!string.IsNullOrEmpty(Config.AppSettings["fake-tpp-id"]))
 				fakeTppId = int.Parse(Config.AppSettings["fake-tpp-id"]);
 			if (!string.IsNullOrEmpty(Config.AppSettings["fake-tpp-type"]))

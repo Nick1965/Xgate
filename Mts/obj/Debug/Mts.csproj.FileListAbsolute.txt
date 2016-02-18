@@ -40,4 +40,3 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\obj\Debug\Oldi.Mts.Propert
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\obj\Debug\Mts.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\obj\Debug\Mts.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\obj\Debug\Mts.pdb
-D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Mts\obj\Debug\Mts.csprojResolveAssemblyReference.cache

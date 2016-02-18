@@ -44,41 +44,21 @@ namespace Oldi.Net
 		public string GetGorodSub()
 			{
 
-			string GorodCommandText = "select [sub_inner_tid] from [gorod].[dbo].payment where not sub_inner_tid like 'card-%' and tid = " + Tid.ToString();
 			string Sub_inner_tid = "";
-
-			using (SqlConnection GorodConnection = new SqlConnection(Settings.GorodConnectionString))
-			using (SqlCommand GorodCommand = new SqlCommand(GorodCommandText, GorodConnection))
+			using (OldiContext db = new OldiContext(Settings.GorodConnectionString))
 				{
-				GorodConnection.Open();
-				using (SqlDataReader DataReader = GorodCommand.ExecuteReader(CommandBehavior.CloseConnection))
-					{
-					if (DataReader.HasRows)
-						{
-						if (DataReader.Read())
-							{
-							Sub_inner_tid = DataReader.GetString(0); // Т.к. параметр 1
-							// Посчитаем еоличество -
-							int Count = 0;
-							for (int i = 0; i < Sub_inner_tid.Length; i++)
-								{
-								if (Sub_inner_tid.Substring(i, 1) == "-")
-									Count++;
-								}
-							if (Count == 3)
-								{
-								RootLog("{0} [GetGorodSub] Check={1}", Tid, Sub_inner_tid);
-								return Sub_inner_tid;
-								}
-							else
-								return "";
-							}
-						}
-					}
+				IEnumerable<string> tids = db.ExecuteQuery<string>(@"
+					select [sub_inner_tid] 
+						from [gorod].[dbo].payment 
+						where not sub_inner_tid like 'card-%' and tid = {0}
+					", Tid);
+				Sub_inner_tid = tids.First<string>();
 				}
 
-			return "";
-
+			if (string.IsNullOrEmpty(Sub_inner_tid))
+				return "";
+			else
+				return Sub_inner_tid;
 			}
 
 		public int CheckDouble()
@@ -106,10 +86,11 @@ namespace Oldi.Net
 				Doubles = db.CheckDouble(x, Terminal, (int)Tid, Pcdate, Amount, AmountAll);
 				}
 	
-			string SubInnerTid = GetGorodSub();
-			if (string.IsNullOrEmpty(SubInnerTid))
-				return 0;
-			else
+			// Проверяем дубли для всех типов терминалов
+			// string SubInnerTid = GetGorodSub();
+			// if (string.IsNullOrEmpty(SubInnerTid))
+			//	return 0;
+			// else
 				return Doubles;
 			
 			}

@@ -209,8 +209,8 @@ namespace Oldi.Net
 							// Если sub_inner_tid содержит 3 '-' возвращает непустую строку
 							string SubInnertid = Request.GetGorodSub();
 
-							if (!string.IsNullOrEmpty(SubInnertid))
-								Log("{0} [DOUB - start] sub_inner_tid={1} Поиск дублей", Request.Tid, SubInnertid);
+							// if (!string.IsNullOrEmpty(SubInnertid))
+							//	Log("{0} [DOUB - start] sub_inner_tid={1} Поиск дублей", Request.Tid, SubInnertid);
 
 							if (!string.IsNullOrEmpty(SubInnertid) && (Doubles = Request.CheckDouble()) > 0)
 								{
@@ -250,8 +250,8 @@ namespace Oldi.Net
 									}
 								}
 
-							if (!string.IsNullOrEmpty(SubInnertid))
-								Log("{0}  [DOUB - stop] {1}", Request.Tid, Request.ErrDesc);
+							// if (!string.IsNullOrEmpty(SubInnertid))
+							//	Log("{0}  [DOUB - stop] {1}", Request.Tid, Request.ErrDesc);
 
 							// Если статус равен 0
 							// И если возможность есть -- провести его
