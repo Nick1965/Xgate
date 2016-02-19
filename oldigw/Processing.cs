@@ -209,11 +209,9 @@ namespace Oldi.Net
 							// Если sub_inner_tid содержит 3 '-' возвращает непустую строку
 							string SubInnertid = Request.GetGorodSub();
 
-							// if (!string.IsNullOrEmpty(SubInnertid))
-							//	Log("{0} [DOUB - start] sub_inner_tid={1} Поиск дублей", Request.Tid, SubInnertid);
-
-							if (!string.IsNullOrEmpty(SubInnertid) && (Doubles = Request.CheckDouble()) > 0)
+							if (!string.IsNullOrEmpty(SubInnertid) && (Doubles = Request.GetDoubles(SubInnertid)) > 0)
 								{
+								Log("{0} [DOUB - step] Для sub_inner_tid={1} найдено {2} дублей", Request.Tid, SubInnertid, Doubles);
 								Request.State = 12;
 								Request.errCode = 6;
 								Request.errDesc = string.Format("Найдено {0} подобных платежей в пределах 10 минут. Платёж отменяется.", Doubles);
@@ -221,6 +219,8 @@ namespace Oldi.Net
 								}
 							else
 								{
+								Log("{0} [DOUB - step] Для sub_inner_tid={1} дублей не найдено", Request.Tid, SubInnertid);
+								
 								// Для начала определимся с провайдером:
 								switch (Request.Provider)
 									{
@@ -251,7 +251,7 @@ namespace Oldi.Net
 								}
 
 							// if (!string.IsNullOrEmpty(SubInnertid))
-							//	Log("{0}  [DOUB - stop] {1}", Request.Tid, Request.ErrDesc);
+							//	Log("{0} [DOUB - stop] {1}", Request.Tid, Request.ErrDesc);
 
 							// Если статус равен 0
 							// И если возможность есть -- провести его

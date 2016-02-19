@@ -50,9 +50,16 @@ namespace Oldi.Net
 				IEnumerable<string> tids = db.ExecuteQuery<string>(@"
 					select [sub_inner_tid] 
 						from [gorod].[dbo].payment 
-						where not sub_inner_tid like 'card-%' and tid = {0}
+						where tid = {0}
 					", Tid);
-				Sub_inner_tid = tids.First<string>();
+				// where not sub_inner_tid like 'card-%' and tid = {0}
+				try
+					{
+					Sub_inner_tid = tids.First<string>();
+					}
+				catch (Exception)
+					{
+					}
 				}
 
 			if (string.IsNullOrEmpty(Sub_inner_tid))
@@ -61,6 +68,31 @@ namespace Oldi.Net
 				return Sub_inner_tid;
 			}
 
+		public int GetDoubles(string sub_inner_tid)
+			{
+			int Doubles = 0;
+
+			try
+				{
+				using (OldiContext db = new OldiContext(Settings.GorodConnectionString))
+					{
+					Doubles = db.ExecuteCommand(@"
+						select count(tid)
+							from [gorod].[dbo].payment 
+							where sub_inner_tid = {0}
+						", sub_inner_tid, Pcdate);
+					}
+					// where not sub_inner_tid like 'card-%' and tid = {0}
+				}
+			catch (Exception)
+				{
+				}
+
+			return Doubles;
+			
+			}
+
+		/*
 		public int CheckDouble()
 			{
 
@@ -76,10 +108,11 @@ namespace Oldi.Net
 				x = Card;
 			else
 				{
-				RootLog("{0} [FCHK] {1}/{2} Не задан номер счёта", Tid, Service, Gateway);
+				RootLog("{0} [DOUB - step] {1}/{2} Не задан номер счёта", Tid, Service, Gateway);
 				return 0;
 				}
 
+			/*
 			int Doubles = 0;
 			using (OldiContext db = new OldiContext(Settings.ConnectionString))
 				{
@@ -92,8 +125,13 @@ namespace Oldi.Net
 			//	return 0;
 			// else
 				return Doubles;
-			
+	
+			if (TerminalType == 1)
+				return 0;
+			return GetDoubles();
+
 			}
-			
+			*/
+
 		}
 	}
