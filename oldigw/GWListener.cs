@@ -314,7 +314,7 @@ namespace Oldi.Net
 				}
 			catch(Exception ex)
 				{
-				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				Log("[{0}] {1}\r\n{2}", listenerContext.Request.RemoteEndPoint.Address, ex.Message, ex.StackTrace);
 				}
 
         }

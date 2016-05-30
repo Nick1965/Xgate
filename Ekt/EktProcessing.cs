@@ -66,7 +66,17 @@ namespace Oldi.Ekt
 				{
 					// TraceRequest("New");
 
-					// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
+				// Проверка дневного лимита для данного плательщика
+				try
+					{
+					DayLimitExceeded();
+					}
+				catch (Exception ex)
+					{
+					RootLog(ex.ToString());
+					}
+				
+				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
 					if (FinancialCheck(New)) return;
 					DoPay(0, 3);
 				}

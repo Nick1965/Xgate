@@ -223,7 +223,7 @@ namespace Oldi.Net
 					state = 0;
 				errCode = 502;
 				Log(errDesc);
-				RootLog(errDesc);
+				RootLog("[{0}] {1} {2}", Tid, Host, errDesc);
 			}
 			catch (Exception ex)
 			{

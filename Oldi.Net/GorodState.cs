@@ -55,11 +55,12 @@ namespace Oldi.Net
 			{
 			public long Tid;
 			public byte State;
+			public string Sub_inner_tid;
 			}
 
 		public class Gorod: DataContext
 			{
-			public Table<Payment> Payments;
+			// public Table<Payment> Payments;
 			public Gorod(string cnn)
 				: base(cnn)
 				{
@@ -85,6 +86,22 @@ namespace Oldi.Net
 			return GorodState;
 
 			}
-	
+
+		public string GetGorodSubLinq()
+			{
+
+			string Sub;
+			string GorodCommandText = "select [sub_inner_tid] from [gorod].[dbo].payment where tid = {0}";
+
+			using (Gorod db = new Gorod(Settings.GorodConnectionString))
+				{
+				IEnumerable<string> Payments = db.ExecuteQuery<string>(GorodCommandText, Tid);
+				Sub = Payments.First<string>();
+				}
+
+			return Sub;
+
+			}
+
 		}
 	}

@@ -24,12 +24,13 @@ namespace Oldi.Net
 				RootLog("\r\nПолучен запро:с\r\n{0}\r\n", stSource);
 
 			state = 0;
+            errCode = 0;
 
             try
             {
                 XDocument doc = XDocument.Parse(stSource);
 
-                if (doc.Element("request").HasAttributes)
+                if (!string.IsNullOrEmpty(stSource) && doc.Element("request").HasAttributes)
                 {
                     requestType = (string)doc.Element("request").Attribute("type");
                 }
@@ -144,7 +145,7 @@ namespace Oldi.Net
 								sb.AppendFormat("{0}={1};", n, v);
 								Attributes.Add(n, v);
 								}
-							// if (Settings.LogLevel.IndexOf("PARS") != -1)
+							if (Settings.LogLevel.IndexOf("PARS") != -1)
 								Log("Parse: atrs={0}", sb.ToString());
 							break;
 						case "filial":
@@ -259,6 +260,7 @@ namespace Oldi.Net
 							okato = (string)el.Value;
 							break;
 						default:
+                            /* Если пришло что-то необычное, просто сообщим об этом.
                             if (requestType != "status")
 								SetParseError(6, "", string.Format("Неверный тип запроса [{0}]=<{1}>", el.Name.LocalName, el.Value));
                             else
@@ -266,23 +268,15 @@ namespace Oldi.Net
                                 errCode = Properties.Settings.Default.CodeSUCS;
                                 errDesc = Properties.Resources.MsgSUCS;
                             }
+                            */
+                            Log("Нераспознанные тэг: requestType=\"{0}\" Name=\"{1}\" Value=\"{2}\"", requestType, el.Name.LocalName, el.Value);
                             break;
                     }
                 }
 
-                
-				if (ErrCode == 0)
-                {
-					// Запрос успешно разобран
-					// Log("Запрос разобран:\r\n{0}", PrintParams());
-                    // ErrDesc = Properties.Resources.MsgSUCS;
-					// errDesc = string.Format("[{0}] Запрос разобран", requestType);
-					errDesc = "";
-                    return 0;
-                }
-                else
-                    return errCode;
+
                 #endregion Parse
+
             }
             catch (Exception ex)
             {

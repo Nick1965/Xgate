@@ -37,7 +37,7 @@ namespace RedirectPay
 		
 		void Log(string fmt, params object[] prms)
 			{
-			Utility.Log(Config.logFile, fmt, prms);
+			Utility.Log(Properties.Settings.Default.LogFile, fmt, prms);
 			}
 	
 		public Scan(string FromDateString)
@@ -70,8 +70,8 @@ namespace RedirectPay
 			 */
 			string RequestString = 
 				@"select p.DatePay, p.tid, p.template_tid, p.agent_oid, p.point_oid, d.ClientAccount, p.Card_number, p.Amount, p.Summary_Amount, p.User_id
-					FROM [Gorod].[dbo].[payment] p 
-					inner join [Gorod].[dbo].[PD4] d on p.tid = d.tid 
+					FROM [Gorod].[dbo].[payment] p (NOLOCK)
+					inner join [Gorod].[dbo].[PD4] d (NOLOCK) on p.tid = d.tid 
 					where p.datepay >= {0} and p.[state] = 12 and p.[result_text] = '[BLACK] Отменён вручную' and
 						not sub_inner_tid like 'card-%' and charindex('-', sub_inner_tid) > 0
 					order by p.datepay;";
@@ -81,8 +81,10 @@ namespace RedirectPay
 
 			string GetNickAndPasswordRequest = 
 				"SELECT [login],[password] FROM [Gorod].[dbo].[user] where user_id = {0}";
-			
-			using (Gorod db = new Gorod(Config.GorodConnectionString))
+
+			Log("Database: {0}", Properties.Settings.Default.GorodConnectionString);
+
+			using (Gorod db = new Gorod(Properties.Settings.Default.GorodConnectionString))
 				{
 
 				IEnumerable<Payment> Payments = db.ExecuteQuery<Payment>(RequestString, FromDate);
@@ -110,7 +112,7 @@ namespace RedirectPay
  					string QueryString = string.Format("Agent_ID={0}&Point_ID={1}&Nick={2}&Password={3}&template_tid=193&ls=900080&SUMMARY_AMOUNT={4}&tid={5}",
 						Row.Agent_oid, Row.Point_oid, Nick, Password, Row.Summary_amount.AsCurrency(), Outtid);
 
-					string Response = Get(Config.SimpleHost, Config.Endpoint, QueryString);
+					string Response = Get(Properties.Settings.Default.SimpleHost, Properties.Settings.Default.Endpoint, QueryString);
 					// Нет связи с платёжным сервисом
 					if (string.IsNullOrEmpty(Response))
 						break;
@@ -143,7 +145,7 @@ namespace RedirectPay
 						db.ExecuteCommand(@"update [gorod].[dbo].[payment_history] set result_text = {1} 
 												where tid = {0} and old_state is null and new_state = 0 and try_state = 0", 
 																CheckId, ResultText);
-						Utility.Log(Config.RedoLogFile, "DATE={7} Tid={0} SUM={1,12:f2} AMN={2,12:f2} ACC={3,20} CRD={4,7} PNT={5,4} AGN={6,4}",
+						Utility.Log(Properties.Settings.Default.RedoLogFile, "DATE={7} Tid={0} SUM={1,12:f2} AMN={2,12:f2} ACC={3,20} CRD={4,7} PNT={5,4} AGN={6,4}",
 							Row.Tid, Row.Summary_amount, Row.Amount, Row.ClientAccount, Row.Card_number,
 							Row.Point_oid, Row.Agent_oid, XConvert.AsDate(Row.DatePay).Replace('T', ' '));
 						}

@@ -340,8 +340,9 @@ namespace Oldi.Mts
 				case 362:
 				case 501: // Превышена пропускная способность
 				case 367: // Номер уже обработан в ЕСПП
-					state = old_state;
-					return 0;
+				case -20367:
+					state = 11;
+					break;
 				case 357: // Платеж уже существует
 				case 398: // Истекло время акцептования документа
 				case 651: // Платеж в требуемом состоянии не найден
@@ -589,53 +590,79 @@ namespace Oldi.Mts
 		public override void Processing(bool New = true)
 		{
 
-			if (New)  // Новый платёж
-			{
-				if (MakePayment() == 0)
+			try
 				{
-					// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-					if (FinancialCheck(New)) return;
-				
-					// ReportRequest("Begin");
-					if (DoPay(0, 1) == 0)
-					{
-						// ReportRequest("Check");
-						DoPay(1, 6); // Платеж МТС не надо проверять статус, он сразу идёт в 6-й статус
-					}
-				}
-				// ReportRequest("End");
-			}
-			else // Redo
-			{
-				ReportRequest("Redo start");
+				SetLock(1);
 
-				// Синхронизация с Городом
-				Sync(false);
-				if (State < 6)
+				if (New)  // Новый платёж
 					{
-
-					if (State == 0) // Новый платеж, получить разрешение
+					if (MakePayment() == 0)
 						{
-						// Проверим время
-						GetTerminalInfo();
+		
+						// Проверка дневного лимита для данного плательщика
+						try
+							{
+							DayLimitExceeded();
+							}
+						catch (Exception ex)
+							{
+							RootLog(ex.ToString());
+							}
 
+						// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
 						if (FinancialCheck(New)) return;
+
+						// ReportRequest("Begin");
 						if (DoPay(0, 1) == 0)
-							DoPay(1, 6);
+							{
+							// ReportRequest("Check");
+							DoPay(1, 6); // Платеж МТС не надо проверять статус, он сразу идёт в 6-й статус
+							}
 						}
-					else if (State == 1) // Разрешение получено
-						{
-						DoPay(1, 6);
-						}
-					else if (State == 3) // Платеж отправлен
-						DoPay(3, 6);
-					
-					
+					// ReportRequest("End");
 					}
 
-				ReportRequest("Redo stop");
+				else // Redo
+					{
+					ReportRequest("Redo start");
+
+					// Синхронизация с Городом
+					Sync(false);
+					if (State < 6)
+						{
+
+						if (State == 0) // Новый платеж, получить разрешение
+							{
+							// Проверим время
+							GetTerminalInfo();
+
+							if (FinancialCheck(New)) return;
+							if (DoPay(0, 1) == 0)
+								DoPay(1, 6);
+							}
+						else if (State == 1) // Разрешение получено
+							{
+							DoPay(1, 6);
+							}
+						else if (State == 3) // Платеж отправлен
+							DoPay(3, 6);
+
+						ReportRequest("Redo stop");
+					
+						}
+					}
+
+				}
+			catch(Exception x)
+				{
+				RootLog("Tid={0} {1}", Tid, x.ToString());
+				}
+			finally
+				{
+				SetLock(0);
+				}
+
 			}
-		}
 
 	
 	

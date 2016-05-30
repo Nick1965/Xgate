@@ -400,7 +400,7 @@ namespace RedirectPay
 
 			WriteLog("Logout", true);
 
-			using (Gorod db = new Gorod(Config.GorodConnectionString))
+			using (Gorod db = new Gorod(Properties.Settings.Default.GorodConnectionString))
 				{
 				db.LogOut(Session["vru_session_id"].ToInt());
 				}
@@ -417,7 +417,7 @@ namespace RedirectPay
 
 			WriteLog("Read", true);
 
-			using (Gorod db = new Gorod(Config.GorodConnectionString))
+			using (Gorod db = new Gorod(Properties.Settings.Default.GorodConnectionString))
 				{
 				ISingleResult<ReadResult> result = db.Read(Template_tid.ToString(), Session["vru_session_id"].ToInt(), Tid, ref ErrCode, ref ErrDesc);
 
@@ -446,7 +446,7 @@ namespace RedirectPay
 
 			WriteLog("Makepay", true);
 
-			using (Gorod db = new Gorod(Config.GorodConnectionString))
+			using (Gorod db = new Gorod(Properties.Settings.Default.GorodConnectionString))
 				{
 				Status = db.MakePay(Template_tid.ToString(),
 							Session["vru_session"].ToInt(),
@@ -499,7 +499,7 @@ namespace RedirectPay
 
 			WriteLog("BuildTemplate", true);
 
-			using (Gorod db = new Gorod(Config.GorodConnectionString))
+			using (Gorod db = new Gorod(Properties.Settings.Default.GorodConnectionString))
 				{
 				Status = db.BuildTemplate(Template_tid.ToString(), Session["vru_session_id"].ToInt(), ref ErrCode, ref ErrDesc);
 				}
@@ -529,7 +529,7 @@ namespace RedirectPay
 
 			WriteLog("Save", true);
 
-			using (Gorod db = new Gorod(Config.GorodConnectionString))
+			using (Gorod db = new Gorod(Properties.Settings.Default.GorodConnectionString))
 				{
 				Status = db.Save(Template_tid.Value, Session["vru_session_id"].ToInt(), FieldName, FieldValue, ref ErrCode, ref ErrDesc);
 				}
@@ -549,8 +549,8 @@ namespace RedirectPay
 				StcSessionId = null, 
 				VruSessionId = null, 
 				CallCategoryId = null;
-	
-			using (Gorod db = new Gorod(Config.GorodConnectionString))
+
+			using (Gorod db = new Gorod(Properties.Settings.Default.GorodConnectionString))
 				{
 				int result = db.CheckLogin(null, IpAddress, null, CardNumber, PIN, ref Seria, ref ServiceNumber, ref StcSessionId, ref VruSessionId, ref CallCategoryId,
 					ref Balance, ref ErrCode, ref ErrDesc);
@@ -677,7 +677,7 @@ namespace RedirectPay
 
 			WriteLog("Calc", true);
 
-			using (Gorod db = new Gorod(Config.GorodConnectionString))
+			using (Gorod db = new Gorod(Properties.Settings.Default.GorodConnectionString))
 				{
 				// 1 - раскодировать, 0 - закодировать
 				db.EncodePin(null, CardNumber, IsNumeric(PIN)? 1: 0, ref PINout);

@@ -45,7 +45,7 @@ namespace OldiGW.Redo.Net
 		public static int processes = 0;
 		public volatile static bool Canceling = false;
 
-		ConcurrentDictionary<long, DateTime> RedoDict = null;
+		public ConcurrentDictionary<long, DateTime> RedoDict = null;
 
 		class CheckInfo
         {
@@ -72,6 +72,15 @@ namespace OldiGW.Redo.Net
             this.idle = idle;
             processes = 0;
 
+			int WorkerThreads;
+			int CompletionPortThreads;
+
+			ThreadPool.GetMaxThreads(out WorkerThreads, out CompletionPortThreads);
+			WorkerThreads = Environment.ProcessorCount * 3;
+			ThreadPool.SetMaxThreads(WorkerThreads, CompletionPortThreads);
+
+			Log("Установлено: количество потоков допроведения = {0} количество птоков ввода/вывода = {1}", WorkerThreads, CompletionPortThreads);
+			
 			RedoDict = new ConcurrentDictionary<long, DateTime>();
         }
 
@@ -190,16 +199,17 @@ namespace OldiGW.Redo.Net
 				}
 			*/
 
+			int SafeInterval = Config.AppSettings["Safe-Interval"].ToInt();
 		
 			// Удалим из очереди платежи старше 1 минуты
 			foreach (long key in RedoDict.Keys)
 				{
 				DateTime d;
 				RedoDict.TryGetValue(key, out d);
-				if (d < DateTime.Now.AddMinutes(-1))
+				if (d < DateTime.Now.AddMinutes(-SafeInterval))
 					{
 					RedoDict.TryRemove(key, out d);
-					Log("{0} [DoREDO] Элемн старше 1 минуты - удаляем из фильтра", key);
+					Log("{0} [DoREDO] Элемент старше {1} минут - удаляем из фильтра", key, SafeInterval);
 					}
 				}
 
@@ -290,6 +300,7 @@ namespace OldiGW.Redo.Net
 			catch (Exception ex)
 				{
 				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				gw.ReportRequest("REDO - stop");
 				}
 			finally
 			{

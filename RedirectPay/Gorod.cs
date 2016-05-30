@@ -64,6 +64,7 @@ namespace RedirectPay
 	/// <summary>
 	/// Таблица Session
 	/// </summary>
+	[Table(Name="Session")]
 	public class Session
 		{
 		public int vru_session_id;
@@ -98,7 +99,6 @@ namespace RedirectPay
 			}
 
 		public History Histories;
-
 		public Table<Session> Sessions;
 
 		[Function(Name="gorod.dbo.get_card_info_info_p")]

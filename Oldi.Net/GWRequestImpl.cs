@@ -17,6 +17,7 @@ using System.ServiceModel;
 using Oldi.Net.Proxy;
 using System.IO.Compression;
 using System.Collections.Specialized;
+using System.Data.Linq;
 
 namespace Oldi.Net
 {
@@ -344,6 +345,16 @@ namespace Oldi.Net
 			{
 				if (MakePayment() != 0) return;
 
+				// Проверка дневного лимита для данного плательщика
+				try
+					{
+					DayLimitExceeded();
+					}
+				catch (Exception ex)
+					{
+					RootLog(ex.ToString());
+					}
+				
 				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
 				if (FinancialCheck(New)) return;
 
@@ -375,6 +386,97 @@ namespace Oldi.Net
 
 		}
 
+		/// <summary>
+		/// Проверка дневного лимита пользователя сайта
+		/// </summary>
+		/// <returns></returns>
+		public bool DayLimitExceeded()
+			{
+			int account = 0;
+			decimal pays = 0M;
+			decimal DayLimit = 1000M;
+
+			if (TerminalType == 2)
+				{
+				RootLog("{0} [DLIM] *** Проверка дневного лимита. Точка = {1}", Tid, Terminal);
+				// Получить номер лицевого счёта плательщика
+				if ((account = GetPayerAccount()) != 0)
+					{
+					pays = PaysInTime(account);
+					if (pays + Amount > DayLimit)
+						{
+						RootLog("{0} [DLIM] *** Exceeded Account {1} Pays {2} Limit {3}", Tid, account, (pays + Amount).AsCurrency(), DayLimit.AsCurrency());
+						return true;
+						}
+					// Добавить платёж в Pays
+					AddPay(account);
+					}
+				RootLog("{0} [DLIM] *** Проверка дневного лимита конец.", Tid);
+				}
+
+			return false;
+			}
+
+		int GetPayerAccount()
+			{
+
+			try
+				{
+				RootLog("{0} [DLIM] {1} {2}", Tid, "SELECT sub_inner_tid FROM Gorod.dbo].payment where tid =", Tid);
+				string Account = GetGorodSubLinq();
+
+				RootLog("{0} [DLIM] Найден sub_inner_tid '{1}'", Tid, Account);
+
+				if (!string.IsNullOrEmpty(Account) && Account.Length >= 6 && Account.Substring(0, 6).ToLower() == "card-9")
+					{
+					Account = Account.Substring(5, Account.IndexOf('-', 5) - 4);
+					RootLog("{0} [DLIM] Найден account '{1}'", Tid, Account);
+					return int.Parse(Account);
+					}
+				else
+					return 0;
+				}
+			catch(Exception ex)
+				{
+				RootLog("{0} [DLIM] {1}", Tid, ex.ToString());
+				return 0;
+				}
+
+			}
+		
+		/// <summary>
+		/// Подсчитывает сумму платежей за сутки для счёта
+		/// </summary>
+		/// <param name="account">Номер счёта</param>
+		/// <returns>Сумма всех платежей</returns>
+		decimal PaysInTime(int account)
+			{
+			decimal balance = 0;
+			DateTime start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
+			DateTime finish = start.AddDays(1);
+			using (OldiContext db = new OldiContext(Settings.ConnectionString))
+				{
+				IEnumerable<decimal?> pays = db.ExecuteQuery<decimal?>("select sum(amount) from oldigw.oldigw.pays where datepay between {0} and {1} and account = {2}", start, finish, account);
+				if (pays != null && pays.Count() > 0)
+					balance = pays.First<decimal?>().Value;
+				}
+			RootLog("{0} [DLIM] Account {1} за день выплачено {2}", Tid, account, balance.AsCurrency());
+			return balance;
+			}
+
+		/// <summary>
+		/// Добавляет платёж в таблицу Pays
+		/// </summary>
+		/// <param name="account"></param>
+		void AddPay(int account)
+			{
+			using (OldiContext db = new OldiContext(Settings.ConnectionString))
+				{
+				db.ExecuteCommand("insert into oldigw.oldigw.pays (tid, datepay, account, amount, balance) values({0}, {1}, {2}, {3}, {4})", Tid, account, DateTime.Now, Amount, 0M);
+				}
+			RootLog("{0} [DLIM] Account {1} добавлен платёж {2}", Tid, account, Amount.AsCurrency());
+			}
+		
 		/// <summary>
 		/// Финансовы контроль
 		/// </summary>
@@ -409,11 +511,13 @@ namespace Oldi.Net
 			// 2 - Рабочее место
 			// 3 - Сайт
 			List<CheckedProvider> ProviderList = LoadProviderList(out AmountLimit, out AmountDelay);
-			bool check = false;
-
+			
 			// Для service и gateaway найдём параметры
+			/*
+			bool check = false;
 			if (TerminalType == 1 || Terminal == 281)
 				check = true;
+			*/
 
 			int tt = TerminalType;
 			if (Terminal == 281)
@@ -430,7 +534,7 @@ namespace Oldi.Net
 					if (Service == item.Service && Gateway == item.Gateway && item.TerminalType == tt)
 						{
 						AmountLimit = item.Limit;
-						check = true;
+						// check = true;
 						RootLog("{0} [FCHK - stop] Найден Service={1} Gateway={2} Type={3} Limit={4} State={5}", Tid, Service, Gateway, tt, AmountLimit, State);
 						break;
 						}
@@ -516,7 +620,7 @@ namespace Oldi.Net
 			{
 
 			XDocument doc = XDocument.Load(".\\lists\\fincheck.xml");
-			string provider = "";
+			// string provider = "";
 			AmountLimit  = 0m;
 			AmountDelay = 16;
 
@@ -547,11 +651,11 @@ namespace Oldi.Net
 								// Console.WriteLine(e.Name.LocalName);
 								if (e.Name.LocalName == "Provider")
 									{
-									string Name = "";
-									string Service = "";
-									string Gateway = "";
-									decimal Limit = decimal.MinusOne;
-									int Delay = 16;
+									// string Name = "";
+									// string Service = "";
+									// string Gateway = "";
+									// decimal Limit = decimal.MinusOne;
+									// int Delay = 16;
 									CheckedProvider providerItem = new CheckedProvider();
 
 									foreach (var item in e.Attributes())

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Oldi.Net;
+using System.Data.SqlClient;
 
 namespace RedirectPay
 	{
@@ -11,7 +12,7 @@ namespace RedirectPay
 		static void Main(string[] args)
 			{
 
-			Utility.Log(Config.logFile, "RedirectPya v1.0");
+			Utility.Log(Properties.Settings.Default.LogFile, "RedirectPya v1.0");
 			Console.WriteLine("RedirectPya v1.0");
 
 			try
@@ -19,9 +20,13 @@ namespace RedirectPay
 				Scan scan = new Scan(args.Length>0?args[0]:"");
 				scan.Run();
 				}
+			catch (SqlException se)
+				{
+				Utility.Log(Properties.Settings.Default.LogFile, "SQL: HRESULT={0} {1} Number={2}\r\n{3}", se.ErrorCode, se.Message, se.Number, se.StackTrace);
+				}
 			catch(Exception ex)
 				{
-				Utility.Log(Config.logFile, ex.ToString());
+				Utility.Log(Properties.Settings.Default.LogFile, ex.ToString());
 				Console.WriteLine(ex.ToString());
 				}
 

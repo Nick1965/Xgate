@@ -144,8 +144,13 @@ namespace Oldi.Mts
 
 			try
 			{
+				/*
 				Schemas.Add(string.Format("http://schema.mts.ru/ESPP/AgentPayments/Registries/Reconciliation/v{0}", ProvidersSettings.Mts.Xsd),
 					string.Format("{0}\\ESPP_AgentPayments_Registries_Reconciliation_v{1}.xsd", ProvidersSettings.Mts.Schemas, ProvidersSettings.Mts.Xsd));
+				 */
+			// Schemas.Add(string.Format("http://schema.mts.ru/ESPP/AgentPayments/Registries/Reconciliation/v5_00", ProvidersSettings.Mts.Xsd),
+			//	string.Format("{0}\\ESPP_AgentPayments_Registries_Reconciliation_v5_02.xsd", ProvidersSettings.Mts.Schemas, ProvidersSettings.Mts.Xsd));
+
 			}
 			catch (Exception ex)
 			{
@@ -159,7 +164,7 @@ namespace Oldi.Mts
 
 		protected override string GetLogName()
 			{
-			return "c:\\oldigw\\log\\registers.log";
+			return ".\\log\\registers.log";
 			}
 
 		/// <summary>
@@ -194,7 +199,7 @@ namespace Oldi.Mts
 			MakeTemplate();
 
 			// Проверим шаблон
-			CheckXML(template);
+			// CheckXML(template);
 			if (ErrCode == 400)
 			{
 				Log("Реестр: err={0} {1}", ErrCode, ErrDesc);
@@ -504,7 +509,7 @@ namespace Oldi.Mts
 
 			Log("log\\registers.log", "Host={0} content-type={1}", Settings.Mts.Host, ContentType);
 			Log("log\\registers.log", "Подготовлен запрос к серверу, f_01={0} f_02={1} f_03={2}:\r\n{3}", f_01, f_02, f_03, stRequest);
-			CheckXML(stRequest);
+			// CheckXML(stRequest);
 			int ret = 0;
 
 			if (errCode != 400)

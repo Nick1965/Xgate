@@ -739,12 +739,12 @@ namespace Oldi.Utility
 			Attachments = Config.AppSettings["Attachments"];
 			
 			if (string.IsNullOrEmpty(Config.AppSettings["Port"]))
-				port = 0;
+				port = 300;
 			else
 				int.TryParse(Config.AppSettings["Port"], out port);
 			
 			if (string.IsNullOrEmpty(Config.AppSettings["SslPort"]))
-				sslPort = 201;
+				sslPort = 301;
 			else
 				int.TryParse(Config.AppSettings["SslPort"], out sslPort);
 

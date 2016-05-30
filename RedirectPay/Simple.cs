@@ -58,6 +58,7 @@ namespace RedirectPay
 		public int? ServiceNumber;
 		}
 
+#if __SIMPLE__
 	public class Simple
 		{
 
@@ -448,5 +449,6 @@ namespace RedirectPay
 			}
 		
 		}
+#endif
 
 	}
