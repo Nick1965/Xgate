@@ -20,7 +20,7 @@ namespace Oldi.Net
         {
             ContentType = "application/x-www-form-urlencoded";
             CodePage = "utf-8";
-            commonName = commonName;
+            commonName = CommonName;
             host = ProvidersSettings.Pcc.Host;
 			// find = ProvidersSettings.Pcc.Find;
 			// payCheck = ProvidersSettings.Pcc.Check;

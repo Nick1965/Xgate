@@ -1779,7 +1779,9 @@ namespace Oldi.Net
 			string ep = Config.AppSettings["SMPPEndpoint"];
 			RootLog("Send SMS(\"{3}\") {0} From={1} To={2}", From, Message, Phone, ep);
 
-			string answer = Get(ep, string.Format("from={0}&phone=7{1}&message={2}", From, Phone, Message));
+            ContentType = "utf-8";
+
+            string answer = Get(ep, string.Format("from={0}&phone=7{1}&message={2}", From, Phone, Message));
 
 			if (!string.IsNullOrEmpty(answer) && answer.IndexOf("<errCode>0</errCode>") != -1)
 				return true;
@@ -1807,9 +1809,10 @@ namespace Oldi.Net
 
 			System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(new Uri(Url.ToString()));
 			request.Method = "GET";
-			request.Accept = "text/xml */*";
+			request.Accept = "text/html */*";
 			request.UserAgent = "XNET-test";
-			// request.ContentType = "application/x-www-form-urlencoded; charset=windows-1251";
+            if (string.IsNullOrEmpty(ContentType))
+                ContentType = "windows-1251";
 			request.ContentType = "application/x-www-form-urlencoded; charset=utf-8";
 			request.Headers.Add("Accept-Encoding", "identity");
 			// request.Headers.Add("Accept-Encoding", "gzip, deflate, identity");
