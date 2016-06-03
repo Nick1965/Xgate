@@ -330,6 +330,9 @@ namespace RT
 
 			StringBuilder p = new StringBuilder();
 
+            pcdate = Pcdate.AddHours(-1);
+            operdate = DateTime.Now.AddHours(-1);
+
 			try
 				{
 
@@ -371,7 +374,7 @@ namespace RT
 					// Непустой для РТ-Мобайл
 					// if (!string.IsNullOrEmpty(agentAccount))
 					// p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
-					p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(DateTime.Now, Settings.Tz)));
+					p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Operdate, Settings.Tz)));
 					p.AppendFormat("&reqTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
 					p.AppendFormat("&payAmount={0}", (int)(Amount * 100m));
 					p.AppendFormat("&agentAccount={0}", agentAccount);
