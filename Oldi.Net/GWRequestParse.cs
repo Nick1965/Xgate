@@ -59,6 +59,7 @@ namespace Oldi.Net
                     {
                         case "provider":
                             provider = ((string)el.Attribute("name")).ToLower();
+
 							foreach (XAttribute attr in el.Attributes())
 							{
 								if (attr.Name.LocalName.ToLower() == "gateway"
@@ -68,7 +69,8 @@ namespace Oldi.Net
 								else if (attr.Name.LocalName.ToLower() == "service")
 									service = (string)attr.Value;
 							}
-							if (Settings.LogLevel.IndexOf("PARS") != -1)
+
+                            if (Settings.LogLevel.IndexOf("PARS") != -1)
 								Log("Parse: provider  = {0}, service = {1} gw = {2}", provider, service, gateway);
                             break;
                         case "tid":
@@ -259,6 +261,21 @@ namespace Oldi.Net
 						case "okato":
 							okato = (string)el.Value;
 							break;
+                        case "regpay":
+                            //
+                            // Рапида по коду требования
+                            //
+                            foreach(var attr in el.Attributes())
+                            {
+                                // Коллекция атрибутов содержит все параметры запросов Рапиды
+                                // Кроме Tid, Phone, Amount, Amount-all
+
+                                if (Settings.LogLevel.IndexOf("PARS") != -1)
+                                    Log("\tregpay: {0} = {1}", attr.Name.LocalName, attr.Value);
+
+                                Attributes.Add(attr.Name.LocalName, attr.Value);
+                            }
+                            break;
 						default:
                             /* Если пришло что-то необычное, просто сообщим об этом.
                             if (requestType != "status")

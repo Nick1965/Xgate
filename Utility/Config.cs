@@ -335,7 +335,16 @@ namespace Oldi.Utility
 			public static string Timeout { get { return Config.Providers["cyber"]["timeout"]; } }
 		}
 
-		public static class Smtp
+        public static class Rapida
+        {
+            public static string Name { get { return Config.Providers["rapida"]["name"]; } }
+            public static string Host { get { return Config.Providers["rapida"]["host"]; } }
+            public static string CN { get { return Config.Providers["rapida"]["cn"]; } }
+            public static string Log { get { return Config.Providers["rapida"]["log"]; } }
+
+        }
+
+        public static class Smtp
 		{
 			public static string Log { get { return Config.Providers["smtp"]["log"]; } }
 		}
@@ -703,10 +712,21 @@ namespace Oldi.Utility
 		/// Имя Web-клиента
 		/// </summary>
 		public static string ClientName { get; set; }
-		/// <summary>
-		/// Чтение файла *.exe.config
-		/// </summary>
-		public static void ReadConfig()
+
+        public static class Rapida
+        {
+            public static string Name { get { return ProvidersSettings.Rapida.Name; } }
+            public static string Host { get { return ProvidersSettings.Rapida.Host; } }
+            public static string CN { get { return ProvidersSettings.Rapida.CN; } }
+            public static string Log { get { return LogPath + ProvidersSettings.Rapida.Log; } }
+
+        }
+
+
+        /// <summary>
+        /// Чтение файла *.exe.config
+        /// </summary>
+        public static void ReadConfig()
 		{
 
 			Assembly assem = Assembly.GetCallingAssembly();

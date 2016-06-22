@@ -281,8 +281,10 @@ namespace OldiGW.Redo.Net
 					gw = new GWEktRequest(gw);
 				else if (gw.Provider == Settings.Rtm.Name)
 					gw = new RT.RTRequest(gw);
+                else if (gw.Provider == Settings.Rapida.Name)
+                    gw = new GWRapidaRequest(gw);
 
-				if (gw != null)
+                if (gw != null)
 					{
 					gw.SetLock(1);
 					gw.ReportRequest("REDO - strt");

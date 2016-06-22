@@ -403,12 +403,26 @@ namespace Oldi.Utility
 				return -1;
 			}
 
-		/// <summary>
-		/// Преобразовывает в строку число с десятичной точкой
-		/// </summary>
-		/// <param name="s"></param>
-		/// <returns></returns>
-		public static string AsCurrency(this decimal d)
+        /// <summary>
+        /// Преобразует в decimal
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static decimal ToDecimal (this string s)
+        {
+            decimal x;
+            if (!decimal.TryParse(s, System.Globalization.NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out x))
+                return decimal.MinusOne;
+            else
+                return x;
+        }
+
+        /// <summary>
+        /// Преобразовывает в строку число с десятичной точкой
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static string AsCurrency(this decimal d)
 			{
 			return d.ToString("0.00", CultureInfo.InvariantCulture);
 			}

@@ -237,6 +237,9 @@ namespace Oldi.Net
 									case "mts":
 										Current = new GWMtsRequest(Request);
 										break;
+                                    case "rapida":
+                                        Current = new GWRapidaRequest(Request);
+                                        break;
 									case "smtp":
 										Current = new Oldi.Smtp.Smtp(Request);
 										break;
@@ -330,7 +333,7 @@ namespace Oldi.Net
 
 			try
             {
-				if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rtm.Name) // RT передаёт уже заполненнвй Answer
+				if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rtm.Name && r.Provider != Settings.Rapida.Name) // RT передаёт уже заполненнвй Answer
 				{
 					if (r.State == 6)
 					{
