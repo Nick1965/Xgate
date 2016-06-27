@@ -62,11 +62,33 @@ namespace Oldi.Ekt
 
 			if (New)  // Новый платёж
 			{
-				if (MakePayment() == 0)
-				{
-					// TraceRequest("New");
+                // Скорретируем AmountAll: + 2.%
 
-				// Проверка дневного лимита для данного плательщика
+                if (Gateway == "1418" && AmountAll > Amount)
+                {
+                    decimal oldAmount = AmountAll;
+                    if (TerminalType == 1)
+                    {
+                        amountAll = Amount / (1m - 0.025m);
+                        amountAll = Math.Round(AmountAll / 10m, 0) * 10m;
+                        if ((1m - Amount / AmountAll) * 100m > 3.5m)
+                            amountAll = Amount;
+                    }
+                    else
+                        amountAll = Math.Round(Amount / (1m - 0.035m), 2);
+
+                    if (AmountAll > oldAmount)
+                        amountAll = oldAmount;
+                    else
+                        RootLog("{0} [CHNG - ****] {4}/{5} A={1} Old={2} New={3} Perc={6}% TType={7}", 
+                            Tid, Amount.AsCurrency(), oldAmount.AsCurrency(), AmountAll.AsCurrency(), Service, Gateway, ((1m - Amount / AmountAll) * 100m).AsCurrency(), TerminalType);
+                }
+
+                if (MakePayment() == 0)
+				{
+                    // TraceRequest("New");
+
+                    // Проверка дневного лимита для данного плательщика
 				try
 					{
 					DayLimitExceeded();

@@ -383,6 +383,9 @@ namespace Oldi.Net
 					}
 				}
 
+                if (string.IsNullOrEmpty(stResponse))
+                    stResponse = string.Format("<Response><ErrCode>6</ErrCode><ErrDesc>Внутрення ошибка сервиса. Нет ответа.</ErrDesc></Response>");
+                
                 // Создаем ответ
 				string answer = string.Format("<?xml version=\"1.0\" encoding=\"{0}\"?>\r\n{1}",
 					dataHolder.ClientEncoding.WebName, stResponse);

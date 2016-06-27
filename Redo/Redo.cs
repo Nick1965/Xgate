@@ -287,7 +287,7 @@ namespace OldiGW.Redo.Net
                 if (gw != null)
 					{
 					gw.SetLock(1);
-					gw.ReportRequest("REDO - strt");
+					// gw.ReportRequest("REDO - strt");
 
 					// Синхронизация с БД Город
 					gw.Sync(false);
@@ -296,13 +296,13 @@ namespace OldiGW.Redo.Net
 					if (gw.State < 6)
 						gw.Processing(false);
 
-					gw.ReportRequest("REDO - stop");
+					gw.ReportRequest("REDO");
 					}
 			}
 			catch (Exception ex)
 				{
 				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
-				gw.ReportRequest("REDO - stop");
+				gw.ReportRequest("REDO");
 				}
 			finally
 			{

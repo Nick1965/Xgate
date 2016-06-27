@@ -251,6 +251,8 @@ namespace Oldi.Mts
             pcdate = DateTime.Now.AddHours(-1);
             terminalDate = pcdate;
             tz = 6;
+
+            
             RootLog("{3} Корректировка времени PC={0} old TD={1} new TD={2}",
                 XConvert.AsDateTZ(Pcdate, Settings.Tz),
                 XConvert.AsDateTZ(TerminalDate, Tz),
@@ -258,6 +260,7 @@ namespace Oldi.Mts
                 Tid);
             if (Exec("UpdateTime", Tid, pcdate: Pcdate, terminalDate: terminalDate) != 0)
                 return -1;
+            
 
             // Проверка времени создания платежа
             // Если платёж кис больше часа, скорректировать время
@@ -266,6 +269,9 @@ namespace Oldi.Mts
             if (old_state == 0 && DateTime.Now.Ticks - Pcdate.Ticks > TimeSpan.TicksPerHour * 1)
 				{
                 pcdate = DateTime.Now;
+
+                // Корректировка времени -1
+                pcdate = pcdate.AddHours(-1);
 
                 Random rnd = new Random((int)DateTime.Now.Ticks);
 				DateTime time = new DateTime(pcdate.Ticks - TimeSpan.TicksPerSecond * (long)(rnd.NextDouble() * 10.0));

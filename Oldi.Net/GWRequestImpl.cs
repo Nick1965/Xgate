@@ -431,7 +431,7 @@ namespace Oldi.Net
 					{
 					Account = Account.Substring(5, Account.IndexOf('-', 5) - 4);
 					RootLog("{0} [DLIM] Найден account '{1}'", Tid, Account);
-					return int.Parse(Account);
+					return int.Parse(Account.Replace("-", ""));
 					}
 				else
 					return 0;
@@ -457,7 +457,7 @@ namespace Oldi.Net
 			using (OldiContext db = new OldiContext(Settings.ConnectionString))
 				{
 				IEnumerable<decimal?> pays = db.ExecuteQuery<decimal?>("select sum(amount) from oldigw.oldigw.pays where datepay between {0} and {1} and account = {2}", start, finish, account);
-				if (pays != null && pays.Count() > 0)
+				// if (pays != null && pays.Count() > 0)
 					balance = pays.First<decimal?>().Value;
 				}
 			RootLog("{0} [DLIM] Account {1} за день выплачено {2}", Tid, account, balance.AsCurrency());

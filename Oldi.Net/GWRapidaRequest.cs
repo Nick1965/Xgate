@@ -124,29 +124,42 @@ namespace Oldi.Net
         {
             host = Settings.Rapida.Host;
 
-            fio = string.Format("{0} {1} {2}", attributes["Fam"], attributes["Name"], attributes["SName"]);
+            try
+            {
+                fio = string.Format("{0} {1} {2}", attributes["Fam"], attributes["Name"], attributes["SName"]);
+            }
+            catch { }
 
             PPID = attributes["PPID"] ?? "";
 
-            // Для платежа по коду требования
-            TemplateTid = attributes["TID"] ?? "";
+            try
+            {
+                // Для платежа по коду требования
+                TemplateTid = attributes["TID"] ?? "";
+            }
+            catch { }
 
-            Fam = HttpUtility.UrlEncode(attributes["Fam"], Encoding.GetEncoding(1251)) ?? "";
-            Name = HttpUtility.UrlEncode(attributes["Name"], Encoding.GetEncoding(1251)) ?? "";
-            SName = HttpUtility.UrlEncode(attributes["SName"], Encoding.GetEncoding(1251)) ?? "";
+            try
+            {
+                Fam = HttpUtility.UrlEncode(attributes["Fam"], Encoding.GetEncoding(1251)) ?? "";
+                Name = HttpUtility.UrlEncode(attributes["Name"], Encoding.GetEncoding(1251)) ?? "";
+                SName = HttpUtility.UrlEncode(attributes["SName"], Encoding.GetEncoding(1251)) ?? "";
 
-            KD = attributes["KD"] ?? "";
-            SD = attributes["SD"] ?? "";
-            ND = attributes["ND"] ?? "";
-            GD = HttpUtility.UrlEncode(attributes["GD"], Encoding.GetEncoding(1251)) ?? "";
-            DD = attributes["DD"] ?? "";
-            DR = attributes["DR"] ?? "";
-            MR = HttpUtility.UrlEncode(attributes["MR"], Encoding.GetEncoding(1251)) ?? "";
-            CS = HttpUtility.UrlEncode(attributes["CS"], Encoding.GetEncoding(1251)) ?? "";
-            AMR = HttpUtility.UrlEncode(attributes["AMR"], Encoding.GetEncoding(1251)) ?? "";
+                KD = attributes["KD"] ?? "";
+                SD = attributes["SD"] ?? "";
+                ND = attributes["ND"] ?? "";
+                GD = HttpUtility.UrlEncode(attributes["GD"], Encoding.GetEncoding(1251)) ?? "";
+                DD = attributes["DD"] ?? "";
+                DR = attributes["DR"] ?? "";
+                MR = HttpUtility.UrlEncode(attributes["MR"], Encoding.GetEncoding(1251)) ?? "";
+                CS = HttpUtility.UrlEncode(attributes["CS"], Encoding.GetEncoding(1251)) ?? "";
+                AMR = HttpUtility.UrlEncode(attributes["AMR"], Encoding.GetEncoding(1251)) ?? "";
 
-            bik = attributes["BIK"] ?? "";
-            account = HttpUtility.UrlEncode(Account, Encoding.GetEncoding(1251)) ?? ""; // Вдруг кто напихает кириллицы в договор
+                bik = attributes["BIK"] ?? "";
+                account = HttpUtility.UrlEncode(Account, Encoding.GetEncoding(1251)) ?? ""; // Вдруг кто напихает кириллицы в договор
+            }
+            catch { }
+
         }
         protected override string GetLogName()
         {
@@ -233,7 +246,10 @@ namespace Oldi.Net
             if (ErrCode != 0)
                 return;
 
-            stRequest = string.Format("?function=payment&PaymExtId={0}&PPID={1}&TID={2}&Amount={3}", Session, PPID, TemplateTid, Amount.AsCurrency());
+            int paySum = (int)(Amount * 100M);
+
+            stRequest = string.Format("?function=payment&PaymExtId={0}&PPID={1}&TID={2}&Amount={3}", 
+                Session, PPID, TemplateTid, paySum);
             string Result = Get(Host + stRequest);
             if (string.IsNullOrEmpty(Result))
             {
@@ -270,13 +286,17 @@ namespace Oldi.Net
         void RegTemplate()
         {
 
-            if (Gateway.ToLower() != "regpay")
-                return;
             if (ErrCode != 0)
                 return;
-
-            string Params = string.Format("{0};{1};{2} {3} {4};{5}", Bik, Account, Fam, Name, SName, Number);
-            stRequest = string.Format("?function=check&PaymExtId={0}&PPID={1}&mPhone={2}&RCode=601&Params={3}", Session, PPID, Phone, Params);
+            if (Gateway.ToLower() == "regpay")
+            {
+                string Params = string.Format("{0};{1};{2} {3} {4};{5}", Bik, Account, Fam, Name, SName, Number);
+                stRequest = string.Format("?function=check&PaymExtId={0}&PPID={1}&mPhone={2}&RCode=601&Params={3}", Session, PPID, Phone, Params);
+            }
+            else
+            {
+                stRequest = string.Format("?function=check&PaymExtId={0}&PPID={1}&TID={2}", Session, PPID, TemplateTid);
+            }
 
             string Result = Get(Host + stRequest);
             if (string.IsNullOrEmpty(Result))
