@@ -333,7 +333,7 @@ namespace Oldi.Net
 
 			try
             {
-				if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rtm.Name && r.Provider != Settings.Rapida.Name) // RT передаёт уже заполненнвй Answer
+				if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rtm.Name && r.Provider != Settings.Rapida.Name) // уже заполненнвй Answer
 				{
 					if (r.State == 6)
 					{
