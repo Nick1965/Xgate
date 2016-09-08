@@ -40,3 +40,17 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.csproj.Gener
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.csprojResolveAssemblyReference.cache
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\Ekt.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\Ekt.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\Oldi.Net.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\Utility.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\SMPP.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\Oldi.Net.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\Utility.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\bin\Debug\SMPP.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.csprojResolveAssemblyReference.cache
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Oldi.Ekt.Messages.resources
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Oldi.Ekt.Properties.Resources.resources
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.csproj.GenerateResource.Cache
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Ekt\obj\Debug\Ekt.pdb

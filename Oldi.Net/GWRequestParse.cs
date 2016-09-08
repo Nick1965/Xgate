@@ -77,6 +77,9 @@ namespace Oldi.Net
                             if (!Int64.TryParse((string)el.Value, out tid))
 								SetParseError(6, "Tid");
                             break;
+                        case "session":
+                            session = (string)el.Value;
+                            break;
                         case "phone":
                             phone = (string)el.Value;
 							foreach (XAttribute attr in el.Attributes())

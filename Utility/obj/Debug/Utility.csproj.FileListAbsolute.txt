@@ -27,3 +27,12 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Oldi.Utility
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Utility\bin\Debug\Utility.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Utility\bin\Debug\Utility.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Utility\bin\Debug\SMPP.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Utility\bin\Debug\SMPP.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.csprojResolveAssemblyReference.cache
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Oldi.Utility.Properties.Resources.resources
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.csproj.GenerateResource.Cache
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Utility\obj\Debug\Utility.pdb

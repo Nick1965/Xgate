@@ -99,6 +99,9 @@ namespace Oldi.Net
 						case "rtm":
 							Current = new RTRequest(Request);
 							break;
+                        case "rapida":
+                            Current = new GWRapidaRequest(Request);
+                            break;
 						default:
 							// Log(Messages.UnknownProvider, Request.Provider);
 							Current.ErrCode = 6;
@@ -384,7 +387,10 @@ namespace Oldi.Net
 				}
 
                 if (string.IsNullOrEmpty(stResponse))
-                    stResponse = string.Format("<Response><ErrCode>6</ErrCode><ErrDesc>Внутрення ошибка сервиса. Нет ответа.</ErrDesc></Response>");
+                {
+                    stResponse = string.Format("<Response><ErrCode>{0}</ErrCode><ErrDesc>{1}</ErrDesc></Response>", r.ErrCode, r.ErrDesc);
+                    Log("{0} не получен ответ st={1} err={2} desc={3}", r.Tid, r.State, r.ErrDesc, r.ErrCode);
+                }
                 
                 // Создаем ответ
 				string answer = string.Format("<?xml version=\"1.0\" encoding=\"{0}\"?>\r\n{1}",

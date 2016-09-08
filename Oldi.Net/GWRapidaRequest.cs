@@ -62,7 +62,10 @@ namespace Oldi.Net
             checkNumber = src.CheckNumber;
             oid = src.Oid;
             cur = src.Cur;
+
             session = Properties.Settings.Default.SessionPrefix + tid.ToString();
+            // session = src.Session;
+
             state = src.State;
 
             lastcode = src.Lastcode;
@@ -122,43 +125,43 @@ namespace Oldi.Net
 
         public override void InitializeComponents()
         {
-            host = Settings.Rapida.Host;
-
             try
             {
-                fio = string.Format("{0} {1} {2}", attributes["Fam"], attributes["Name"], attributes["SName"]);
+                host = Settings.Rapida.Host;
+
+                if (Gateway.Equals("regpay", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    fio = attributes["Fam"] != null ? attributes["Fam"] : ""
+                        + " " + attributes["Name"] != null ? attributes["Name"] : ""
+                        + " " + attributes["SName"] != null ? attributes["SName"] : "";
+
+                    Fam = HttpUtility.UrlEncode(attributes["Fam"], Encoding.GetEncoding(1251)) ?? "";
+                    Name = HttpUtility.UrlEncode(attributes["Name"], Encoding.GetEncoding(1251)) ?? "";
+                    SName = HttpUtility.UrlEncode(attributes["SName"], Encoding.GetEncoding(1251)) ?? "";
+
+                    KD = attributes["KD"] ?? "";
+                    SD = attributes["SD"] ?? "";
+                    ND = attributes["ND"] ?? "";
+                    GD = HttpUtility.UrlEncode(attributes["GD"], Encoding.GetEncoding(1251)) ?? "";
+                    DD = attributes["DD"] ?? "";
+                    DR = attributes["DR"] ?? "";
+                    MR = HttpUtility.UrlEncode(attributes["MR"], Encoding.GetEncoding(1251)) ?? "";
+                    CS = HttpUtility.UrlEncode(attributes["CS"], Encoding.GetEncoding(1251)) ?? "";
+                    AMR = HttpUtility.UrlEncode(attributes["AMR"], Encoding.GetEncoding(1251)) ?? "";
+
+                    bik = attributes["BIK"] ?? "";
+                    account = HttpUtility.UrlEncode(Account, Encoding.GetEncoding(1251)) ?? ""; // Вдруг кто напихает кириллицы в договор
+                }
+                else
+                    // Для платежа по коду требования
+                    TemplateTid = attributes["TID"] != null ? attributes["TID"] : "";
+
+                PPID = attributes["PPID"] ?? "";
+
             }
-            catch { }
-
-            PPID = attributes["PPID"] ?? "";
-
-            try
-            {
-                // Для платежа по коду требования
-                TemplateTid = attributes["TID"] ?? "";
+            catch(Exception ex) {
+                RootLog("{0} {1}\r\n{2}", Tid, ex.Message, ex.StackTrace);
             }
-            catch { }
-
-            try
-            {
-                Fam = HttpUtility.UrlEncode(attributes["Fam"], Encoding.GetEncoding(1251)) ?? "";
-                Name = HttpUtility.UrlEncode(attributes["Name"], Encoding.GetEncoding(1251)) ?? "";
-                SName = HttpUtility.UrlEncode(attributes["SName"], Encoding.GetEncoding(1251)) ?? "";
-
-                KD = attributes["KD"] ?? "";
-                SD = attributes["SD"] ?? "";
-                ND = attributes["ND"] ?? "";
-                GD = HttpUtility.UrlEncode(attributes["GD"], Encoding.GetEncoding(1251)) ?? "";
-                DD = attributes["DD"] ?? "";
-                DR = attributes["DR"] ?? "";
-                MR = HttpUtility.UrlEncode(attributes["MR"], Encoding.GetEncoding(1251)) ?? "";
-                CS = HttpUtility.UrlEncode(attributes["CS"], Encoding.GetEncoding(1251)) ?? "";
-                AMR = HttpUtility.UrlEncode(attributes["AMR"], Encoding.GetEncoding(1251)) ?? "";
-
-                bik = attributes["BIK"] ?? "";
-                account = HttpUtility.UrlEncode(Account, Encoding.GetEncoding(1251)) ?? ""; // Вдруг кто напихает кириллицы в договор
-            }
-            catch { }
 
         }
         protected override string GetLogName()
@@ -166,45 +169,87 @@ namespace Oldi.Net
             return Settings.Rapida.Log;
         }
 
-        public override int MakeRequest(int old_state)
-        {
-            Log("{0} CHECK", Tid);
-            // Проверка баланса агента
-            Log("{0} [REGP] Начало регистрации", Tid);
-            return 0;
-        }
-
-        public override int DoPay(byte old_state, byte try_state)
+         /// <summary>
+        /// Выполняет проверку баланса, вычисляет уникальный номер платежа и регистрирует плательщика и шаблон
+        /// </summary>
+        public override void Check()
         {
 
-            // Блокировать допроведение записи
-            SetLock(1);
+            // Создание уникального номера платежа
+            session = Guid.NewGuid().ToString("n").Substring(12);
+            errCode = 0;
 
-            if (old_state == 0)
+            if (CheckBalance())
             {
-                if (CheckBalance())
-                {
-                    // Баланс удовлетворяет платежу
+                // Для регистрации
+                if (Gateway.Equals("regpay", StringComparison.CurrentCultureIgnoreCase))
                     RegPayeer();
+                // Для обоих типов запросов
+                if (ErrCode == 0)
                     RegTemplate();
-                    TemplatePayment();
-                }
-                else
-                {
-                    // Будем ждать когда поступят деньги
-                    if (State == 0)
-                    {
-                        errDesc = "Шлюз временно заблокирован";
-                        errCode = 12;
-                    }
-                }
             }
             else
-                return 0;
+            {
+                if (ErrCode == 0) // Будем ждать когда поступят деньги
+                {
+                    errDesc = "Шлюз временно заблокирован";
+                    errCode = 12;
+                }
+                else
+                    errCode = 11;
+            }
 
             MakeAnswer();
 
-            UpdateState(tid, state: state, errCode: errCode, errDesc: errDesc, opcode: GKID, acceptCode: TemplateTid, limit: Balance, locked: 0); // Разблокировать если проведён
+        }
+
+        /// <summary>
+        /// Проведение платежа
+        /// </summary>
+        /// <param name="old_state">Текущий статус платежа</param>
+        /// <param name="try_state">Требуемый статус платежа</param>
+        /// <returns></returns>
+        public override int DoPay(byte old_state, byte try_state)
+        {
+
+            try
+            {
+                // Блокировать допроведение записи
+                SetLock(1);
+
+                if (old_state == 0)
+                {
+
+                    if (string.IsNullOrEmpty(Session))
+                        session = Guid.NewGuid().ToString("n").Substring(12);
+
+                    RootLog("{0} [DoPay] {1} Запрос {2} {3} {4}", Tid, Session, Gateway, Fio, TemplateTid);
+
+                    Check();
+                    if (ErrCode == 0)
+                        TemplatePayment();
+
+                }
+                else
+                    return 0;
+
+                MakeAnswer();
+
+                if (ErrCode == 11 || ErrCode == 12)
+                    state = old_state;
+
+            }
+            catch (Exception ex)
+            {
+                RootLog("{0} {1}\r\n{2}", Tid, ex.Message, ex.StackTrace);
+                errCode = 2;
+                state = 11;
+            }
+            finally
+            {
+                UpdateState(tid, state: state, errCode: errCode, errDesc: errDesc, opcode: GKID, acceptCode: TemplateTid, limit: Balance, locked: 0); // Разблокировать если проведён
+            }
+
 
             return ErrCode;
         }
@@ -220,14 +265,21 @@ namespace Oldi.Net
 
             sb.Append("<Response>\r\n");
 
+            sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "UniqID", Session);
             sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "ErrCode", ErrCode);
             sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "ErrDesc", ErrDesc);
 
-            sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "FIO", Fio);
+            if (!string.IsNullOrEmpty(Fam))
+                        sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "Fam", Fam.ToUpper());
+            if (!string.IsNullOrEmpty(Name))
+                sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "Name", Name.ToUpper());
+            if (!string.IsNullOrEmpty(SName))
+                sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "SName", SName.ToUpper());
+            sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "FIO", Fio.ToUpper());
             sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "GKID", GKID);
             sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "TID", TemplateTid);
             sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "Balance", Balance.AsCurrency());
-            sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "Bank", Bank);
+            sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "Appendix", Bank.ToUpper());
 
             sb.Append("</Response>\r\n");
 
@@ -248,13 +300,14 @@ namespace Oldi.Net
 
             int paySum = (int)(Amount * 100M);
 
-            stRequest = string.Format("?function=payment&PaymExtId={0}&PPID={1}&TID={2}&Amount={3}", 
-                Session, PPID, TemplateTid, paySum);
+            RootLog("{0} [TplPay - start] Ext={1} TID={2} Trm={3} Amount={4}", Tid, Session, TemplateTid, PPID, Amount.AsCurrency());
+            stRequest = string.Format("?function=payment&PaymExtId={0}&PPID={1}&TID={2}&Amount={3}", Session, PPID, TemplateTid, paySum);
+
             string Result = Get(Host + stRequest);
             if (string.IsNullOrEmpty(Result))
             {
-                if (ErrCode == 500) // Ошибка сервиса
-                    state = 11;
+                if (ErrCode != 0) // Ошибка сервиса
+                    errCode = 11;
                 return;
             }
 
@@ -278,6 +331,8 @@ namespace Oldi.Net
                 state = 12;
             }
 
+            RootLog("{0} [TplPay - finish] Ext={1} TID={2} Trm={3} Balance={4} err={5} {6}", Tid, Session, TemplateTid, PPID, Balance.AsCurrency(), ErrCode, ErrDesc);
+
         }
 
         /// <summary>
@@ -288,13 +343,17 @@ namespace Oldi.Net
 
             if (ErrCode != 0)
                 return;
+            // Если запрос с регистрацией
             if (Gateway.ToLower() == "regpay")
             {
                 string Params = string.Format("{0};{1};{2} {3} {4};{5}", Bik, Account, Fam, Name, SName, Number);
+                RootLog("{0} [RegTpl - start] Ext={1} Trm={2} Ph={3} Params=\"{4}\"", Tid, Session, PPID, Phone, Params);
                 stRequest = string.Format("?function=check&PaymExtId={0}&PPID={1}&mPhone={2}&RCode=601&Params={3}", Session, PPID, Phone, Params);
             }
+            // Если запрос по номеру кода
             else
             {
+                RootLog("{0} [RegTpl - start] Ext={1} Trm={2} TID={3}", Tid, Session, PPID, Session);
                 stRequest = string.Format("?function=check&PaymExtId={0}&PPID={1}&TID={2}", Session, PPID, TemplateTid);
             }
 
@@ -309,10 +368,17 @@ namespace Oldi.Net
             string ResultStatus = GetValueFromAnswer(Result, "/Response/CheckResult");
             if (!string.IsNullOrEmpty(ResultStatus) && ResultStatus.ToUpper() == "OK")
             {
+                Fam = GetValueFromAnswer(Result, "/Response/Fam");
+                Name = GetValueFromAnswer(Result, "/Response/Name");
+                SName = GetValueFromAnswer(Result, "/Response/SName");
+
+                fio = Fam + " " + Name + " " + SName;
+
                 // Код требования
                 TemplateTid = GetValueFromAnswer(Result, "/Response/Tid");
                 // Банк
-                Bank = GetValueFromAnswer(Result, "/Response/B_Name");
+                Bank = GetValueFromAnswer(Result, "/Response/Description");
+                // Bank = GetValueFromAnswer(Result, "/Response/B_Name");
                 // Номер платежа в системе
                 PaymNumb = GetValueFromAnswer(Result, "/Response/PaymNumb");
                 // Баланс агента
@@ -329,6 +395,9 @@ namespace Oldi.Net
                 state = 12;
             }
 
+            RootLog("{0} [RegTpl - finish] Ext={1} TID={2} FIO={3} Trm={4} PayNumb={5} Balance={6} err={7}\r\n\t\t{8}", 
+                Tid, Session, TemplateTid, Fam + " " + Name + " " + SName, PPID, PaymNumb, Balance.AsCurrency(), ErrCode, ErrDesc);
+
         }
 
         /// <summary>
@@ -342,14 +411,17 @@ namespace Oldi.Net
             if (Gateway.ToLower() != "regpay")
                 return;
 
+            RootLog("{0} [RegPay - start] Ext={1} Ph={1} Fio={2}||{3}||{4} Pass={5}||{6}||{7} GD={8} DD={9} DR={10} MR={11} CS={12} AMR={13}, Trm={14}",
+                Session, Phone, Fam.ToUpper(), Name.ToUpper(), SName.ToUpper(), KD, SD, ND, GD, DD, DR, MR, CS, AMR, PPID);
+
             stRequest = string.Format("?function=reg&PaymExtId={0}&PPID={1}&mPhone={2}&fam={3}&name={4}&sname={5}&KD={6}&SD={7}&ND={8}&GD={9}&DD={10}&DR={11}&MR={12}&CS={13}&AMR={14}", 
-                Session, PPID, Phone, Fam.ToUpper(), Name.ToUpper(), SName.ToUpper(), KD, SD, ND, GD, DD, DR, MR, CS, AMR);
+                Session, PPID, Phone, Fam != null? Fam.ToUpper(): "", Name != null? Name.ToUpper(): "", SName != null? SName.ToUpper(): "", KD, SD, ND, GD, DD, DR, MR, CS, AMR);
 
             string Result = Get(Host + stRequest);
             if (string.IsNullOrEmpty(Result))
             {
-                if (ErrCode == 500) // Ошибка сервиса
-                    state = 11;
+                if (ErrCode != 0) // Ошибка сервиса
+                    errCode = 11;
                 return;
             }
 
@@ -369,31 +441,32 @@ namespace Oldi.Net
                 state = 12;
             }
 
-            Log("RegPayer: {0} {1}", ErrCode, ErrDesc);
+            RootLog("{0} [RegPay - finish]  Ext={1} GkID={2} err={3}\r\n{4}", Tid, Session, GKID, ErrCode, ErrDesc);
 
         }
 
+        /// <summary>
+        /// Проверка баланса счёта агента
+        /// </summary>
+        /// <returns></returns>
         bool CheckBalance()
         {
 
+            RootLog("{0} [CheckBalance - start]", Session);
+
             string Result = Get(Host + string.Format("?function=getbalance&PaymExtId={0}", Session));
-            if (string.IsNullOrEmpty(Result))
-            {
-                if (ErrCode == 500) // Ошибка сервиса
-                    state = 11;
-                return false;
-            }
 
             // Получение статуса запроса
-
             string sResult = GetValueFromAnswer(Result, "/Response/Result");
             errDesc = GetValueFromAnswer(Result, "/Response/Description");
-            
+
+
             // Если запрос завершился с ошибкой вернем -1
             if (sResult.ToUpper() != "OK")
             {
                 errCode = GetValueFromAnswer(Result, "/Response/ErrCode").ToInt();
                 state = 12; // Ошибка на стороне сервиса РАРИДА
+                RootLog("{0} [CheckBalance - finish] Result={1} {2}", Session, sResult, ErrDesc);
                 return false;
             }
 
@@ -403,14 +476,14 @@ namespace Oldi.Net
 
             if (Balance < Amount)
             {
-                Log("Баланс точки {0} меньше размера платежа. Сервис приостанавливается", Balance);
+                RootLog("{0} [CheckBalance - finish] Result={1} {2}\r\nБаланс {3} меньше размера платежа. Сервис приостанавливается", Session, sResult, ErrDesc, Balance);
                 errCode = 12;
                 state = 0;
                 return false;
             }
             else
             {
-                Log("Баланс точки {0}", Balance);
+                RootLog("{0} [CheckBalance - finish] Result={1} {2}\r\nБаланс {3}", Session, sResult, ErrDesc, Balance);
             }
 
             errCode = 0;
@@ -432,27 +505,31 @@ namespace Oldi.Net
         private bool ValidateRemote(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
         {
             // allow any certificate...
-            Log("Серверный сертификат: CN={0} Hash={1} S/n={2}", certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
+            Utility.Log(".\\log\\Certificates.log", "Серверный сертификат: CN={0} Hash={1} S/n={2}", certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
 
             // policyErrors = SslPolicyErrors.RemoteCertificateChainErrors | SslPolicyErrors.RemoteCertificateNameMismatch | SslPolicyErrors.RemoteCertificateNotAvailable;
 
             if ((policyErrors & SslPolicyErrors.RemoteCertificateChainErrors) != 0)
             {
-                Log("Cert: Chain");
+                Utility.Log(".\\log\\Certificates.log", "Серверный сертификат: CN={0} Hash={1} S/n={2}: Ошибка наследования", 
+                    certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
                 return false;
             }
             if ((policyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) != 0)
             {
-                Log("Cert: Name");
+                Utility.Log(".\\log\\Certificates.log", "Серверный сертификат: CN={0} Hash={1} S/n={2}: Имя сертификата не совпадает с именем сервера", 
+                    certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
                 return false;
             }
             if ((policyErrors & SslPolicyErrors.RemoteCertificateNotAvailable) != 0)
             {
-                Log("Cert: Cert not available");
+                Utility.Log(".\\log\\Certificates.log", "Серверный сертификат: CN={0} Hash={1} S/n={2}: Сертификат недействителен", 
+                    certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
                 return false;
             }
 
-            Log("Сертификат сервера подтверждён");
+            Utility.Log(".\\log\\Certificates.log", "Серверный сертификат подтверждён: CN={0} Hash={1} S/n={2}", 
+                certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
 
             return true;
         }
@@ -498,8 +575,7 @@ namespace Oldi.Net
                 // Console.WriteLine(Endpoint);
                 // Log(Endpoint);
 
-                if (Settings.LogLevel.IndexOf("REQ") != -1)
-                    Log("GET: {0}", Endpoint);
+                Log("GET: {0}", Endpoint);
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
                 ServicePointManager.CheckCertificateRevocationList = false;
@@ -540,18 +616,19 @@ namespace Oldi.Net
                 StreamReader readStream = new StreamReader(ResponseStream, Encoding.GetEncoding(1251));
 
                 string stResponse = readStream.ReadToEnd();
-                if (Settings.logLevel.IndexOf("REQ") != -1)
-                    Log(" \r\n----------------------------------------------------------\r\n{0}----------------------------------------------------------", stResponse);
+                Log(" \r\n----------------------------------------------------------\r\n{0}----------------------------------------------------------", stResponse);
 
                 Response.Close();
                 readStream.Close();
+
+                errCode = 0;
 
                 return stResponse;
             }
             catch (WebException we)
             {
                 // Console.WriteLine("{0} {1} {3}\r\n{2}", we.Status, we.Message, we.StackTrace, we.TargetSite);
-                Log("{0} GET: {1} ({2}) {3}", Tid, (int)we.Status, we.Status, we.Message);
+                Log("{0} GET: {1} ({2}) {3}\r\n{4}", Session, (int)we.Status, we.Status, we.Message, we.StackTrace);
                 foreach (string key in we.Data.Keys)
                 {
                     // Console.WriteLine("{0} = {1}", key, we.Data[key]);
@@ -564,7 +641,7 @@ namespace Oldi.Net
             }
             catch (Exception ex)
             {
-                Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+                Log("{0} GET: {1}\r\n{2}", Session, ex.Message, ex.StackTrace);
                 // Console.WriteLine(ex.ToString());
                 errCode = 500;
                 errDesc = "Внутрення ошибка сервиса HYPERCASSA";
@@ -572,8 +649,6 @@ namespace Oldi.Net
 
             return "";
         }
-
-        #endregion Communications
 
         /// <summary>
         /// Извлекает параметр из ответа в виде XPath запроса
@@ -612,6 +687,9 @@ namespace Oldi.Net
 
             return "";
         }
+
+        #endregion Communications
+
 
     }
 

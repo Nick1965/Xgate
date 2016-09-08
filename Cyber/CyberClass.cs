@@ -238,28 +238,28 @@ namespace Oldi.Net.Cyber
 						prm.AppendLine("NUMBER", "");
 						prm.AppendLine("ACCOUNT", fio);
 						StringBuilder purpose = new StringBuilder();
-							purpose.Append("BENTYPE-corporate");
-							if (!string.IsNullOrEmpty(ben))
-								purpose.AppendFormat("||BEN-{0}", ben);
-							if (!string.IsNullOrEmpty(inn))
-								purpose.AppendFormat("||BENINN-{0}", inn);
-							if (!string.IsNullOrEmpty(kpp))
-								purpose.AppendFormat("||BENKPP-{0}", kpp);
-							if (!string.IsNullOrEmpty(account))
-								purpose.AppendFormat("||BENACC-{0}", account);
-							if (!string.IsNullOrEmpty(bik))	
-								purpose.AppendFormat("||BENBANKBIK-{0}", bik);
-							if (!string.IsNullOrEmpty(reason))
-								purpose.AppendFormat("||REASON-{0}", reason);
-							if (tax != -1)	
-								purpose.AppendFormat("||REASON_FAT-{0}", tax == 0 ? "no_FAT" : tax == 10 ? "FAT10" : "FAT18");
-							if (!string.IsNullOrEmpty(address))
-								purpose.AppendFormat("||PAYER_ADDRESS-{0}", address);
-							purpose.Append("||PRIORITY-05");
-							if (!string.IsNullOrEmpty(kbk))
-								purpose.AppendFormat("||KBK-{0}", kbk);
-							if (!string.IsNullOrEmpty(okato))
-								purpose.AppendFormat("||OKTMO-{0}", okato); 
+						purpose.Append("BENTYPE-corporate");
+						if (!string.IsNullOrEmpty(ben))
+							purpose.AppendFormat("||BEN-{0}", ben);
+						if (!string.IsNullOrEmpty(inn))
+							purpose.AppendFormat("||BENINN-{0}", inn);
+						if (!string.IsNullOrEmpty(kpp))
+							purpose.AppendFormat("||BENKPP-{0}", kpp);
+						if (!string.IsNullOrEmpty(account))
+							purpose.AppendFormat("||BENACC-{0}", account);
+						if (!string.IsNullOrEmpty(bik))	
+							purpose.AppendFormat("||BENBANKBIK-{0}", bik);
+                        if (!string.IsNullOrEmpty(reason))
+							purpose.AppendFormat("||REASON-{0}", reason);
+						if (tax != -1)	
+							purpose.AppendFormat("||REASON_FAT-{0}", tax == 0 ? "no_FAT" : tax == 10 ? "FAT10" : "FAT18");
+						if (!string.IsNullOrEmpty(address))
+							purpose.AppendFormat("||PAYER_ADDRESS-{0}", address);
+						purpose.Append("||PRIORITY-05");
+						if (!string.IsNullOrEmpty(kbk))
+							purpose.AppendFormat("||KBK-{0}", kbk);
+						if (!string.IsNullOrEmpty(okato))
+							purpose.AppendFormat("||OKTMO-{0}", okato); 
 						prm.AppendLine("PURPOSE", purpose.ToString());
 					}
 					else
