@@ -364,24 +364,18 @@ namespace Oldi.Net
 			}
 			else // Redo
 			{
-				// Синхронизация с городом
-				Sync(false);
-				if (State < 6)
+				if (State == 0)
 					{
-
-					if (State == 0)
-						{
-						if (FinancialCheck(New)) return;
-						if (DoPay(0, 1) != 0) return;
-						if (DoPay(1, 3) != 0) return;
-						}
-
-					if (State == 1)
-						if (DoPay(1, 3) != 0) return;
-
-					DoPay(3, 6);
-		
+					if (FinancialCheck(New)) return;
+					if (DoPay(0, 1) != 0) return;
+					if (DoPay(1, 3) != 0) return;
 					}
+
+				if (State == 1)
+					if (DoPay(1, 3) != 0) return;
+
+				DoPay(3, 6);
+		
 			}
 
 		}
