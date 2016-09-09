@@ -199,7 +199,8 @@ namespace Oldi.Net
                     errCode = 11;
             }
 
-            MakeAnswer();
+            if (Tid < 0)
+                MakeAnswer();
 
         }
 
@@ -233,8 +234,6 @@ namespace Oldi.Net
                 else
                     return 0;
 
-                MakeAnswer();
-
                 if (ErrCode == 11 || ErrCode == 12)
                     state = old_state;
 
@@ -250,6 +249,8 @@ namespace Oldi.Net
                 UpdateState(tid, state: state, errCode: errCode, errDesc: errDesc, opcode: GKID, acceptCode: TemplateTid, limit: Balance, locked: 0); // Разблокировать если проведён
             }
 
+
+            MakeAnswer();
 
             return ErrCode;
         }
@@ -478,6 +479,7 @@ namespace Oldi.Net
             {
                 RootLog("{0} [CheckBalance - finish] Result={1} {2}\r\nБаланс {3} меньше размера платежа. Сервис приостанавливается", Session, sResult, ErrDesc, Balance);
                 errCode = 12;
+                errDesc = "Шлюз временно заблокирован";
                 state = 0;
                 return false;
             }
