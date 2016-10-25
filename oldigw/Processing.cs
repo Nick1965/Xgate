@@ -338,7 +338,7 @@ namespace Oldi.Net
             {
 				if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rtm.Name && r.Provider != Settings.Rapida.Name) // уже заполненнвй Answer
 				{
-					if (r.State == 6)
+					if (r.State == 6 || r.State == 0 && r.Provider == "rapida")
 					{
 						// stResponse = string.Format(Properties.Settings.Default.Response, 3, gw.ErrDesc, gw.Outtid, gw.Acceptdate, gw.AcceptCode, gw.Account, gw.AddInfo);
 						int pos = 0;
@@ -369,9 +369,9 @@ namespace Oldi.Net
 					}
 					else if (r.State == 0 && r.ErrCode == 7) // Передача управляющих кодов 7
 					{
-						stResponse = string.Format(Properties.Settings.Default.FailResponse, r.ErrCode, errDesc);
+                        stResponse = string.Format(Properties.Settings.Default.FailResponse, r.ErrCode, errDesc);
 					}
-					else if (r.ErrCode == 11 || r.ErrCode == 12) // Передача управляющих кодов 11, 12
+                    else if (r.ErrCode == 11 || r.ErrCode == 12) // Передача управляющих кодов 11, 12
 					{
 						stResponse = string.Format(Properties.Settings.Default.FailResponse, r.ErrCode, errDesc);
 					}

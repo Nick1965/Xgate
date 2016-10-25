@@ -199,7 +199,7 @@ namespace Oldi.Net
                     errCode = 11;
             }
 
-            if (Tid < 0)
+            if (Tid <= 0)
                 MakeAnswer();
 
         }
