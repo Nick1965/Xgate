@@ -14,6 +14,6 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\SocialExplorer.FastDbf\obj\Deb
 d:\MyDocuments\Visual Studio 2013\Projects\X-Gate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.csprojResolveAssemblyReference.cache
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\SocialExplorer.FastDbf\bin\Debug\SocialExplorer.FastDbf.dll
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\SocialExplorer.FastDbf\bin\Debug\SocialExplorer.FastDbf.pdb
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.csprojResolveAssemblyReference.cache
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.dll
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.csprojResolveAssemblyReference.cache

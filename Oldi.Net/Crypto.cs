@@ -39,7 +39,10 @@ namespace Oldi.Net
 		/// <param name="CommonName">Общее имя CN</param>
 		public Crypto(string CommonName)
         {
-			certificate = GetCertificate(CommonName);
+            if (string.IsNullOrEmpty(CommonName))
+                return;
+
+            certificate = GetCertificate(CommonName);
             if (certificate != null)
             {
 				try
@@ -193,5 +196,43 @@ namespace Oldi.Net
 			}
 
 		} // Sign
-	}
+
+
+        /// <summary>
+        /// Вычисление Хэш-функции для заданного алгоритма
+        /// </summary>
+        /// <param name="Text"></param>
+        /// <param name="Aalg"></param>
+        /// <param name="CP"></param>
+        /// <returns></returns>
+        public string Hash(string Text, int Alg = 256, Encoding CP = null)
+        {
+            byte[] buf;
+            string str = "";
+            if (CP == null)
+                CP = UTF8Encoding.UTF8;
+
+            if (Alg == 5)
+            {
+                MD5CryptoServiceProvider md5 = new MD5CryptoServiceProvider();
+                buf = md5.ComputeHash(CP.GetBytes(Text));
+            }
+            else if (Alg == 1)
+            {
+                SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider();
+                buf = sha1.ComputeHash(CP.GetBytes(Text));
+            }
+            else // 256
+            {
+                SHA256CryptoServiceProvider sha256 = new SHA256CryptoServiceProvider();
+                buf = sha256.ComputeHash(CP.GetBytes(Text));
+            }
+
+            for (int i = 0; i < buf.Length; i++)
+                str += buf[i].ToString("x2");
+
+            return str;
+        }
+
+    }
 }

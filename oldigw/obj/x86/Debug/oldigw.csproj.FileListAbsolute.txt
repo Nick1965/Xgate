@@ -92,8 +92,11 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.exe
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.pdb
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.exe
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csprojResolveAssemblyReference.cache
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Answer.resources
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Messages.resources
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Properties.Resources.resources
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\app.config
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\oldigw.exe
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\oldigw.pdb
@@ -119,8 +122,5 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\Utility.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\Redo.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\SMPP.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\SocialExplorer.FastDbf.pdb
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csprojResolveAssemblyReference.cache
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Answer.resources
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Messages.resources
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\Oldi.Net.Properties.Resources.resources
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.exe
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.pdb

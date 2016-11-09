@@ -344,6 +344,17 @@ namespace Oldi.Utility
 
         }
 
+        public static class Xsolla
+        {
+            public static string Name { get { return Config.Providers["xsolla"]["name"]; } }
+            public static string Host { get { return Config.Providers["xsolla"]["host"]; } }
+            public static string CodePage { get { return Config.Providers["xsolla"]["codepage"]; } }
+            public static string Agent { get { return Config.Providers["xsolla"]["agent"]; } }
+            public static string AgentKey { get { return Config.Providers["xsolla"]["agent-key"]; } }
+            public static string Log { get { return Config.Providers["xsolla"]["log"]; } }
+
+        }
+
         public static class Smtp
 		{
 			public static string Log { get { return Config.Providers["smtp"]["log"]; } }
@@ -481,13 +492,7 @@ namespace Oldi.Utility
 		/// <summary>
 		/// Номер чточки сайта
 		/// </summary>
-		public static int SiteTppId
-			{
-			get
-				{
-				return siteTppId;
-				}
-			}
+		public static int SiteTppId { get { return siteTppId; } }
 		
 		/// <summary>
 		/// ID терминала поумолчанию, если он не зарегистрирован
@@ -510,11 +515,7 @@ namespace Oldi.Utility
 		/// <summary>
 		/// Подключение к БД ГОРОД
 		/// </summary>
-		public static string GorodConnectionString
-			{
-			get;
-			set;
-			}
+		public static string GorodConnectionString { get; set; }
 
 		/// <summary>
 		/// Время попытки проверки БД при старте шлюза
@@ -524,10 +525,7 @@ namespace Oldi.Utility
 		// Общая секция для шлюза
 		public static class OldiGW
 		{
-			public static string LogFile
-			{
-				get { return LogPath + "OldiGW.log"; }
-			}
+			public static string LogFile { get { return LogPath + "OldiGW.log"; } }
 		}
 
 		internal static int conveyorSize;
@@ -544,34 +542,16 @@ namespace Oldi.Utility
 		/// <summary>
 		/// Предел суммы для финансового контроля
 		/// </summary>
-		public static decimal AmountLimit
-			{
-			get
-				{
-				return amountLimit;
-				}
-			}
+		public static decimal AmountLimit { get { return amountLimit; } }
 		/// <summary>
 		/// Звдержка (в часах) для финансового контроля
 		/// </summary>
-		public static int AmountDelay
-			{
-			get
-				{
-				return amountDelay;
-				}
-			}
+		public static int AmountDelay { get { return amountDelay; } }
 
 		/// <summary>
 		/// Белый и чёрный списки
 		/// </summary>
-		public static string Lists
-			{
-			get
-				{
-				return root + lists;
-				}
-			}
+		public static string Lists { get { return root + lists; } }
 
 		/// <summary>
 		/// SMTP-сервер
@@ -595,12 +575,10 @@ namespace Oldi.Utility
 			public static string Name { get { return ProvidersSettings.Mts.Name; } }
 			public static string Host { get { return ProvidersSettings.Mts.Host; } }
 			public static string LogFile { get { return logPath + ProvidersSettings.Mts.Log; } }
-
 			public static string AsVps { get { return ProvidersSettings.Mts.AsVps; } }
 			public static string VpsCode { get { return ProvidersSettings.Mts.VpsCode; } }
 			public static string Contract { get { return ProvidersSettings.Mts.Contract; } }
 			public static string Security { get { return ProvidersSettings.Mts.Security; } }
-
 			public static string Codepage { get { return ProvidersSettings.Mts.Codepage; } }
 			public static string ContentType { get { return ProvidersSettings.Mts.ContentType; } }
 			public static string Timeout { get { return ProvidersSettings.Mts.Timeout; } }
@@ -632,43 +610,12 @@ namespace Oldi.Utility
 		/// <summary>
 		/// Rt-mobile
 		/// </summary>
-		public static class Rtm
-			{
-			public static string Name
-				{
-				get
-					{
-					return ProvidersSettings.Rtm.Name;
-					}
-				}
-			public static string Host
-				{
-				get
-					{
-					return ProvidersSettings.Rtm.Host;
-					}
-				}
-			public static string LogFile
-				{
-				get
-					{
-					return logPath + ProvidersSettings.Rtm.Log;
-					}
-				}
-			public static string CN
-				{
-				get
-					{
-					return ProvidersSettings.Rtm.CN;
-					}
-				}
-			public static string Hash
-				{
-				get
-					{
-					return ProvidersSettings.Rtm.Hash.Replace(" ", "");
-					}
-				}
+		public static class Rtm {
+            public static string Name { get { return ProvidersSettings.Rtm.Name; } }
+			public static string Host { get { return ProvidersSettings.Rtm.Host; } }
+			public static string LogFile { get { return logPath + ProvidersSettings.Rtm.Log; } }
+			public static string CN { get { return ProvidersSettings.Rtm.CN; } }
+			public static string Hash{get{return ProvidersSettings.Rtm.Hash.Replace(" ", "");}}
 			}
 
 		/// <summary>
@@ -722,6 +669,17 @@ namespace Oldi.Utility
 
         }
 
+
+        public static class Xsolla
+        {
+            public static string Name { get { return ProvidersSettings.Xsolla.Name; } }
+            public static string Host { get { return ProvidersSettings.Xsolla.Host; } }
+            public static string Agent { get { return ProvidersSettings.Xsolla.Agent; } }
+            public static string AgentKey { get { return ProvidersSettings.Xsolla.AgentKey; } }
+            public static string CodePage { get { return ProvidersSettings.Xsolla.CodePage; } }
+            public static string Log { get { return LogPath + ProvidersSettings.Xsolla.Log; } }
+
+        }
 
         /// <summary>
         /// Чтение файла *.exe.config

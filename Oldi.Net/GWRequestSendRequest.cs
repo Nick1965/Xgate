@@ -46,7 +46,7 @@ namespace Oldi.Net
 			errCode = 0;
 			
 			// Добавление сертификата
-			if (provider != Settings.Cyber.Name && provider != "as")
+			if (!string.IsNullOrEmpty(commonName))
 			{
 				using (Crypto cert = new Crypto(CommonName))
 				{
@@ -109,7 +109,10 @@ namespace Oldi.Net
 					break;
 			}
 
-			if (Provider != "as")
+            Log("Codepage: {0}", enc.WindowsCodePage.ToString());
+
+            /*
+            if (Provider != "as")
 				if (string.IsNullOrEmpty(Host) || string.IsNullOrEmpty(stRequest))
 				{
 					state = 11;
@@ -118,11 +121,12 @@ namespace Oldi.Net
 					RootLog(ErrDesc);
 					return 1;
 				}
+                */
+            try
+            {
 
-			try
-			{
-
-				ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls;
+                // Использем только протоколы семейства TLS
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
 				ServicePointManager.CheckCertificateRevocationList = true;
 				ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(ValidateRemote);
 				ServicePointManager.DefaultConnectionLimit = 10;
@@ -132,12 +136,11 @@ namespace Oldi.Net
 				request.Credentials = CredentialCache.DefaultCredentials;
 				request.KeepAlive = true;
 				request.Timeout = TimeOut() * 1000;
-				if (Provider == "as")
-					request.Method = "GET";
-				else
-					request.Method = "POST";
+				request.Method = "POST";
 				request.Accept = "text/html, */*";
-				request.AllowAutoRedirect = false;
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.Headers.Set("Accept-Encoding", "identity");
+                request.AllowAutoRedirect = false;
 				request.UserAgent = Settings.Title;
 				request.ContentType = ContentType;
 
@@ -160,8 +163,12 @@ namespace Oldi.Net
 				AddHeaders(request);
 				request.UserAgent = Settings.ClientName;
 
-				// Log("Host={0}", request.Host);
-				/*
+                Log("------------------------------------------------------");
+                Log("Method={0}", request.Method);
+                Log("Host={0}", Host);
+                // Log("Body={0}", stRequest);
+
+                /*
 				if (Settings.LogLevel.IndexOf("HDR") != -1)
 				{
 					for (int i = 0; i < request.Headers.Count; ++i)
@@ -169,15 +176,16 @@ namespace Oldi.Net
 				}
 				*/
 
-				LogRequest(request.Headers, stRequest);
+                LogRequest(request.Headers, stRequest);
 				Log("------------------------------------------------------");
 
-				if (Provider != "as")
+				if (request.Method == WebRequestMethods.Http.Post)
 				{
 					// buf = enc.GetBytes(stRequest.Replace("\r\n", ""));
 					buf = enc.GetBytes(stRequest);
 					request.ContentLength = buf.Length;
-					using (Stream requestStream = request.GetRequestStream())
+                    Log("ContentLength={0}", request.ContentLength);
+                    using (Stream requestStream = request.GetRequestStream())
 						requestStream.Write(buf, 0, buf.Length);
 				}
 
@@ -217,13 +225,17 @@ namespace Oldi.Net
 			}
 			catch (WebException we)
 			{
-				errCode = (int)we.Status + 100;
 				errDesc = string.Format("{0} {1} ({2})", errCode, we.Message, we.Status.ToString());
 				if (state == 1)
 					state = 0;
 				errCode = 502;
-				Log(errDesc);
+				Log(we.ToString());
 				RootLog("[{0}] {1} {2}", Tid, Host, errDesc);
+                Log(we.ToString());
+
+                // Если это ошибка установки SSL-соединения, надо повторить.
+                if (we.Status == WebExceptionStatus.SecureChannelFailure)
+                    return (int)WebExceptionStatus.SecureChannelFailure;
 			}
 			catch (Exception ex)
 			{
@@ -255,13 +267,13 @@ namespace Oldi.Net
 		/// <param name="text"></param>
 		void LogRequest(WebHeaderCollection headers, string text)
 		{
-			StringBuilder s = new StringBuilder();
+            StringBuilder s = new StringBuilder();
 			s.AppendFormat("Host: {0}\r\n", Host);
 			if (Settings.LogLevel.IndexOf("HDR") != -1)
 			{
 				for (int i = 0; i < headers.Count; ++i)
 					s.AppendFormat("{0}={1}\r\n", headers.Keys[i], headers[i]);
-			}
+            }
 			if (Provider != "cyber")
 				{
 				s.Append(text);

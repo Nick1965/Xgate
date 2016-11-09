@@ -63,6 +63,9 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.exe.ma
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.application
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.exe
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.csprojResolveAssemblyReference.cache
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.Properties.Resources.resources
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.csproj.GenerateResource.Cache
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Test.exe.config
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Test.exe.manifest
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Test.application
@@ -76,9 +79,6 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Cyber.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Oldi.Net.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Utility.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\SMPP.pdb
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.csprojResolveAssemblyReference.cache
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.Properties.Resources.resources
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.csproj.GenerateResource.Cache
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.TrustInfo.xml
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.exe.manifest
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.application

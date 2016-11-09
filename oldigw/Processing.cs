@@ -243,7 +243,10 @@ namespace Oldi.Net
                                     case "rapida":
                                         Current = new GWRapidaRequest(Request);
                                         break;
-									case "smtp":
+                                    case "xsolla":
+                                        Current = new GWXsolllaRequest(Request);
+                                        break;
+                                    case "smtp":
 										Current = new Oldi.Smtp.Smtp(Request);
 										break;
 									default:

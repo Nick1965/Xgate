@@ -283,6 +283,8 @@ namespace OldiGW.Redo.Net
 					gw = new RT.RTRequest(gw);
                 else if (gw.Provider == Settings.Rapida.Name)
                     gw = new GWRapidaRequest(gw);
+                else if (gw.Provider == Settings.Xsolla.Name)
+                    gw = new GWXsolllaRequest(gw);
 
                 if (gw != null)
 					{

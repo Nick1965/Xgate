@@ -407,8 +407,8 @@ namespace Oldi.Mts
 		{
 			SqlDataReader dr = null;
 
-			Log(Properties.Resources.MsgRedoRunning);
-			Console.WriteLine(Properties.Resources.MsgRedoRunning);
+			Log(Resources.MsgRedoRunning);
+			Console.WriteLine(Resources.MsgRedoRunning);
 
 			TaskState stateInfo = (TaskState)State;
 	

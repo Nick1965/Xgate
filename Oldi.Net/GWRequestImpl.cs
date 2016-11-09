@@ -18,6 +18,7 @@ using Oldi.Net.Proxy;
 using System.IO.Compression;
 using System.Collections.Specialized;
 using System.Data.Linq;
+using System.Xml.XPath;
 
 namespace Oldi.Net
 {
@@ -1821,12 +1822,12 @@ namespace Oldi.Net
 
 			RootLog("\r\nGet: Обращение к XSMPP: {0}", Url);
 			foreach (string key in request.Headers.AllKeys)
-				RootLog("{0} = {1}", key, request.Headers[key]);
+				Log("{0} = {1}", key, request.Headers[key]);
 
 			System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
 			if (response == null)
 				{
-				RootLog("Get: Request faulted.");
+				Log("Get: Request faulted.");
 				return null;
 				}
 
@@ -1839,7 +1840,7 @@ namespace Oldi.Net
 
 			RootLog("\r\nGetПолучен ответ:");
 			foreach (string key in response.Headers.AllKeys)
-				RootLog("{0} = {1}", key, response.Headers[key]);
+				Log("{0} = {1}", key, response.Headers[key]);
 
 			// Pipes the stream to a higher level stream reader with the required encoding format. 
 			Encoding enc;
@@ -1890,7 +1891,46 @@ namespace Oldi.Net
 			return buf;
 			}
 
-		/// <summary>
+        /// <summary>
+        /// Извлекает параметр из ответа в виде XPath запроса
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <param name="expr"></param>
+        /// <returns></returns>
+        protected String GetValueFromAnswer(string answer, string expr)
+        {
+
+            if (string.IsNullOrEmpty(answer))
+                return "";
+
+            try
+            {
+
+                XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
+                XPathNavigator nav = doc.CreateNavigator();
+                // XPathNodeIterator items = nav.Select(expr);
+                XPathNavigator node = nav.SelectSingleNode(expr.ToLower());
+
+                // Log("****************************************************");
+                // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
+                // Log("****************************************************");
+
+
+                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
+                return node.Select(expr.ToLower()).Current.Value;
+
+            }
+            catch (Exception /*ex*/)
+            {
+                // Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+                // Log(answer);
+            }
+
+            return "";
+        }
+
+
+        /// <summary>
 		/// Запись в основной лог
 		/// </summary>
 		/// <param name="fmt">Формат</param>

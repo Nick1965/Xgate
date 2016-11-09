@@ -7,6 +7,7 @@ using Oldi.Utility;
 using System.Xml.Linq;
 using System.Security.Cryptography;
 using System.Web;
+using System.Net;
 
 namespace Oldi.Ekt
 {
@@ -115,7 +116,12 @@ namespace Oldi.Ekt
 		}
 
 
-		/// <summary>
+        /// <summary>
+        /// Количество повторов при ошибке SSL
+        /// </summary>
+        int Attempt = 0;
+
+        /// <summary>
 		/// Выполнение запроса
 		/// </summary>
 		/// <param name="host">Хост (не используется)</param>
@@ -139,6 +145,7 @@ namespace Oldi.Ekt
 				// retcode = 0 - OK
 				// retcode = 1 - TCP-error
 				// retcode = 2 - Message sends, but no answer recieved.
+                // retcode = 10 - SSL error
 				// retcode < 0 - System error
 				// if (Settings.LogLevel.IndexOf("REQ") != -1)
 				//	Log("\r\nПодготовлен запрос к: {0}\r\n{1}", Host, stRequest);
@@ -201,7 +208,18 @@ namespace Oldi.Ekt
 							break;
 					}
 				}
-				else if (retcode > 0) // Ошибка TCP или таймаут
+                else if ((WebExceptionStatus)retcode == WebExceptionStatus.SecureChannelFailure) // Ошибка SSL
+                {
+                    if (Attempt < 3)
+                    {
+                        Attempt++;
+                        Log("{0} - {1} / 3 Повтор после ошибки SSL", Tid, Attempt);
+                        return DoPay(old_state, try_state);
+                    }
+                    errCode = 11;
+                    state = old_state;
+                }
+                else if (retcode > 0) // Ошибка TCP или таймаут
 				{
 					errCode = 11;
 					state = old_state;

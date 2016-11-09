@@ -652,44 +652,6 @@ namespace Oldi.Net
             return "";
         }
 
-        /// <summary>
-        /// Извлекает параметр из ответа в виде XPath запроса
-        /// </summary>
-        /// <param name="answer"></param>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        String GetValueFromAnswer(string answer, string expr)
-        {
-
-            if (string.IsNullOrEmpty(answer))
-                return "";
-
-            try
-            {
-
-                XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
-                XPathNavigator nav = doc.CreateNavigator();
-                // XPathNodeIterator items = nav.Select(expr);
-                XPathNavigator node = nav.SelectSingleNode(expr.ToLower());
-
-                // Log("****************************************************");
-                // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
-                // Log("****************************************************");
-
-
-                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
-                return node.Select(expr.ToLower()).Current.Value;
-
-            }
-            catch (Exception ex)
-            {
-                Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
-                Log(answer);
-            }
-
-            return "";
-        }
-
         #endregion Communications
 
 

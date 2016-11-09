@@ -36,6 +36,9 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\SMPP.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Utility.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.csprojResolveAssemblyReference.cache
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.Properties.Resources.resources
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.csproj.GenerateResource.Cache
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Oldi.Net.dll.config
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Oldi.Net.dll
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Oldi.Net.pdb
@@ -43,8 +46,5 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\SMPP.dll
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Utility.dll
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\SMPP.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\bin\Debug\Utility.pdb
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.csprojResolveAssemblyReference.cache
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.Properties.Resources.resources
-D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.csproj.GenerateResource.Cache
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.dll
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Oldi.Net\obj\Debug\Oldi.Net.pdb
