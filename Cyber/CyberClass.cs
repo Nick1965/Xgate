@@ -267,6 +267,7 @@ namespace Oldi.Net.Cyber
 						prm.AppendLine("NUMBER", number);
 						prm.AppendLine("CARD", card);
 						prm.AppendLine("FIO", fio);
+                        prm.AppendLine("INN", Inn);
 						if (Gateway == "3477" && !string.IsNullOrEmpty(Account) && Account == "-1")
 							prm.Append("ACCOUNT=\r\n");
 						else
