@@ -553,7 +553,7 @@ namespace Oldi.Net
 				foreach (var item in ProviderList)
 					{
 					// Если реквизиты платежа (провайдер/сервис/получатель) совпадают с эталонным
-					if (item.Name.ToLower() == Provider.ToLower() && item.Service.ToLower() == Service.ToLower() && item.Gateway.ToLower() == Gateway.ToLower())
+					if (item.Name.ToLower() == Provider.ToLower() && item.Service?.ToLower() == Service?.ToLower() && item.Gateway?.ToLower() == Gateway?.ToLower())
 						{
 						// Ищем переопределения для агента
 						if (!FindAgentInList(out AmountLimit, out AmountDelay, out Notify))

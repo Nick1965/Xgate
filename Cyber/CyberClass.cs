@@ -329,12 +329,12 @@ namespace Oldi.Net.Cyber
 					IPriv.SignMessage(prm.ToString(), out stRequest, out s_text, secret_key_path, passwd);
 					}
 
-				/*
+                /*
 				if (Settings.LogLevel.IndexOf("REQ") != -1)
 					Log("\r\nПодготовлен запрос:\r\n{0}\r\n", s_text);
 				*/
 
-				Log("{0} Подготовлен запрос:\r\n{1}", Session, prm.ToString());
+                Log("{0} Подготовлен запрос:\r\n{1}", Session, prm.ToString());
 				Log("Подписан запрос\r\n---------------------------------------{0}\r\n---------------------------------------", stRequest);
 				
 				errCode = 0;

@@ -143,10 +143,10 @@ namespace Oldi.Net
             {
                 if (!string.IsNullOrEmpty(Number))
                 {
-                    Log("Xsolla md5: {7}|{0}|{1}|{2}|{3}|{4}|{5}|{6}", Gateway, V1, Amount.AsCurrency(), Tid, Agent, date, AgentKey, Command);
-                    md5 = Crypto.Hash(Command + Gateway + V1 + Amount.AsCurrency() + Tid + Agent + date + AgentKey, 5, Encoding.ASCII);
+                    Log("Xsolla md5: {7}|{0}|{1}|{2}|{3}|{4}|{5}|{6}", Gateway, Number, Amount.AsCurrency(), Tid, Agent, date, AgentKey, Command);
+                    md5 = Crypto.Hash(Command + Gateway + Number + Amount.AsCurrency() + Tid + Agent + date + AgentKey, 5, Encoding.UTF8);
                     stRequest = string.Format("command={0}&project={1}&v1={2}&sum={3}&id={4}&type={5}&date={6}&md5={7}",
-                        Command, Gateway, V1, Amount.AsCurrency(), Tid, Agent, date, md5);
+                        Command, Gateway, Number, Amount.AsCurrency(), Tid, Agent, date, md5);
                 }
                 else if (!string.IsNullOrEmpty(Account))
                 {
