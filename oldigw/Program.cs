@@ -58,13 +58,13 @@ namespace Oldi.Net
 
 				// Config.Load();
 
-				// Заставляум не печатать лог, если отправляется реестр
-				if (args.Length != 0 && args[0] == "--pays")
+				// Заставляем не печатать лог, если отправляется реестр
+				if (args.Length != 0 && args[0] == "--tpp")
 					Settings.logLevel = "";
 
 				Settings.ReadConfig();
 				logFile = Settings.OldiGW.LogFile;
-				Log("\r\n{0}", Settings.Title);
+				Log($"\r\n{Settings.Title}");
 
 				// Больше не будем проверять работоспособность так.
 				// В следующей версии процесс будем пинговать.
@@ -88,6 +88,7 @@ namespace Oldi.Net
                         case "--noredo":
                             noredo = true;
                             break;
+                        /*
                         case "--pays":
 							GWMtsRegister reg = null;
 
@@ -106,6 +107,10 @@ namespace Oldi.Net
 
 							reg.MakeRegister();
 							return;
+                        */
+                        case "--tpp":
+                            Oldi.Ekt.Mts.RegTerminals();
+                            return;
                         default:
 							Console.WriteLine(Properties.Resources.MsgUsage);
                             return;
@@ -122,7 +127,7 @@ namespace Oldi.Net
 						}
 					catch (Exception ex)
 						{
-						Log("Необработанное исключение:\r\n{0}\r\n{1}", ex.Message, ex.StackTrace);
+						Log($"Необработанное исключение:\r\n{ex.ToString()}");
 						}
 					}
 
@@ -132,12 +137,12 @@ namespace Oldi.Net
 			}
 			catch (Exception se)
 			{
-				Console.WriteLine("Main: {0}\r\n{1}", se.Message, se.StackTrace);
-				// Log("Stack: {0}\r\n{1}", se.Message, se.StackTrace);
-			}
+				Console.WriteLine($"Main: {se.ToString()}");
+                Log($"Main: {se.ToString()}");
+            }
 
-			Console.WriteLine("Press any key to exit...");
-			Console.ReadKey();
+            // Console.WriteLine("Press any key to exit...");
+			// Console.ReadKey();
 		}
 
 		static void Run(bool noredo)
