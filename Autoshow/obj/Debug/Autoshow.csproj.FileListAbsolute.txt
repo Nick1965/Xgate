@@ -33,3 +33,14 @@ D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Utility.pdb
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.csprojResolveAssemblyReference.cache
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.dll
 D:\MyDocuments\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Autoshow.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Autoshow.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Oldi.Net.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\SMPP.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Utility.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Oldi.Net.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\SMPP.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Utility.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.csprojResolveAssemblyReference.cache
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.pdb

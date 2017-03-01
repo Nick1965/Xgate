@@ -14,7 +14,7 @@ using System.Globalization;
 namespace GPG
 	{
 	
-	class GPGService: IGPGService
+	public class GPGService: IGPGService
 		{
 		public GPGService()
 			{
@@ -28,7 +28,7 @@ namespace GPG
 		/// <param name="IncludeData"></param>
 		/// <param name="Text"></param>
 		/// <returns></returns>
-		GpgResult CreateSign(string PrivateKeyName, string PublicKeyName, bool IncludeData, string Text)
+		public GpgResult CreateSign(string PrivateKeyName, string PublicKeyName, bool IncludeData, string Text)
 			{
 			GpgResult Result = new GpgResult();
 
