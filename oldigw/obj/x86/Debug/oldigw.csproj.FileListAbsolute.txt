@@ -124,3 +124,5 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\SMPP.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\bin\Debug\SocialExplorer.FastDbf.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.exe
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\oldigw\obj\x86\Debug\oldigw.pdb
+D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.exe
+D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.pdb
