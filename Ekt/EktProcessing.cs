@@ -11,31 +11,9 @@ using System.Net;
 
 namespace Oldi.Ekt
 {
-	class Result
-	{
-		public int state;
-		public int substate;
-		public int code;
-		public Result()
-		{
-			state = 0;
-			substate = 0;
-			code = 0;
-		}
-	}
 
 	public partial class GWEktRequest : GWRequest
 	{
-		public override int TimeOut()
-		{
-			return int.Parse(Settings.Ekt.Timeout);
-		}
-
-		protected override string GetLogName()
-		{
-			return Settings.Ekt.LogFile;
-		}
-
 
 		/// <summary>
 		/// Допроведение платежа
@@ -59,14 +37,14 @@ namespace Oldi.Ekt
 		public override void Processing(bool New)
 		{
 
-			int atts = 1;
-
 			if (New)  // Новый платёж
 			{
+                // QIWI:
                 // Скорретируем AmountAll: + 2.%
-
-                if (Gateway == "1418" && AmountAll > Amount)
+                if (Gateway == qiwiGateway && AmountAll > Amount)
                 {
+                    RootLog($"{Tid} [CHNG AmountAll] {Service}/{Gateway} корретировка");
+
                     decimal oldAmount = AmountAll;
                     if (TerminalType == 1)
                     {
@@ -79,10 +57,15 @@ namespace Oldi.Ekt
                         amountAll = Math.Round(Amount / (1m - 0.035m), 2);
 
                     if (AmountAll > oldAmount)
-                        amountAll = oldAmount;
+                    {
+                        amountAll = oldAmount; // Откат к старому значению. Корретировка не нужна
+                        RootLog($"{Tid} [CHNG AmountAll] {Service}/{Gateway} корретировка не требуется");
+                    }
                     else
-                        RootLog("{0} [CHNG - ****] {4}/{5} A={1} Old={2} New={3} Perc={6}% TType={7}", 
-                            Tid, Amount.AsCurrency(), oldAmount.AsCurrency(), AmountAll.AsCurrency(), Service, Gateway, ((1m - Amount / AmountAll) * 100m).AsCurrency(), TerminalType);
+                    {
+                        RootLog($"{Tid} [CHNG AmountAll] {Service}/{Gateway} корретировка");
+                        RootLog($"{Tid} [CHNG]  A={Amount.AsCurrency()} Old={oldAmount.AsCurrency()} New={AmountAll.AsCurrency()} Perc={((1m - Amount / AmountAll) * 100m).AsCurrency()} TType={TerminalType}");
+                    }
                 }
 
                 if (MakePayment() == 0)
@@ -103,7 +86,7 @@ namespace Oldi.Ekt
 					if (FinancialCheck(New)) return;
 					DoPay(0, 3);
 				}
-				TechInfo = string.Format("st={1}/{2}/{3} atts={0}", atts, result.state, result.substate, result.code);
+                TechInfo = $"state={result.state} substate={result.substate} code={result.code}";
 				// TraceRequest("End");
 			}
 			else // Redo
@@ -161,42 +144,30 @@ namespace Oldi.Ekt
 							errCode = 11;
 							state = 3;
 							break;
-						case 40:
+                        /*
+                        case 40:
 							if (result.substate == 7)
 								errCode = 11;
 							else
 								state = 3;
 								errCode = 1;
 							break;
-						case 80:
-							if (result.code == 30 /* || result.code == 33 */ ) // Нет денег/ Сервис не подключен (отменяем платёж)
-							
+						*/
+                        case 80:
+							if (result.code == 30) // Нет денег - длиный интервал
 							{
 								errCode = 12;
 								state = old_state == 0? (byte)0: (byte)3;
 							}
 							else 
-							
 							{
 								errCode = 6;
 								state = 12;
 							}
 							break;
-						case -2:
-							if (result.substate == 0 && result.code == 0 && DateTime.Now < Operdate.AddHours(4)) // Платёж не найден при проверке статуса
-							{
-								// errCode = 11; // Повторить платёж
-								// state = 0;
-								errCode = 6;
-								state = 12;
-							}
-							else
-							{
-								// errCode = 2; // Отложить платёж
-								// state = 11;
-							}
-								errCode = 6;
-								state = 12;
+						case -2: // Платёж не найден при проверке статуса. Отменяем платёж
+							errCode = 6;
+							state = 12;
 							break;
 						case 60:
 							errCode = 3;
@@ -489,13 +460,14 @@ namespace Oldi.Ekt
 		/// <returns></returns>
 		public override int MakeRequest(int state)
 		{
-			if (string.IsNullOrEmpty(Settings.Ekt.Pointid) || string.IsNullOrEmpty(Gateway))
+			if (string.IsNullOrEmpty(pointid) || string.IsNullOrEmpty(Gateway))
 			{
 				state = 0;
 				errCode = 2;
 				errDesc = string.Format(Messages.Err_NoDefaults, state);
-				RootLog(ErrDesc);
-				return 1;
+                RootLog($"Pointid=\"{pointid}\"\r\nGateway=\"{Gateway}\"");
+                RootLog(ErrDesc);
+                return 1;
 			}
 
 			if (Amount == decimal.MinusOne)
@@ -503,6 +475,8 @@ namespace Oldi.Ekt
 				state = 0;
 				errCode = 7;
 				errDesc = Messages.Err_NoAmount;
+                RootLog($"Pointid=\"{pointid}\"\r\nGateway=\"{Gateway}\"");
+                RootLog(Messages.Err_NoAmount);
 				return 1;
 			}
 
@@ -511,75 +485,84 @@ namespace Oldi.Ekt
 			int lTz = Tz != -1? Tz: Settings.Tz;
 			string sDate = XConvert.AsDate(pcdate) + string.Format("+{0:D2}00", lTz);
 
-			stRequest = Properties.Resources.Template_XmlHeader + "\r\n";
-			if (state == 0) // Payment
+            string sAmount = Math.Round(Amount * 100).ToString();
+            string sAmountAll = Math.Round(AmountAll * 100).ToString();
+            string check = MakeCheckNumber();
+            string acnt = !string.IsNullOrEmpty(Account)? Account: !string.IsNullOrEmpty(Card)? Card: Phone;
+            string sAttributes = "";
+
+
+
+            stRequest = Properties.Resources.Template_XmlHeader + "\r\n";
+
+            if (state == 0) // Payment
 				{
-				if (Gateway == "605")
-					stRequest += string.Format(Properties.Resources.Template_Payment_605, Settings.Ekt.Pointid, Account, Gateway,
-					Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(), sDate,
-						// Атрибуты: id2, fio, address, ee
-					Phone, Fio, Address, Number);
-				else if (Gateway == "1668")
-					stRequest += string.Format(Properties.Resources.Template_Payment_1668, Settings.Ekt.Pointid, Card, Gateway,
-						Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(), sDate, Phone);
+                /*
+                <request point="{0}">
+	                <payment account="{1}" service="{2}" sum="{3}" sum-in="{4}" id="{5}" check="{6}" date="{7}">
+                        <attribute name="id2" value="{8}" />
+	                </payment>
+                </request>
+                 */
+
+                if (!string.IsNullOrEmpty(Account) && !string.IsNullOrEmpty(Number)) // Атрибуты: id1 = account, id2 = number
+                {
+                    if (Attributes == null)
+                        attributes = new AttributesCollection();
+                    attributes.Add("id2", Number);
+                }
+                else if (!string.IsNullOrEmpty(Account) && !string.IsNullOrEmpty(Phone)) // Id1 и phone
+                {
+                    if (Attributes == null)
+                        attributes = new AttributesCollection();
+                    attributes.Add("phone", Phone);
+                }
+
+                foreach (string name in Attributes.Keys)
+                    sAttributes += $@"<attribute name=""{name}"" value=""{Attributes[name]}"" />";
+
+                stRequest += $@"<request point=""{pointid}"">";
+                stRequest += $@"<payment id=""{Tid}"" sum=""{sAmount}"" sum-in=""{sAmountAll}"" check=""{check}"" service=""{Gateway}"" account=""{acnt}"" date=""{sDate}""";
+                if (Terminal != int.MinValue)
+                    stRequest += $@" terminal-vps-id=""{Terminal}""";
+                stRequest += ">";
+                if (!string.IsNullOrEmpty(sAttributes))
+                    stRequest += $"{sAttributes}";
+                stRequest += "</payment></request>";
+
+                /*
+                if (Gateway == "1668")
+					stRequest += string.Format(Properties.Resources.Template_Payment_1668, pointid, Card, Gateway, sAmount, sAmountAll, Tid, MakeCheckNumber(), sDate, Phone);
 				// Единый кошелёк
 				else if (Gateway == "458")
 					{
-					if (Account.Length > 10 || (Account.Length == 10 && Account.Substring(0) != "9"))
-						{
-						stRequest += string.Format(Properties.Resources.Template_Id1,
-							Settings.Ekt.Pointid,
-							Account,
-							Gateway,
-							Math.Round(Amount * 100),
-							Math.Round(AmountAll * 100),
-							Tid.ToString(),
-							MakeCheckNumber(),
-							sDate);
-						}
-					else
-						{
-						stRequest += string.Format(Properties.Resources.Template_Id1, Settings.Ekt.Pointid,
-							Gateway,
-							Math.Round(Amount * 100),
-							Math.Round(AmountAll * 100),
-							Tid.ToString(),
-							MakeCheckNumber(),
-							sDate,
-							Account);
-						}
+					if (Account.Length > 10 || (Account.Length == 10 && Account.Substring(0) != "9")) // Лицевой счёт
+						stRequest += string.Format(Properties.Resources.Template_Id1, pointid, Account, Gateway, sAmount, sAmountAll, Tid, MakeCheckNumber(), sDate);
+					else // Номер телефона
+						stRequest += string.Format(Properties.Resources.Template_Id1, pointid, Gateway, sAmount, sAmountAll, Tid, MakeCheckNumber(), sDate, Account);
 					}
-				else if (!string.IsNullOrEmpty(Account) && !string.IsNullOrEmpty(Number)) // Id1 и Id2
-					{
-					stRequest += string.Format(Properties.Resources.Template_Payment_Id1Id2, 
-						Settings.Ekt.Pointid, Gateway, Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(), sDate,
-						// Атрибуты: id1, id2
-						Account, Number);
-					}
-				else if (!string.IsNullOrEmpty(Account) && !string.IsNullOrEmpty(Phone)) // Id1 и phone
-					{
-					stRequest += string.Format(Properties.Resources.Template_Payment_Id1Phone,
-						Settings.Ekt.Pointid, Gateway, Math.Round(Amount * 100), Math.Round(AmountAll * 100), Tid.ToString(), MakeCheckNumber(), sDate,
-						// Атрибуты: id1, phone
-						Account, Phone);
-					}
-				else if (string.IsNullOrEmpty(Account) && string.IsNullOrEmpty(Phone) && Attributes != null && Attributes.Count > 0) // Есть дополнительные атрибуты
+				else if (!string.IsNullOrEmpty(Account) && !string.IsNullOrEmpty(Number)) // Атрибуты: id1 = account, id2 = number
+                    stRequest += string.Format(Properties.Resources.Template_Payment_Id1Id2, pointid, Gateway, sAmount, sAmountAll, Tid, MakeCheckNumber(), sDate, Account, Number);
+				else
+                if (!string.IsNullOrEmpty(Account) && !string.IsNullOrEmpty(Phone)) // Id1 и phone
+					stRequest += string.Format(Properties.Resources.Template_Payment_Id1Phone, pointid, Gateway, sAmount, sAmountAll, Tid, MakeCheckNumber(), sDate, Account, Phone);
+				else if (string.IsNullOrEmpty(Account) && string.IsNullOrEmpty(Phone) && Attributes?.Count > 0) // Есть дополнительные атрибуты
 					{
 					StringBuilder sb = new StringBuilder();
-					sb.AppendFormat("<request point=\"{0}\">\r\n", Settings.Ekt.Pointid);
+					sb.Append($"<request point=\"{pointid}\">\r\n");
 					sb.AppendFormat("\t<payment account=\"{0}\" service=\"{1}\" sum=\"{2}\" sum-in=\"{3}\" id=\"{4}\" check=\"{5}\" date={6}>\r\n",
 						string.IsNullOrEmpty(Phone) ? Account : Phone,	// Номер телефона или счёта
 						Gateway,										// Номер шлюза ЕКТ
-						Math.Round(Amount * 100),						// amount
-						Math.Round(AmountAll * 100),					// summary_amount
+						sAmount,					                	// amount
+						sAmountAll,                 					// summary_amount
 						Tid.ToString(),
 						MakeCheckNumber(),								// Номер чека
 						sDate											// Время платежа
 						);
 					// Добавляется коллекция атрибутов
 					foreach (string name in Attributes.Keys)
-						sb.AppendFormat("\t\t<attribute name=\"{0}\" value=\"{1}\" />\r\n", name, Attributes[name]);
-					sb.Append("\t/<payment>\r\n");
+                        sb.Append($"\t\t<attribute name=\"{name}\" value=\"{Attributes[name]}\" />\r\n");
+                    sb.Append("\t/<payment>\r\n");
 					sb.Append("/<request>");
 					stRequest += sb.ToString();
 					}
@@ -588,16 +571,20 @@ namespace Oldi.Ekt
 					StringBuilder sb = new StringBuilder();
 					// Добавляется коллекция атрибутов
 					foreach (string name in Attributes.Keys)
-						sb.AppendFormat("\t\t<attribute name=\"{0}\" value=\"{1}\" />\r\n", name, Attributes[name]);
-					stRequest += string.Format(Properties.Resources.Template_Payment, Settings.Ekt.Pointid,
+						sb.Append($"\t\t<attribute name=\"{name}\" value=\"{Attributes[name]}\" />\r\n");
+					stRequest += string.Format(Properties.Resources.Template_Payment, pointid,
 						string.IsNullOrEmpty(Phone) ? Account : Phone, Gateway, // Номер сервиса ЕКТ, 
-						Math.Round(Amount * 100),
-						AmountAll == -1? Math.Round(Amount * 100): Math.Round(AmountAll * 100), 
-						Tid.ToString(), MakeCheckNumber(), sDate, sb.ToString());
+						sAmount, 
+                        AmountAll == -1? sAmount: sAmountAll, 
+						Tid, 
+                        MakeCheckNumber(), 
+                        sDate, 
+                        sb.ToString());
 					}
+                    */
 				}
 			else if (state == 3) // Status
-				stRequest += string.Format(Properties.Resources.Template_Status, Settings.Ekt.Pointid, Tid);
+				stRequest += string.Format(Properties.Resources.Template_Status, pointid, Tid);
 			else
 				{
 				errDesc = string.Format(Messages.Err_UnknownState, state);

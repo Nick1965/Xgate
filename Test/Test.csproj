@@ -75,6 +75,10 @@
       <Project>{0533A02A-EFD6-483C-B640-82B23E68B611}</Project>
       <Name>Cyber</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ekt\Ekt.csproj">
+      <Project>{16750842-6236-419e-9930-87ddba8456eb}</Project>
+      <Name>Ekt</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Oldi.Net\Oldi.Net.csproj">
       <Project>{E9CA46DE-E44D-49C3-BCBA-D9AC2CD9C785}</Project>
       <Name>Oldi.Net</Name>

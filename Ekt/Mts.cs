@@ -58,7 +58,7 @@ namespace Oldi.Ekt
         static List<TppRecord> terminals = new List<TppRecord>();
         static string packet = "";
 
-		static string CodePage = "utf-8";
+        static string CodePage = Settings.Ekt.Codepage;
 		static string ContentType = Settings.Ekt.ContentType;
 		static string commonName = Settings.Ekt.Certname;
 

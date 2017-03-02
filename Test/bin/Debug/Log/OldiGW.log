@@ -1,0 +1,1641 @@
+
+
+2017-03-01 17:04:45.711 [01] Конфигурация шлюза:
+2017-03-01 17:04:45.739 [01] GWHost=oldigw/
+2017-03-01 17:04:45.743 [01] Port=300
+2017-03-01 17:04:45.746 [01] SslPort=301
+2017-03-01 17:04:45.750 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:04:45.761 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:04:45.764 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:04:45.768 [01] DbCheckTimeout=2
+2017-03-01 17:04:45.775 [01] fake-tpp-id=880
+2017-03-01 17:04:45.779 [01] fake-tpp-type=1
+2017-03-01 17:04:45.782 [01] tz=6
+2017-03-01 17:04:45.786 [01] Conveyor-Size=20
+2017-03-01 17:04:45.790 [01] Safe-Interval=3
+2017-03-01 17:04:45.793 [01] Root=.\
+2017-03-01 17:04:45.797 [01] LogPath=log\
+2017-03-01 17:04:45.800 [01] Templates=templates\
+2017-03-01 17:04:45.804 [01] Registers=registers\
+2017-03-01 17:04:45.848 [01] XSD=xsd\
+2017-03-01 17:04:45.851 [01] Attachments=attachments\
+2017-03-01 17:04:45.854 [01] Cyber=cyber\
+2017-03-01 17:04:45.858 [01] Lists=lists\lists.xml
+2017-03-01 17:04:45.861 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:04:45.864 [01] Delivery=0
+
+
+2017-03-01 17:04:45.868 [01] Providers:
+2017-03-01 17:04:45.872 [01] providers: mts
+2017-03-01 17:04:45.875 [01] 	ott=1_25
+2017-03-01 17:04:45.878 [01] 	xsd=5_02
+2017-03-01 17:04:45.881 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:04:45.885 [01] 	as-vps=226581085
+2017-03-01 17:04:45.888 [01] 	vps-code=1380200801234
+2017-03-01 17:04:45.892 [01] 	contract=9904000052
+2017-03-01 17:04:45.895 [01] 	security-code=98
+2017-03-01 17:04:45.918 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:04:45.921 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:04:45.925 [01] 	code-page=utf-8
+2017-03-01 17:04:45.928 [01] 	content-type=text/html
+2017-03-01 17:04:45.932 [01] 	timeout=40
+2017-03-01 17:04:45.935 [01] 	header=
+2017-03-01 17:04:45.938 [01] 	schemas=schemas\
+2017-03-01 17:04:45.941 [01] 	log=mts.log
+2017-03-01 17:04:45.945 [01] providers: ekt
+2017-03-01 17:04:45.948 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:04:45.952 [01] 	point-id=12415
+2017-03-01 17:04:45.955 [01] 	certname=EBURG-NEW
+2017-03-01 17:04:45.958 [01] 	code-page=utf-8
+2017-03-01 17:04:45.962 [01] 	content-type=text/html
+2017-03-01 17:04:45.965 [01] 	timeout=60
+2017-03-01 17:04:45.968 [01] 	log=ekt.log
+2017-03-01 17:04:45.972 [01] providers: cyber
+2017-03-01 17:04:45.993 [01] 	SD=1839361
+2017-03-01 17:04:45.997 [01] 	AP=1354719
+2017-03-01 17:04:46.000 [01] 	OP=1354720
+2017-03-01 17:04:46.004 [01] 	SecretKey=secret.key
+2017-03-01 17:04:46.007 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:04:46.011 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:04:46.014 [01] 	BankKeySerial=904291
+2017-03-01 17:04:46.017 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:04:46.021 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:04:46.024 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:04:46.041 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:04:46.044 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:04:46.048 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:04:46.051 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:04:46.055 [01] 	timeout=120
+2017-03-01 17:04:46.058 [01] 	log=cyber.log
+2017-03-01 17:04:46.062 [01] providers: rt
+2017-03-01 17:04:46.065 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:04:46.068 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:04:46.072 [01] 	cn=Rostelecom
+2017-03-01 17:04:46.075 [01] 	log=rt.log
+2017-03-01 17:04:46.079 [01] providers: rtm
+2017-03-01 17:04:46.082 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:04:46.086 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:04:46.089 [01] 	cn=regplat2rtmobile
+2017-03-01 17:04:46.092 [01] 	log=rtm.log
+2017-03-01 17:04:46.096 [01] providers: rapida
+2017-03-01 17:04:46.110 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:04:46.113 [01] 	cn=RegPlat.ru
+2017-03-01 17:04:46.117 [01] 	log=rapida.log
+2017-03-01 17:04:46.120 [01] providers: xsolla
+2017-03-01 17:04:46.124 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:04:46.127 [01] 	agent=12791
+2017-03-01 17:04:46.131 [01] 	agent-key=regplat
+2017-03-01 17:04:46.134 [01] 	codepage=utf-8
+2017-03-01 17:04:46.138 [01] 	log=xsolla.log
+2017-03-01 17:04:46.141 [01] providers: pcc
+2017-03-01 17:04:46.145 [01] 	certname=dealoldit
+2017-03-01 17:04:46.148 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:04:46.152 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:04:46.155 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:04:46.159 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:04:46.162 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:04:46.166 [01] 	log=pcc.log
+2017-03-01 17:04:46.170 [01] providers: Kinomax
+2017-03-01 17:04:46.174 [01] 	host=http://localhost:8000/
+2017-03-01 17:04:46.177 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:04:46.181 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:04:46.184 [01] 	log=kinomax.log
+2017-03-01 17:04:46.188 [01] providers: smtp
+2017-03-01 17:04:46.191 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:04:46.195 [01] 	code-page=866
+2017-03-01 17:04:46.198 [01] 	log=smtp.log
+2017-03-01 17:04:46.202 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:04:46.206 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:04:46.210 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:04:46.213 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:04:46.217 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:04:46.221 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:04:46.224 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:04:46.228 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:04:46.231 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:04:46.236 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:04:46.239 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:04:46.243 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:04:46.246 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:04:46.250 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:04:46.253 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:04:46.257 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:04:46.261 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:04:46.264 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:04:46.268 [01] 	Lst: ".\lists\lists.xml"
+2017-03-01 17:04:46.338 [01] Ekt.MakeRequest: Не заданы обязательные параметры
+
+
+2017-03-01 17:08:17.467 [01] Конфигурация шлюза:
+2017-03-01 17:08:17.475 [01] GWHost=oldigw/
+2017-03-01 17:08:17.480 [01] Port=300
+2017-03-01 17:08:17.484 [01] SslPort=301
+2017-03-01 17:08:17.489 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:08:17.493 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:08:17.497 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:08:17.500 [01] DbCheckTimeout=2
+2017-03-01 17:08:17.505 [01] fake-tpp-id=880
+2017-03-01 17:08:17.509 [01] fake-tpp-type=1
+2017-03-01 17:08:17.514 [01] tz=6
+2017-03-01 17:08:17.517 [01] Conveyor-Size=20
+2017-03-01 17:08:17.521 [01] Safe-Interval=3
+2017-03-01 17:08:17.525 [01] Root=.\
+2017-03-01 17:08:17.529 [01] LogPath=log\
+2017-03-01 17:08:17.532 [01] Templates=templates\
+2017-03-01 17:08:17.536 [01] Registers=registers\
+2017-03-01 17:08:17.540 [01] XSD=xsd\
+2017-03-01 17:08:17.544 [01] Attachments=attachments\
+2017-03-01 17:08:17.547 [01] Cyber=cyber\
+2017-03-01 17:08:17.551 [01] Lists=lists\lists.xml
+2017-03-01 17:08:17.555 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:08:17.558 [01] Delivery=0
+
+
+2017-03-01 17:08:17.562 [01] Providers:
+2017-03-01 17:08:17.566 [01] providers: mts
+2017-03-01 17:08:17.570 [01] 	ott=1_25
+2017-03-01 17:08:17.575 [01] 	xsd=5_02
+2017-03-01 17:08:17.579 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:08:17.583 [01] 	as-vps=226581085
+2017-03-01 17:08:17.586 [01] 	vps-code=1380200801234
+2017-03-01 17:08:17.590 [01] 	contract=9904000052
+2017-03-01 17:08:17.594 [01] 	security-code=98
+2017-03-01 17:08:17.598 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:08:17.602 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:08:17.606 [01] 	code-page=utf-8
+2017-03-01 17:08:17.610 [01] 	content-type=text/html
+2017-03-01 17:08:17.614 [01] 	timeout=40
+2017-03-01 17:08:17.618 [01] 	header=
+2017-03-01 17:08:17.622 [01] 	schemas=schemas\
+2017-03-01 17:08:17.626 [01] 	log=mts.log
+2017-03-01 17:08:17.630 [01] providers: ekt
+2017-03-01 17:08:17.633 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:08:17.638 [01] 	point-id=12415
+2017-03-01 17:08:17.643 [01] 	certname=EBURG-NEW
+2017-03-01 17:08:17.648 [01] 	code-page=utf-8
+2017-03-01 17:08:17.652 [01] 	content-type=text/html
+2017-03-01 17:08:17.656 [01] 	timeout=60
+2017-03-01 17:08:17.660 [01] 	log=ekt.log
+2017-03-01 17:08:17.663 [01] providers: cyber
+2017-03-01 17:08:17.667 [01] 	SD=1839361
+2017-03-01 17:08:17.671 [01] 	AP=1354719
+2017-03-01 17:08:17.675 [01] 	OP=1354720
+2017-03-01 17:08:17.679 [01] 	SecretKey=secret.key
+2017-03-01 17:08:17.683 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:08:17.687 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:08:17.691 [01] 	BankKeySerial=904291
+2017-03-01 17:08:17.695 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:08:17.699 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:08:17.703 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:08:17.707 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:08:17.711 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:08:17.715 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:08:17.719 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:08:17.723 [01] 	timeout=120
+2017-03-01 17:08:17.727 [01] 	log=cyber.log
+2017-03-01 17:08:17.731 [01] providers: rt
+2017-03-01 17:08:17.735 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:08:17.740 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:08:17.744 [01] 	cn=Rostelecom
+2017-03-01 17:08:17.748 [01] 	log=rt.log
+2017-03-01 17:08:17.752 [01] providers: rtm
+2017-03-01 17:08:17.756 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:08:17.759 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:08:17.763 [01] 	cn=regplat2rtmobile
+2017-03-01 17:08:17.767 [01] 	log=rtm.log
+2017-03-01 17:08:17.771 [01] providers: rapida
+2017-03-01 17:08:17.775 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:08:17.779 [01] 	cn=RegPlat.ru
+2017-03-01 17:08:17.783 [01] 	log=rapida.log
+2017-03-01 17:08:17.786 [01] providers: xsolla
+2017-03-01 17:08:17.790 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:08:17.794 [01] 	agent=12791
+2017-03-01 17:08:17.798 [01] 	agent-key=regplat
+2017-03-01 17:08:17.802 [01] 	codepage=utf-8
+2017-03-01 17:08:17.807 [01] 	log=xsolla.log
+2017-03-01 17:08:17.810 [01] providers: pcc
+2017-03-01 17:08:17.814 [01] 	certname=dealoldit
+2017-03-01 17:08:17.818 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:08:17.822 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:08:17.826 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:08:17.830 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:08:17.834 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:08:17.838 [01] 	log=pcc.log
+2017-03-01 17:08:17.841 [01] providers: Kinomax
+2017-03-01 17:08:17.845 [01] 	host=http://localhost:8000/
+2017-03-01 17:08:17.849 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:08:17.853 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:08:17.857 [01] 	log=kinomax.log
+2017-03-01 17:08:17.862 [01] providers: smtp
+2017-03-01 17:08:17.866 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:08:17.870 [01] 	code-page=866
+2017-03-01 17:08:17.874 [01] 	log=smtp.log
+2017-03-01 17:08:17.878 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:08:17.882 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:08:17.887 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:08:17.890 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:08:17.894 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:08:17.898 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:08:17.902 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:08:17.906 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:08:17.910 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:08:17.914 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:08:17.918 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:08:17.922 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:08:17.926 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:08:17.930 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:08:17.934 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:08:17.938 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:08:17.942 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:08:17.946 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:08:17.950 [01] 	Lst: ".\lists\lists.xml"
+2017-03-01 17:08:18.022 [01] Ekt.MakeRequest: Не заданы обязательные параметры
+
+
+2017-03-01 17:16:47.371 [01] Конфигурация шлюза:
+2017-03-01 17:16:47.379 [01] GWHost=oldigw/
+2017-03-01 17:16:47.384 [01] Port=300
+2017-03-01 17:16:47.389 [01] SslPort=301
+2017-03-01 17:16:47.393 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:16:47.397 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:16:47.402 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:16:47.406 [01] DbCheckTimeout=2
+2017-03-01 17:16:47.410 [01] fake-tpp-id=880
+2017-03-01 17:16:47.415 [01] fake-tpp-type=1
+2017-03-01 17:16:47.419 [01] tz=6
+2017-03-01 17:16:47.423 [01] Conveyor-Size=20
+2017-03-01 17:16:47.428 [01] Safe-Interval=3
+2017-03-01 17:16:47.432 [01] Root=.\
+2017-03-01 17:16:47.436 [01] LogPath=log\
+2017-03-01 17:16:47.441 [01] Templates=templates\
+2017-03-01 17:16:47.444 [01] Registers=registers\
+2017-03-01 17:16:47.448 [01] XSD=xsd\
+2017-03-01 17:16:47.453 [01] Attachments=attachments\
+2017-03-01 17:16:47.457 [01] Cyber=cyber\
+2017-03-01 17:16:47.461 [01] Lists=lists\lists.xml
+2017-03-01 17:16:47.465 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:16:47.469 [01] Delivery=0
+
+
+2017-03-01 17:16:47.473 [01] Providers:
+2017-03-01 17:16:47.477 [01] providers: mts
+2017-03-01 17:16:47.481 [01] 	ott=1_25
+2017-03-01 17:16:47.486 [01] 	xsd=5_02
+2017-03-01 17:16:47.490 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:16:47.494 [01] 	as-vps=226581085
+2017-03-01 17:16:47.498 [01] 	vps-code=1380200801234
+2017-03-01 17:16:47.502 [01] 	contract=9904000052
+2017-03-01 17:16:47.506 [01] 	security-code=98
+2017-03-01 17:16:47.510 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:16:47.514 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:16:47.518 [01] 	code-page=utf-8
+2017-03-01 17:16:47.522 [01] 	content-type=text/html
+2017-03-01 17:16:47.526 [01] 	timeout=40
+2017-03-01 17:16:47.530 [01] 	header=
+2017-03-01 17:16:47.534 [01] 	schemas=schemas\
+2017-03-01 17:16:47.538 [01] 	log=mts.log
+2017-03-01 17:16:47.542 [01] providers: ekt
+2017-03-01 17:16:47.545 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:16:47.549 [01] 	point-id=12415
+2017-03-01 17:16:47.553 [01] 	certname=EBURG-NEW
+2017-03-01 17:16:47.557 [01] 	code-page=utf-8
+2017-03-01 17:16:47.561 [01] 	content-type=text/html
+2017-03-01 17:16:47.565 [01] 	timeout=60
+2017-03-01 17:16:47.569 [01] 	log=ekt.log
+2017-03-01 17:16:47.573 [01] providers: cyber
+2017-03-01 17:16:47.577 [01] 	SD=1839361
+2017-03-01 17:16:47.581 [01] 	AP=1354719
+2017-03-01 17:16:47.585 [01] 	OP=1354720
+2017-03-01 17:16:47.589 [01] 	SecretKey=secret.key
+2017-03-01 17:16:47.593 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:16:47.597 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:16:47.601 [01] 	BankKeySerial=904291
+2017-03-01 17:16:47.605 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:16:47.609 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:16:47.613 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:16:47.617 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:16:47.621 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:16:47.625 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:16:47.628 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:16:47.632 [01] 	timeout=120
+2017-03-01 17:16:47.636 [01] 	log=cyber.log
+2017-03-01 17:16:47.641 [01] providers: rt
+2017-03-01 17:16:47.644 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:16:47.648 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:16:47.652 [01] 	cn=Rostelecom
+2017-03-01 17:16:47.656 [01] 	log=rt.log
+2017-03-01 17:16:47.660 [01] providers: rtm
+2017-03-01 17:16:47.664 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:16:47.668 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:16:47.672 [01] 	cn=regplat2rtmobile
+2017-03-01 17:16:47.676 [01] 	log=rtm.log
+2017-03-01 17:16:47.680 [01] providers: rapida
+2017-03-01 17:16:47.684 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:16:47.688 [01] 	cn=RegPlat.ru
+2017-03-01 17:16:47.692 [01] 	log=rapida.log
+2017-03-01 17:16:47.696 [01] providers: xsolla
+2017-03-01 17:16:47.700 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:16:47.704 [01] 	agent=12791
+2017-03-01 17:16:47.708 [01] 	agent-key=regplat
+2017-03-01 17:16:47.711 [01] 	codepage=utf-8
+2017-03-01 17:16:47.715 [01] 	log=xsolla.log
+2017-03-01 17:16:47.719 [01] providers: pcc
+2017-03-01 17:16:47.723 [01] 	certname=dealoldit
+2017-03-01 17:16:47.727 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:16:47.731 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:16:47.734 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:16:47.738 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:16:47.742 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:16:47.747 [01] 	log=pcc.log
+2017-03-01 17:16:47.751 [01] providers: Kinomax
+2017-03-01 17:16:47.755 [01] 	host=http://localhost:8000/
+2017-03-01 17:16:47.759 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:16:47.762 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:16:47.766 [01] 	log=kinomax.log
+2017-03-01 17:16:47.770 [01] providers: smtp
+2017-03-01 17:16:47.774 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:16:47.778 [01] 	code-page=866
+2017-03-01 17:16:47.782 [01] 	log=smtp.log
+2017-03-01 17:16:47.786 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:16:47.790 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:16:47.794 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:16:47.798 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:16:47.803 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:16:47.807 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:16:47.810 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:16:47.814 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:16:47.818 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:16:47.822 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:16:47.826 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:16:47.830 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:16:47.834 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:16:47.838 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:16:47.842 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:16:47.846 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:16:47.850 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:16:47.854 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:16:47.858 [01] 	Lst: ".\lists\lists.xml"
+2017-03-01 17:16:47.932 [01] Ekt.MakeRequest: Не заданы обязательные параметры
+
+
+2017-03-01 17:23:14.201 [01] Конфигурация шлюза:
+2017-03-01 17:23:14.209 [01] GWHost=oldigw/
+2017-03-01 17:23:14.214 [01] Port=300
+2017-03-01 17:23:14.218 [01] SslPort=301
+2017-03-01 17:23:14.222 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:23:14.227 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:23:14.232 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:23:14.236 [01] DbCheckTimeout=2
+2017-03-01 17:23:14.241 [01] fake-tpp-id=880
+2017-03-01 17:23:14.245 [01] fake-tpp-type=1
+2017-03-01 17:23:14.249 [01] tz=6
+2017-03-01 17:23:14.253 [01] Conveyor-Size=20
+2017-03-01 17:23:14.257 [01] Safe-Interval=3
+2017-03-01 17:23:14.261 [01] Root=.\
+2017-03-01 17:23:14.264 [01] LogPath=log\
+2017-03-01 17:23:14.268 [01] Templates=templates\
+2017-03-01 17:23:14.272 [01] Registers=registers\
+2017-03-01 17:23:14.276 [01] XSD=xsd\
+2017-03-01 17:23:14.280 [01] Attachments=attachments\
+2017-03-01 17:23:14.284 [01] Cyber=cyber\
+2017-03-01 17:23:14.288 [01] Lists=lists\lists.xml
+2017-03-01 17:23:14.292 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:23:14.296 [01] Delivery=0
+
+
+2017-03-01 17:23:14.300 [01] Providers:
+2017-03-01 17:23:14.304 [01] providers: mts
+2017-03-01 17:23:14.308 [01] 	ott=1_25
+2017-03-01 17:23:14.312 [01] 	xsd=5_02
+2017-03-01 17:23:14.316 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:23:14.320 [01] 	as-vps=226581085
+2017-03-01 17:23:14.324 [01] 	vps-code=1380200801234
+2017-03-01 17:23:14.328 [01] 	contract=9904000052
+2017-03-01 17:23:14.332 [01] 	security-code=98
+2017-03-01 17:23:14.336 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:23:14.340 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:23:14.344 [01] 	code-page=utf-8
+2017-03-01 17:23:14.348 [01] 	content-type=text/html
+2017-03-01 17:23:14.352 [01] 	timeout=40
+2017-03-01 17:23:14.356 [01] 	header=
+2017-03-01 17:23:14.360 [01] 	schemas=schemas\
+2017-03-01 17:23:14.364 [01] 	log=mts.log
+2017-03-01 17:23:14.368 [01] providers: ekt
+2017-03-01 17:23:14.372 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:23:14.377 [01] 	point-id=12415
+2017-03-01 17:23:14.381 [01] 	certname=EBURG-NEW
+2017-03-01 17:23:14.384 [01] 	code-page=utf-8
+2017-03-01 17:23:14.388 [01] 	content-type=text/html
+2017-03-01 17:23:14.392 [01] 	timeout=60
+2017-03-01 17:23:14.396 [01] 	log=ekt.log
+2017-03-01 17:23:14.400 [01] providers: cyber
+2017-03-01 17:23:14.404 [01] 	SD=1839361
+2017-03-01 17:23:14.408 [01] 	AP=1354719
+2017-03-01 17:23:14.412 [01] 	OP=1354720
+2017-03-01 17:23:14.415 [01] 	SecretKey=secret.key
+2017-03-01 17:23:14.419 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:23:14.423 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:23:14.427 [01] 	BankKeySerial=904291
+2017-03-01 17:23:14.431 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:23:14.435 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:23:14.439 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:23:14.443 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:23:14.446 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:23:14.450 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:23:14.454 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:23:14.458 [01] 	timeout=120
+2017-03-01 17:23:14.462 [01] 	log=cyber.log
+2017-03-01 17:23:14.466 [01] providers: rt
+2017-03-01 17:23:14.469 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:23:14.473 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:23:14.477 [01] 	cn=Rostelecom
+2017-03-01 17:23:14.481 [01] 	log=rt.log
+2017-03-01 17:23:14.485 [01] providers: rtm
+2017-03-01 17:23:14.489 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:23:14.493 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:23:14.497 [01] 	cn=regplat2rtmobile
+2017-03-01 17:23:14.500 [01] 	log=rtm.log
+2017-03-01 17:23:14.504 [01] providers: rapida
+2017-03-01 17:23:14.508 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:23:14.512 [01] 	cn=RegPlat.ru
+2017-03-01 17:23:14.516 [01] 	log=rapida.log
+2017-03-01 17:23:14.519 [01] providers: xsolla
+2017-03-01 17:23:14.523 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:23:14.527 [01] 	agent=12791
+2017-03-01 17:23:14.531 [01] 	agent-key=regplat
+2017-03-01 17:23:14.535 [01] 	codepage=utf-8
+2017-03-01 17:23:14.538 [01] 	log=xsolla.log
+2017-03-01 17:23:14.542 [01] providers: pcc
+2017-03-01 17:23:14.545 [01] 	certname=dealoldit
+2017-03-01 17:23:14.549 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:23:14.553 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:23:14.557 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:23:14.560 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:23:14.564 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:23:14.568 [01] 	log=pcc.log
+2017-03-01 17:23:14.571 [01] providers: Kinomax
+2017-03-01 17:23:14.575 [01] 	host=http://localhost:8000/
+2017-03-01 17:23:14.579 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:23:14.583 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:23:14.586 [01] 	log=kinomax.log
+2017-03-01 17:23:14.590 [01] providers: smtp
+2017-03-01 17:23:14.594 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:23:14.598 [01] 	code-page=866
+2017-03-01 17:23:14.601 [01] 	log=smtp.log
+2017-03-01 17:23:14.605 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:23:14.609 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:23:14.613 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:23:14.617 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:23:14.621 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:23:14.625 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:23:14.629 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:23:14.633 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:23:14.637 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:23:14.640 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:23:14.644 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:23:14.648 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:23:14.652 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:23:14.656 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:23:14.659 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:23:14.663 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:23:14.667 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:23:14.671 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:23:14.675 [01] 	Lst: ".\lists\lists.xml"
+
+
+2017-03-01 17:25:31.510 [01] Конфигурация шлюза:
+2017-03-01 17:25:31.518 [01] GWHost=oldigw/
+2017-03-01 17:25:31.523 [01] Port=300
+2017-03-01 17:25:31.528 [01] SslPort=301
+2017-03-01 17:25:31.533 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:25:31.537 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:25:31.540 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:25:31.544 [01] DbCheckTimeout=2
+2017-03-01 17:25:31.549 [01] fake-tpp-id=880
+2017-03-01 17:25:31.553 [01] fake-tpp-type=1
+2017-03-01 17:25:31.558 [01] tz=6
+2017-03-01 17:25:31.561 [01] Conveyor-Size=20
+2017-03-01 17:25:31.566 [01] Safe-Interval=3
+2017-03-01 17:25:31.570 [01] Root=.\
+2017-03-01 17:25:31.574 [01] LogPath=log\
+2017-03-01 17:25:31.578 [01] Templates=templates\
+2017-03-01 17:25:31.582 [01] Registers=registers\
+2017-03-01 17:25:31.586 [01] XSD=xsd\
+2017-03-01 17:25:31.590 [01] Attachments=attachments\
+2017-03-01 17:25:31.593 [01] Cyber=cyber\
+2017-03-01 17:25:31.597 [01] Lists=lists\lists.xml
+2017-03-01 17:25:31.601 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:25:31.605 [01] Delivery=0
+
+
+2017-03-01 17:25:31.608 [01] Providers:
+2017-03-01 17:25:31.612 [01] providers: mts
+2017-03-01 17:25:31.617 [01] 	ott=1_25
+2017-03-01 17:25:31.620 [01] 	xsd=5_02
+2017-03-01 17:25:31.624 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:25:31.628 [01] 	as-vps=226581085
+2017-03-01 17:25:31.632 [01] 	vps-code=1380200801234
+2017-03-01 17:25:31.636 [01] 	contract=9904000052
+2017-03-01 17:25:31.640 [01] 	security-code=98
+2017-03-01 17:25:31.643 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:25:31.647 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:25:31.651 [01] 	code-page=utf-8
+2017-03-01 17:25:31.655 [01] 	content-type=text/html
+2017-03-01 17:25:31.659 [01] 	timeout=40
+2017-03-01 17:25:31.662 [01] 	header=
+2017-03-01 17:25:31.666 [01] 	schemas=schemas\
+2017-03-01 17:25:31.670 [01] 	log=mts.log
+2017-03-01 17:25:31.674 [01] providers: ekt
+2017-03-01 17:25:31.678 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:25:31.682 [01] 	point-id=12415
+2017-03-01 17:25:31.685 [01] 	certname=EBURG-NEW
+2017-03-01 17:25:31.689 [01] 	code-page=utf-8
+2017-03-01 17:25:31.693 [01] 	content-type=text/html
+2017-03-01 17:25:31.696 [01] 	timeout=60
+2017-03-01 17:25:31.700 [01] 	log=ekt.log
+2017-03-01 17:25:31.704 [01] providers: cyber
+2017-03-01 17:25:31.708 [01] 	SD=1839361
+2017-03-01 17:25:31.711 [01] 	AP=1354719
+2017-03-01 17:25:31.715 [01] 	OP=1354720
+2017-03-01 17:25:31.719 [01] 	SecretKey=secret.key
+2017-03-01 17:25:31.723 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:25:31.727 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:25:31.730 [01] 	BankKeySerial=904291
+2017-03-01 17:25:31.734 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:25:31.738 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:25:31.742 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:25:31.746 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:25:31.750 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:25:31.754 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:25:31.758 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:25:31.761 [01] 	timeout=120
+2017-03-01 17:25:31.765 [01] 	log=cyber.log
+2017-03-01 17:25:31.769 [01] providers: rt
+2017-03-01 17:25:31.773 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:25:31.777 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:25:31.780 [01] 	cn=Rostelecom
+2017-03-01 17:25:31.784 [01] 	log=rt.log
+2017-03-01 17:25:31.788 [01] providers: rtm
+2017-03-01 17:25:31.792 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:25:31.796 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:25:31.799 [01] 	cn=regplat2rtmobile
+2017-03-01 17:25:31.803 [01] 	log=rtm.log
+2017-03-01 17:25:31.807 [01] providers: rapida
+2017-03-01 17:25:31.810 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:25:31.814 [01] 	cn=RegPlat.ru
+2017-03-01 17:25:31.819 [01] 	log=rapida.log
+2017-03-01 17:25:31.822 [01] providers: xsolla
+2017-03-01 17:25:31.826 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:25:31.830 [01] 	agent=12791
+2017-03-01 17:25:31.834 [01] 	agent-key=regplat
+2017-03-01 17:25:31.838 [01] 	codepage=utf-8
+2017-03-01 17:25:31.841 [01] 	log=xsolla.log
+2017-03-01 17:25:31.845 [01] providers: pcc
+2017-03-01 17:25:31.849 [01] 	certname=dealoldit
+2017-03-01 17:25:31.852 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:25:31.856 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:25:31.860 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:25:31.863 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:25:31.867 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:25:31.871 [01] 	log=pcc.log
+2017-03-01 17:25:31.875 [01] providers: Kinomax
+2017-03-01 17:25:31.878 [01] 	host=http://localhost:8000/
+2017-03-01 17:25:31.882 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:25:31.886 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:25:31.890 [01] 	log=kinomax.log
+2017-03-01 17:25:31.893 [01] providers: smtp
+2017-03-01 17:25:31.897 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:25:31.901 [01] 	code-page=866
+2017-03-01 17:25:31.905 [01] 	log=smtp.log
+2017-03-01 17:25:31.908 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:25:31.912 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:25:31.917 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:25:31.920 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:25:31.924 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:25:31.928 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:25:31.932 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:25:31.936 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:25:31.939 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:25:31.943 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:25:31.947 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:25:31.951 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:25:31.954 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:25:31.958 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:25:31.962 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:25:31.966 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:25:31.970 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:25:31.974 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:25:31.978 [01] 	Lst: ".\lists\lists.xml"
+
+
+2017-03-01 17:27:39.736 [01] Конфигурация шлюза:
+2017-03-01 17:27:39.745 [01] GWHost=oldigw/
+2017-03-01 17:27:39.750 [01] Port=300
+2017-03-01 17:27:39.755 [01] SslPort=301
+2017-03-01 17:27:39.760 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:27:39.765 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:27:39.771 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:27:39.776 [01] DbCheckTimeout=2
+2017-03-01 17:27:39.782 [01] fake-tpp-id=880
+2017-03-01 17:27:39.786 [01] fake-tpp-type=1
+2017-03-01 17:27:39.791 [01] tz=6
+2017-03-01 17:27:39.796 [01] Conveyor-Size=20
+2017-03-01 17:27:39.801 [01] Safe-Interval=3
+2017-03-01 17:27:39.806 [01] Root=.\
+2017-03-01 17:27:39.810 [01] LogPath=log\
+2017-03-01 17:27:39.815 [01] Templates=templates\
+2017-03-01 17:27:39.819 [01] Registers=registers\
+2017-03-01 17:27:39.824 [01] XSD=xsd\
+2017-03-01 17:27:39.829 [01] Attachments=attachments\
+2017-03-01 17:27:39.834 [01] Cyber=cyber\
+2017-03-01 17:27:39.839 [01] Lists=lists\lists.xml
+2017-03-01 17:27:39.843 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:27:39.848 [01] Delivery=0
+
+
+2017-03-01 17:27:39.852 [01] Providers:
+2017-03-01 17:27:39.857 [01] providers: mts
+2017-03-01 17:27:39.861 [01] 	ott=1_25
+2017-03-01 17:27:39.865 [01] 	xsd=5_02
+2017-03-01 17:27:39.869 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:27:39.874 [01] 	as-vps=226581085
+2017-03-01 17:27:39.878 [01] 	vps-code=1380200801234
+2017-03-01 17:27:39.883 [01] 	contract=9904000052
+2017-03-01 17:27:39.887 [01] 	security-code=98
+2017-03-01 17:27:39.891 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:27:39.896 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:27:39.900 [01] 	code-page=utf-8
+2017-03-01 17:27:39.904 [01] 	content-type=text/html
+2017-03-01 17:27:39.909 [01] 	timeout=40
+2017-03-01 17:27:39.914 [01] 	header=
+2017-03-01 17:27:39.918 [01] 	schemas=schemas\
+2017-03-01 17:27:39.922 [01] 	log=mts.log
+2017-03-01 17:27:39.927 [01] providers: ekt
+2017-03-01 17:27:39.931 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:27:39.935 [01] 	point-id=12415
+2017-03-01 17:27:39.939 [01] 	certname=EBURG-NEW
+2017-03-01 17:27:39.944 [01] 	code-page=utf-8
+2017-03-01 17:27:39.948 [01] 	content-type=text/html
+2017-03-01 17:27:39.953 [01] 	timeout=60
+2017-03-01 17:27:39.958 [01] 	log=ekt.log
+2017-03-01 17:27:39.962 [01] providers: cyber
+2017-03-01 17:27:39.966 [01] 	SD=1839361
+2017-03-01 17:27:39.971 [01] 	AP=1354719
+2017-03-01 17:27:39.975 [01] 	OP=1354720
+2017-03-01 17:27:39.980 [01] 	SecretKey=secret.key
+2017-03-01 17:27:39.984 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:27:39.988 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:27:39.993 [01] 	BankKeySerial=904291
+2017-03-01 17:27:39.997 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:27:40.001 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:27:40.005 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:27:40.010 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:27:40.014 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:27:40.019 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:27:40.024 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:27:40.029 [01] 	timeout=120
+2017-03-01 17:27:40.033 [01] 	log=cyber.log
+2017-03-01 17:27:40.037 [01] providers: rt
+2017-03-01 17:27:40.042 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:27:40.046 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:27:40.051 [01] 	cn=Rostelecom
+2017-03-01 17:27:40.055 [01] 	log=rt.log
+2017-03-01 17:27:40.060 [01] providers: rtm
+2017-03-01 17:27:40.064 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:27:40.068 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:27:40.073 [01] 	cn=regplat2rtmobile
+2017-03-01 17:27:40.078 [01] 	log=rtm.log
+2017-03-01 17:27:40.082 [01] providers: rapida
+2017-03-01 17:27:40.086 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:27:40.090 [01] 	cn=RegPlat.ru
+2017-03-01 17:27:40.095 [01] 	log=rapida.log
+2017-03-01 17:27:40.099 [01] providers: xsolla
+2017-03-01 17:27:40.103 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:27:40.108 [01] 	agent=12791
+2017-03-01 17:27:40.112 [01] 	agent-key=regplat
+2017-03-01 17:27:40.116 [01] 	codepage=utf-8
+2017-03-01 17:27:40.121 [01] 	log=xsolla.log
+2017-03-01 17:27:40.125 [01] providers: pcc
+2017-03-01 17:27:40.129 [01] 	certname=dealoldit
+2017-03-01 17:27:40.134 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:27:40.138 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:27:40.143 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:27:40.147 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:27:40.151 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:27:40.156 [01] 	log=pcc.log
+2017-03-01 17:27:40.160 [01] providers: Kinomax
+2017-03-01 17:27:40.164 [01] 	host=http://localhost:8000/
+2017-03-01 17:27:40.169 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:27:40.173 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:27:40.178 [01] 	log=kinomax.log
+2017-03-01 17:27:40.182 [01] providers: smtp
+2017-03-01 17:27:40.186 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:27:40.191 [01] 	code-page=866
+2017-03-01 17:27:40.195 [01] 	log=smtp.log
+2017-03-01 17:27:40.199 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:27:40.204 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:27:40.209 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:27:40.213 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:27:40.218 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:27:40.222 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:27:40.226 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:27:40.231 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:27:40.235 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:27:40.240 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:27:40.244 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:27:40.249 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:27:40.253 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:27:40.258 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:27:40.262 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:27:40.267 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:27:40.271 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:27:40.276 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:27:40.281 [01] 	Lst: ".\lists\lists.xml"
+
+
+2017-03-01 17:28:53.547 [01] Конфигурация шлюза:
+2017-03-01 17:28:53.554 [01] GWHost=oldigw/
+2017-03-01 17:28:53.558 [01] Port=300
+2017-03-01 17:28:53.564 [01] SslPort=301
+2017-03-01 17:28:53.568 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:28:53.573 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:28:53.579 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:28:53.584 [01] DbCheckTimeout=2
+2017-03-01 17:28:53.588 [01] fake-tpp-id=880
+2017-03-01 17:28:53.592 [01] fake-tpp-type=1
+2017-03-01 17:28:53.597 [01] tz=6
+2017-03-01 17:28:53.601 [01] Conveyor-Size=20
+2017-03-01 17:28:53.605 [01] Safe-Interval=3
+2017-03-01 17:28:53.609 [01] Root=.\
+2017-03-01 17:28:53.613 [01] LogPath=log\
+2017-03-01 17:28:53.616 [01] Templates=templates\
+2017-03-01 17:28:53.621 [01] Registers=registers\
+2017-03-01 17:28:53.625 [01] XSD=xsd\
+2017-03-01 17:28:53.628 [01] Attachments=attachments\
+2017-03-01 17:28:53.632 [01] Cyber=cyber\
+2017-03-01 17:28:53.636 [01] Lists=lists\lists.xml
+2017-03-01 17:28:53.640 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:28:53.643 [01] Delivery=0
+
+
+2017-03-01 17:28:53.647 [01] Providers:
+2017-03-01 17:28:53.651 [01] providers: mts
+2017-03-01 17:28:53.655 [01] 	ott=1_25
+2017-03-01 17:28:53.659 [01] 	xsd=5_02
+2017-03-01 17:28:53.663 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:28:53.667 [01] 	as-vps=226581085
+2017-03-01 17:28:53.671 [01] 	vps-code=1380200801234
+2017-03-01 17:28:53.675 [01] 	contract=9904000052
+2017-03-01 17:28:53.679 [01] 	security-code=98
+2017-03-01 17:28:53.682 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:28:53.686 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:28:53.690 [01] 	code-page=utf-8
+2017-03-01 17:28:53.694 [01] 	content-type=text/html
+2017-03-01 17:28:53.697 [01] 	timeout=40
+2017-03-01 17:28:53.701 [01] 	header=
+2017-03-01 17:28:53.705 [01] 	schemas=schemas\
+2017-03-01 17:28:53.709 [01] 	log=mts.log
+2017-03-01 17:28:53.713 [01] providers: ekt
+2017-03-01 17:28:53.717 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:28:53.721 [01] 	point-id=12415
+2017-03-01 17:28:53.725 [01] 	certname=EBURG-NEW
+2017-03-01 17:28:53.728 [01] 	code-page=utf-8
+2017-03-01 17:28:53.732 [01] 	content-type=text/html
+2017-03-01 17:28:53.736 [01] 	timeout=60
+2017-03-01 17:28:53.740 [01] 	log=ekt.log
+2017-03-01 17:28:53.744 [01] providers: cyber
+2017-03-01 17:28:53.748 [01] 	SD=1839361
+2017-03-01 17:28:53.752 [01] 	AP=1354719
+2017-03-01 17:28:53.757 [01] 	OP=1354720
+2017-03-01 17:28:53.760 [01] 	SecretKey=secret.key
+2017-03-01 17:28:53.764 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:28:53.768 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:28:53.772 [01] 	BankKeySerial=904291
+2017-03-01 17:28:53.776 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:28:53.780 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:28:53.783 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:28:53.787 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:28:53.791 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:28:53.794 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:28:53.798 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:28:53.802 [01] 	timeout=120
+2017-03-01 17:28:53.806 [01] 	log=cyber.log
+2017-03-01 17:28:53.809 [01] providers: rt
+2017-03-01 17:28:53.813 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:28:53.817 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:28:53.821 [01] 	cn=Rostelecom
+2017-03-01 17:28:53.825 [01] 	log=rt.log
+2017-03-01 17:28:53.829 [01] providers: rtm
+2017-03-01 17:28:53.833 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:28:53.837 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:28:53.841 [01] 	cn=regplat2rtmobile
+2017-03-01 17:28:53.844 [01] 	log=rtm.log
+2017-03-01 17:28:53.848 [01] providers: rapida
+2017-03-01 17:28:53.852 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:28:53.856 [01] 	cn=RegPlat.ru
+2017-03-01 17:28:53.860 [01] 	log=rapida.log
+2017-03-01 17:28:53.863 [01] providers: xsolla
+2017-03-01 17:28:53.867 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:28:53.871 [01] 	agent=12791
+2017-03-01 17:28:53.875 [01] 	agent-key=regplat
+2017-03-01 17:28:53.878 [01] 	codepage=utf-8
+2017-03-01 17:28:53.882 [01] 	log=xsolla.log
+2017-03-01 17:28:53.886 [01] providers: pcc
+2017-03-01 17:28:53.890 [01] 	certname=dealoldit
+2017-03-01 17:28:53.893 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:28:53.899 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:28:53.903 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:28:53.907 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:28:53.911 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:28:53.914 [01] 	log=pcc.log
+2017-03-01 17:28:53.918 [01] providers: Kinomax
+2017-03-01 17:28:53.922 [01] 	host=http://localhost:8000/
+2017-03-01 17:28:53.925 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:28:53.929 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:28:53.933 [01] 	log=kinomax.log
+2017-03-01 17:28:53.936 [01] providers: smtp
+2017-03-01 17:28:53.940 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:28:53.944 [01] 	code-page=866
+2017-03-01 17:28:53.948 [01] 	log=smtp.log
+2017-03-01 17:28:53.952 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:28:53.956 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:28:53.960 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:28:53.963 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:28:53.967 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:28:53.971 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:28:53.975 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:28:53.979 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:28:53.982 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:28:53.986 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:28:53.990 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:28:53.994 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:28:53.998 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:28:54.002 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:28:54.005 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:28:54.009 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:28:54.013 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:28:54.017 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:28:54.021 [01] 	Lst: ".\lists\lists.xml"
+
+
+2017-03-01 17:33:53.773 [01] Конфигурация шлюза:
+2017-03-01 17:33:53.780 [01] GWHost=oldigw/
+2017-03-01 17:33:53.784 [01] Port=300
+2017-03-01 17:33:53.789 [01] SslPort=301
+2017-03-01 17:33:53.794 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:33:53.798 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:33:53.802 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:33:53.805 [01] DbCheckTimeout=2
+2017-03-01 17:33:53.809 [01] fake-tpp-id=880
+2017-03-01 17:33:53.813 [01] fake-tpp-type=1
+2017-03-01 17:33:53.818 [01] tz=6
+2017-03-01 17:33:53.822 [01] Conveyor-Size=20
+2017-03-01 17:33:53.826 [01] Safe-Interval=3
+2017-03-01 17:33:53.830 [01] Root=.\
+2017-03-01 17:33:53.834 [01] LogPath=log\
+2017-03-01 17:33:53.838 [01] Templates=templates\
+2017-03-01 17:33:53.842 [01] Registers=registers\
+2017-03-01 17:33:53.846 [01] XSD=xsd\
+2017-03-01 17:33:53.850 [01] Attachments=attachments\
+2017-03-01 17:33:53.853 [01] Cyber=cyber\
+2017-03-01 17:33:53.857 [01] Lists=lists\lists.xml
+2017-03-01 17:33:53.861 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:33:53.865 [01] Delivery=0
+
+
+2017-03-01 17:33:53.869 [01] Providers:
+2017-03-01 17:33:53.873 [01] providers: mts
+2017-03-01 17:33:53.876 [01] 	ott=1_25
+2017-03-01 17:33:53.880 [01] 	xsd=5_02
+2017-03-01 17:33:53.884 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:33:53.888 [01] 	as-vps=226581085
+2017-03-01 17:33:53.892 [01] 	vps-code=1380200801234
+2017-03-01 17:33:53.896 [01] 	contract=9904000052
+2017-03-01 17:33:53.900 [01] 	security-code=98
+2017-03-01 17:33:53.904 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:33:53.907 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:33:53.911 [01] 	code-page=utf-8
+2017-03-01 17:33:53.915 [01] 	content-type=text/html
+2017-03-01 17:33:53.919 [01] 	timeout=40
+2017-03-01 17:33:53.923 [01] 	header=
+2017-03-01 17:33:53.926 [01] 	schemas=schemas\
+2017-03-01 17:33:53.930 [01] 	log=mts.log
+2017-03-01 17:33:53.934 [01] providers: ekt
+2017-03-01 17:33:53.938 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:33:53.942 [01] 	point-id=12415
+2017-03-01 17:33:53.946 [01] 	certname=EBURG-NEW
+2017-03-01 17:33:53.949 [01] 	code-page=utf-8
+2017-03-01 17:33:53.953 [01] 	content-type=text/html
+2017-03-01 17:33:53.957 [01] 	timeout=60
+2017-03-01 17:33:53.961 [01] 	log=ekt.log
+2017-03-01 17:33:53.965 [01] providers: cyber
+2017-03-01 17:33:53.969 [01] 	SD=1839361
+2017-03-01 17:33:53.973 [01] 	AP=1354719
+2017-03-01 17:33:53.976 [01] 	OP=1354720
+2017-03-01 17:33:53.980 [01] 	SecretKey=secret.key
+2017-03-01 17:33:53.984 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:33:53.988 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:33:53.992 [01] 	BankKeySerial=904291
+2017-03-01 17:33:53.996 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:33:54.000 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:33:54.004 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:33:54.007 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:33:54.011 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:33:54.015 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:33:54.019 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:33:54.022 [01] 	timeout=120
+2017-03-01 17:33:54.026 [01] 	log=cyber.log
+2017-03-01 17:33:54.030 [01] providers: rt
+2017-03-01 17:33:54.034 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:33:54.038 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:33:54.041 [01] 	cn=Rostelecom
+2017-03-01 17:33:54.045 [01] 	log=rt.log
+2017-03-01 17:33:54.049 [01] providers: rtm
+2017-03-01 17:33:54.053 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:33:54.057 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:33:54.061 [01] 	cn=regplat2rtmobile
+2017-03-01 17:33:54.065 [01] 	log=rtm.log
+2017-03-01 17:33:54.068 [01] providers: rapida
+2017-03-01 17:33:54.072 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:33:54.076 [01] 	cn=RegPlat.ru
+2017-03-01 17:33:54.080 [01] 	log=rapida.log
+2017-03-01 17:33:54.084 [01] providers: xsolla
+2017-03-01 17:33:54.088 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:33:54.091 [01] 	agent=12791
+2017-03-01 17:33:54.095 [01] 	agent-key=regplat
+2017-03-01 17:33:54.099 [01] 	codepage=utf-8
+2017-03-01 17:33:54.103 [01] 	log=xsolla.log
+2017-03-01 17:33:54.106 [01] providers: pcc
+2017-03-01 17:33:54.110 [01] 	certname=dealoldit
+2017-03-01 17:33:54.114 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:33:54.118 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:33:54.122 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:33:54.125 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:33:54.129 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:33:54.133 [01] 	log=pcc.log
+2017-03-01 17:33:54.136 [01] providers: Kinomax
+2017-03-01 17:33:54.140 [01] 	host=http://localhost:8000/
+2017-03-01 17:33:54.144 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:33:54.148 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:33:54.152 [01] 	log=kinomax.log
+2017-03-01 17:33:54.155 [01] providers: smtp
+2017-03-01 17:33:54.159 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:33:54.163 [01] 	code-page=866
+2017-03-01 17:33:54.167 [01] 	log=smtp.log
+2017-03-01 17:33:54.171 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:33:54.175 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:33:54.179 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:33:54.183 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:33:54.186 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:33:54.191 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:33:54.194 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:33:54.198 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:33:54.202 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:33:54.206 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:33:54.210 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:33:54.214 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:33:54.218 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:33:54.222 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:33:54.226 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:33:54.229 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:33:54.233 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:33:54.237 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:33:54.241 [01] 	Lst: ".\lists\lists.xml"
+
+
+2017-03-01 17:38:31.116 [01] Конфигурация шлюза:
+2017-03-01 17:38:31.123 [01] GWHost=oldigw/
+2017-03-01 17:38:31.127 [01] Port=300
+2017-03-01 17:38:31.132 [01] SslPort=301
+2017-03-01 17:38:31.136 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:38:31.141 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:38:31.146 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:38:31.150 [01] DbCheckTimeout=2
+2017-03-01 17:38:31.154 [01] fake-tpp-id=880
+2017-03-01 17:38:31.159 [01] fake-tpp-type=1
+2017-03-01 17:38:31.163 [01] tz=6
+2017-03-01 17:38:31.167 [01] Conveyor-Size=20
+2017-03-01 17:38:31.170 [01] Safe-Interval=3
+2017-03-01 17:38:31.175 [01] Root=.\
+2017-03-01 17:38:31.179 [01] LogPath=log\
+2017-03-01 17:38:31.183 [01] Templates=templates\
+2017-03-01 17:38:31.186 [01] Registers=registers\
+2017-03-01 17:38:31.190 [01] XSD=xsd\
+2017-03-01 17:38:31.194 [01] Attachments=attachments\
+2017-03-01 17:38:31.198 [01] Cyber=cyber\
+2017-03-01 17:38:31.202 [01] Lists=lists\lists.xml
+2017-03-01 17:38:31.206 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:38:31.210 [01] Delivery=0
+
+
+2017-03-01 17:38:31.214 [01] Providers:
+2017-03-01 17:38:31.218 [01] providers: mts
+2017-03-01 17:38:31.222 [01] 	ott=1_25
+2017-03-01 17:38:31.226 [01] 	xsd=5_02
+2017-03-01 17:38:31.230 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:38:31.234 [01] 	as-vps=226581085
+2017-03-01 17:38:31.238 [01] 	vps-code=1380200801234
+2017-03-01 17:38:31.242 [01] 	contract=9904000052
+2017-03-01 17:38:31.246 [01] 	security-code=98
+2017-03-01 17:38:31.250 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:38:31.254 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:38:31.258 [01] 	code-page=utf-8
+2017-03-01 17:38:31.262 [01] 	content-type=text/html
+2017-03-01 17:38:31.266 [01] 	timeout=40
+2017-03-01 17:38:31.270 [01] 	header=
+2017-03-01 17:38:31.274 [01] 	schemas=schemas\
+2017-03-01 17:38:31.278 [01] 	log=mts.log
+2017-03-01 17:38:31.282 [01] providers: ekt
+2017-03-01 17:38:31.286 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:38:31.290 [01] 	point-id=12415
+2017-03-01 17:38:31.293 [01] 	certname=EBURG-NEW
+2017-03-01 17:38:31.298 [01] 	code-page=utf-8
+2017-03-01 17:38:31.302 [01] 	content-type=text/html
+2017-03-01 17:38:31.305 [01] 	timeout=60
+2017-03-01 17:38:31.309 [01] 	log=ekt.log
+2017-03-01 17:38:31.313 [01] providers: cyber
+2017-03-01 17:38:31.317 [01] 	SD=1839361
+2017-03-01 17:38:31.321 [01] 	AP=1354719
+2017-03-01 17:38:31.325 [01] 	OP=1354720
+2017-03-01 17:38:31.329 [01] 	SecretKey=secret.key
+2017-03-01 17:38:31.332 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:38:31.336 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:38:31.340 [01] 	BankKeySerial=904291
+2017-03-01 17:38:31.344 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:38:31.348 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:38:31.352 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:38:31.356 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:38:31.359 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:38:31.364 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:38:31.367 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:38:31.371 [01] 	timeout=120
+2017-03-01 17:38:31.375 [01] 	log=cyber.log
+2017-03-01 17:38:31.380 [01] providers: rt
+2017-03-01 17:38:31.383 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:38:31.388 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:38:31.391 [01] 	cn=Rostelecom
+2017-03-01 17:38:31.395 [01] 	log=rt.log
+2017-03-01 17:38:31.399 [01] providers: rtm
+2017-03-01 17:38:31.403 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:38:31.407 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:38:31.411 [01] 	cn=regplat2rtmobile
+2017-03-01 17:38:31.415 [01] 	log=rtm.log
+2017-03-01 17:38:31.418 [01] providers: rapida
+2017-03-01 17:38:31.422 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:38:31.426 [01] 	cn=RegPlat.ru
+2017-03-01 17:38:31.430 [01] 	log=rapida.log
+2017-03-01 17:38:31.433 [01] providers: xsolla
+2017-03-01 17:38:31.437 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:38:31.441 [01] 	agent=12791
+2017-03-01 17:38:31.446 [01] 	agent-key=regplat
+2017-03-01 17:38:31.450 [01] 	codepage=utf-8
+2017-03-01 17:38:31.453 [01] 	log=xsolla.log
+2017-03-01 17:38:31.457 [01] providers: pcc
+2017-03-01 17:38:31.461 [01] 	certname=dealoldit
+2017-03-01 17:38:31.465 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:38:31.468 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:38:31.472 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:38:31.476 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:38:31.480 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:38:31.484 [01] 	log=pcc.log
+2017-03-01 17:38:31.488 [01] providers: Kinomax
+2017-03-01 17:38:31.491 [01] 	host=http://localhost:8000/
+2017-03-01 17:38:31.495 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:38:31.499 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:38:31.502 [01] 	log=kinomax.log
+2017-03-01 17:38:31.506 [01] providers: smtp
+2017-03-01 17:38:31.510 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:38:31.514 [01] 	code-page=866
+2017-03-01 17:38:31.518 [01] 	log=smtp.log
+2017-03-01 17:38:31.522 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:38:31.526 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:38:31.530 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:38:31.534 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:38:31.538 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:38:31.542 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:38:31.545 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:38:31.549 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:38:31.553 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:38:31.557 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:38:31.561 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:38:31.565 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:38:31.568 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:38:31.572 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:38:31.576 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:38:31.580 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:38:31.584 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:38:31.588 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:38:31.592 [01] 	Lst: ".\lists\lists.xml"
+
+
+2017-03-01 17:39:49.356 [01] Конфигурация шлюза:
+2017-03-01 17:39:49.364 [01] GWHost=oldigw/
+2017-03-01 17:39:49.368 [01] Port=300
+2017-03-01 17:39:49.371 [01] SslPort=301
+2017-03-01 17:39:49.375 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:39:49.379 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:39:49.383 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:39:49.387 [01] DbCheckTimeout=2
+2017-03-01 17:39:49.391 [01] fake-tpp-id=880
+2017-03-01 17:39:49.395 [01] fake-tpp-type=1
+2017-03-01 17:39:49.399 [01] tz=6
+2017-03-01 17:39:49.402 [01] Conveyor-Size=20
+2017-03-01 17:39:49.407 [01] Safe-Interval=3
+2017-03-01 17:39:49.410 [01] Root=.\
+2017-03-01 17:39:49.414 [01] LogPath=log\
+2017-03-01 17:39:49.418 [01] Templates=templates\
+2017-03-01 17:39:49.422 [01] Registers=registers\
+2017-03-01 17:39:49.425 [01] XSD=xsd\
+2017-03-01 17:39:49.430 [01] Attachments=attachments\
+2017-03-01 17:39:49.433 [01] Cyber=cyber\
+2017-03-01 17:39:49.437 [01] Lists=lists\lists.xml
+2017-03-01 17:39:49.442 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:39:49.445 [01] Delivery=0
+
+
+2017-03-01 17:39:49.449 [01] Providers:
+2017-03-01 17:39:49.453 [01] providers: mts
+2017-03-01 17:39:49.457 [01] 	ott=1_25
+2017-03-01 17:39:49.461 [01] 	xsd=5_02
+2017-03-01 17:39:49.464 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:39:49.468 [01] 	as-vps=226581085
+2017-03-01 17:39:49.472 [01] 	vps-code=1380200801234
+2017-03-01 17:39:49.476 [01] 	contract=9904000052
+2017-03-01 17:39:49.480 [01] 	security-code=98
+2017-03-01 17:39:49.484 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:39:49.488 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:39:49.491 [01] 	code-page=utf-8
+2017-03-01 17:39:49.495 [01] 	content-type=text/html
+2017-03-01 17:39:49.499 [01] 	timeout=40
+2017-03-01 17:39:49.503 [01] 	header=
+2017-03-01 17:39:49.507 [01] 	schemas=schemas\
+2017-03-01 17:39:49.510 [01] 	log=mts.log
+2017-03-01 17:39:49.514 [01] providers: ekt
+2017-03-01 17:39:49.518 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:39:49.522 [01] 	point-id=12415
+2017-03-01 17:39:49.526 [01] 	certname=EBURG-NEW
+2017-03-01 17:39:49.529 [01] 	code-page=utf-8
+2017-03-01 17:39:49.533 [01] 	content-type=text/html
+2017-03-01 17:39:49.537 [01] 	timeout=60
+2017-03-01 17:39:49.541 [01] 	log=ekt.log
+2017-03-01 17:39:49.545 [01] providers: cyber
+2017-03-01 17:39:49.548 [01] 	SD=1839361
+2017-03-01 17:39:49.552 [01] 	AP=1354719
+2017-03-01 17:39:49.556 [01] 	OP=1354720
+2017-03-01 17:39:49.560 [01] 	SecretKey=secret.key
+2017-03-01 17:39:49.563 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:39:49.567 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:39:49.571 [01] 	BankKeySerial=904291
+2017-03-01 17:39:49.575 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:39:49.579 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:39:49.583 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:39:49.586 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:39:49.590 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:39:49.594 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:39:49.598 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:39:49.601 [01] 	timeout=120
+2017-03-01 17:39:49.605 [01] 	log=cyber.log
+2017-03-01 17:39:49.609 [01] providers: rt
+2017-03-01 17:39:49.613 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:39:49.616 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:39:49.620 [01] 	cn=Rostelecom
+2017-03-01 17:39:49.624 [01] 	log=rt.log
+2017-03-01 17:39:49.628 [01] providers: rtm
+2017-03-01 17:39:49.632 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:39:49.635 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:39:49.639 [01] 	cn=regplat2rtmobile
+2017-03-01 17:39:49.643 [01] 	log=rtm.log
+2017-03-01 17:39:49.647 [01] providers: rapida
+2017-03-01 17:39:49.650 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:39:49.654 [01] 	cn=RegPlat.ru
+2017-03-01 17:39:49.658 [01] 	log=rapida.log
+2017-03-01 17:39:49.661 [01] providers: xsolla
+2017-03-01 17:39:49.665 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:39:49.669 [01] 	agent=12791
+2017-03-01 17:39:49.673 [01] 	agent-key=regplat
+2017-03-01 17:39:49.676 [01] 	codepage=utf-8
+2017-03-01 17:39:49.680 [01] 	log=xsolla.log
+2017-03-01 17:39:49.684 [01] providers: pcc
+2017-03-01 17:39:49.687 [01] 	certname=dealoldit
+2017-03-01 17:39:49.691 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:39:49.695 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:39:49.699 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:39:49.702 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:39:49.706 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:39:49.710 [01] 	log=pcc.log
+2017-03-01 17:39:49.714 [01] providers: Kinomax
+2017-03-01 17:39:49.717 [01] 	host=http://localhost:8000/
+2017-03-01 17:39:49.721 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:39:49.724 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:39:49.728 [01] 	log=kinomax.log
+2017-03-01 17:39:49.732 [01] providers: smtp
+2017-03-01 17:39:49.736 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:39:49.740 [01] 	code-page=866
+2017-03-01 17:39:49.744 [01] 	log=smtp.log
+2017-03-01 17:39:49.747 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:39:49.751 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:39:49.756 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:39:49.760 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:39:49.764 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:39:49.768 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:39:49.772 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:39:49.776 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:39:49.780 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:39:49.784 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:39:49.787 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:39:49.791 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:39:49.795 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:39:49.799 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:39:49.803 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:39:49.807 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:39:49.811 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:39:49.815 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:39:49.819 [01] 	Lst: ".\lists\lists.xml"
+
+
+2017-03-01 17:42:40.906 [01] Конфигурация шлюза:
+2017-03-01 17:42:40.914 [01] GWHost=oldigw/
+2017-03-01 17:42:40.919 [01] Port=300
+2017-03-01 17:42:40.924 [01] SslPort=301
+2017-03-01 17:42:40.929 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:42:40.934 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:42:40.938 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:42:40.943 [01] DbCheckTimeout=2
+2017-03-01 17:42:40.947 [01] fake-tpp-id=880
+2017-03-01 17:42:40.951 [01] fake-tpp-type=1
+2017-03-01 17:42:40.955 [01] tz=6
+2017-03-01 17:42:40.959 [01] Conveyor-Size=20
+2017-03-01 17:42:40.964 [01] Safe-Interval=3
+2017-03-01 17:42:40.968 [01] Root=.\
+2017-03-01 17:42:40.972 [01] LogPath=log\
+2017-03-01 17:42:40.975 [01] Templates=templates\
+2017-03-01 17:42:40.980 [01] Registers=registers\
+2017-03-01 17:42:40.984 [01] XSD=xsd\
+2017-03-01 17:42:40.988 [01] Attachments=attachments\
+2017-03-01 17:42:40.991 [01] Cyber=cyber\
+2017-03-01 17:42:40.995 [01] Lists=lists\lists.xml
+2017-03-01 17:42:40.999 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:42:41.003 [01] Delivery=0
+
+
+2017-03-01 17:42:41.008 [01] Providers:
+2017-03-01 17:42:41.013 [01] providers: mts
+2017-03-01 17:42:41.017 [01] 	ott=1_25
+2017-03-01 17:42:41.021 [01] 	xsd=5_02
+2017-03-01 17:42:41.025 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:42:41.030 [01] 	as-vps=226581085
+2017-03-01 17:42:41.034 [01] 	vps-code=1380200801234
+2017-03-01 17:42:41.039 [01] 	contract=9904000052
+2017-03-01 17:42:41.043 [01] 	security-code=98
+2017-03-01 17:42:41.047 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:42:41.052 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:42:41.056 [01] 	code-page=utf-8
+2017-03-01 17:42:41.059 [01] 	content-type=text/html
+2017-03-01 17:42:41.063 [01] 	timeout=40
+2017-03-01 17:42:41.067 [01] 	header=
+2017-03-01 17:42:41.071 [01] 	schemas=schemas\
+2017-03-01 17:42:41.075 [01] 	log=mts.log
+2017-03-01 17:42:41.079 [01] providers: ekt
+2017-03-01 17:42:41.083 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:42:41.087 [01] 	point-id=12415
+2017-03-01 17:42:41.091 [01] 	certname=EBURG-NEW
+2017-03-01 17:42:41.095 [01] 	code-page=utf-8
+2017-03-01 17:42:41.099 [01] 	content-type=text/html
+2017-03-01 17:42:41.103 [01] 	timeout=60
+2017-03-01 17:42:41.107 [01] 	log=ekt.log
+2017-03-01 17:42:41.110 [01] providers: cyber
+2017-03-01 17:42:41.114 [01] 	SD=1839361
+2017-03-01 17:42:41.118 [01] 	AP=1354719
+2017-03-01 17:42:41.122 [01] 	OP=1354720
+2017-03-01 17:42:41.126 [01] 	SecretKey=secret.key
+2017-03-01 17:42:41.130 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:42:41.134 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:42:41.138 [01] 	BankKeySerial=904291
+2017-03-01 17:42:41.142 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:42:41.146 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:42:41.151 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:42:41.155 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:42:41.159 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:42:41.163 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:42:41.167 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:42:41.171 [01] 	timeout=120
+2017-03-01 17:42:41.175 [01] 	log=cyber.log
+2017-03-01 17:42:41.179 [01] providers: rt
+2017-03-01 17:42:41.184 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:42:41.187 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:42:41.191 [01] 	cn=Rostelecom
+2017-03-01 17:42:41.195 [01] 	log=rt.log
+2017-03-01 17:42:41.199 [01] providers: rtm
+2017-03-01 17:42:41.203 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:42:41.207 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:42:41.211 [01] 	cn=regplat2rtmobile
+2017-03-01 17:42:41.214 [01] 	log=rtm.log
+2017-03-01 17:42:41.218 [01] providers: rapida
+2017-03-01 17:42:41.222 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:42:41.226 [01] 	cn=RegPlat.ru
+2017-03-01 17:42:41.229 [01] 	log=rapida.log
+2017-03-01 17:42:41.233 [01] providers: xsolla
+2017-03-01 17:42:41.237 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:42:41.241 [01] 	agent=12791
+2017-03-01 17:42:41.244 [01] 	agent-key=regplat
+2017-03-01 17:42:41.248 [01] 	codepage=utf-8
+2017-03-01 17:42:41.252 [01] 	log=xsolla.log
+2017-03-01 17:42:41.256 [01] providers: pcc
+2017-03-01 17:42:41.260 [01] 	certname=dealoldit
+2017-03-01 17:42:41.264 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:42:41.267 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:42:41.271 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:42:41.275 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:42:41.279 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:42:41.283 [01] 	log=pcc.log
+2017-03-01 17:42:41.286 [01] providers: Kinomax
+2017-03-01 17:42:41.290 [01] 	host=http://localhost:8000/
+2017-03-01 17:42:41.294 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:42:41.297 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:42:41.301 [01] 	log=kinomax.log
+2017-03-01 17:42:41.305 [01] providers: smtp
+2017-03-01 17:42:41.309 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:42:41.313 [01] 	code-page=866
+2017-03-01 17:42:41.316 [01] 	log=smtp.log
+2017-03-01 17:42:41.320 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:42:41.324 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:42:41.329 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:42:41.333 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:42:41.336 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:42:41.340 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:42:41.344 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:42:41.348 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:42:41.352 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:42:41.356 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:42:41.360 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:42:41.364 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:42:41.368 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:42:41.371 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:42:41.375 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:42:41.379 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:42:41.383 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:42:41.387 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:42:41.391 [01] 	Lst: ".\lists\lists.xml"
+
+
+2017-03-01 17:43:10.118 [01] Конфигурация шлюза:
+2017-03-01 17:43:10.125 [01] GWHost=oldigw/
+2017-03-01 17:43:10.132 [01] Port=300
+2017-03-01 17:43:10.136 [01] SslPort=301
+2017-03-01 17:43:10.140 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:43:10.144 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:43:10.148 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:43:10.152 [01] DbCheckTimeout=2
+2017-03-01 17:43:10.156 [01] fake-tpp-id=880
+2017-03-01 17:43:10.161 [01] fake-tpp-type=1
+2017-03-01 17:43:10.165 [01] tz=6
+2017-03-01 17:43:10.169 [01] Conveyor-Size=20
+2017-03-01 17:43:10.173 [01] Safe-Interval=3
+2017-03-01 17:43:10.177 [01] Root=.\
+2017-03-01 17:43:10.181 [01] LogPath=log\
+2017-03-01 17:43:10.185 [01] Templates=templates\
+2017-03-01 17:43:10.189 [01] Registers=registers\
+2017-03-01 17:43:10.193 [01] XSD=xsd\
+2017-03-01 17:43:10.197 [01] Attachments=attachments\
+2017-03-01 17:43:10.200 [01] Cyber=cyber\
+2017-03-01 17:43:10.204 [01] Lists=lists\lists.xml
+2017-03-01 17:43:10.208 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:43:10.212 [01] Delivery=0
+
+
+2017-03-01 17:43:10.216 [01] Providers:
+2017-03-01 17:43:10.220 [01] providers: mts
+2017-03-01 17:43:10.224 [01] 	ott=1_25
+2017-03-01 17:43:10.228 [01] 	xsd=5_02
+2017-03-01 17:43:10.232 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:43:10.236 [01] 	as-vps=226581085
+2017-03-01 17:43:10.240 [01] 	vps-code=1380200801234
+2017-03-01 17:43:10.244 [01] 	contract=9904000052
+2017-03-01 17:43:10.248 [01] 	security-code=98
+2017-03-01 17:43:10.251 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:43:10.255 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:43:10.259 [01] 	code-page=utf-8
+2017-03-01 17:43:10.263 [01] 	content-type=text/html
+2017-03-01 17:43:10.267 [01] 	timeout=40
+2017-03-01 17:43:10.271 [01] 	header=
+2017-03-01 17:43:10.275 [01] 	schemas=schemas\
+2017-03-01 17:43:10.279 [01] 	log=mts.log
+2017-03-01 17:43:10.283 [01] providers: ekt
+2017-03-01 17:43:10.286 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:43:10.290 [01] 	point-id=12415
+2017-03-01 17:43:10.294 [01] 	certname=EBURG-NEW
+2017-03-01 17:43:10.298 [01] 	code-page=utf-8
+2017-03-01 17:43:10.302 [01] 	content-type=text/html
+2017-03-01 17:43:10.306 [01] 	timeout=60
+2017-03-01 17:43:10.310 [01] 	log=ekt.log
+2017-03-01 17:43:10.314 [01] providers: cyber
+2017-03-01 17:43:10.317 [01] 	SD=1839361
+2017-03-01 17:43:10.321 [01] 	AP=1354719
+2017-03-01 17:43:10.325 [01] 	OP=1354720
+2017-03-01 17:43:10.329 [01] 	SecretKey=secret.key
+2017-03-01 17:43:10.333 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:43:10.337 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:43:10.341 [01] 	BankKeySerial=904291
+2017-03-01 17:43:10.345 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:43:10.349 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:43:10.353 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:43:10.357 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:43:10.361 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:43:10.365 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:43:10.369 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:43:10.373 [01] 	timeout=120
+2017-03-01 17:43:10.377 [01] 	log=cyber.log
+2017-03-01 17:43:10.381 [01] providers: rt
+2017-03-01 17:43:10.385 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:43:10.388 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:43:10.393 [01] 	cn=Rostelecom
+2017-03-01 17:43:10.397 [01] 	log=rt.log
+2017-03-01 17:43:10.400 [01] providers: rtm
+2017-03-01 17:43:10.404 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:43:10.408 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:43:10.412 [01] 	cn=regplat2rtmobile
+2017-03-01 17:43:10.416 [01] 	log=rtm.log
+2017-03-01 17:43:10.419 [01] providers: rapida
+2017-03-01 17:43:10.423 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:43:10.427 [01] 	cn=RegPlat.ru
+2017-03-01 17:43:10.431 [01] 	log=rapida.log
+2017-03-01 17:43:10.434 [01] providers: xsolla
+2017-03-01 17:43:10.438 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:43:10.442 [01] 	agent=12791
+2017-03-01 17:43:10.445 [01] 	agent-key=regplat
+2017-03-01 17:43:10.449 [01] 	codepage=utf-8
+2017-03-01 17:43:10.453 [01] 	log=xsolla.log
+2017-03-01 17:43:10.456 [01] providers: pcc
+2017-03-01 17:43:10.460 [01] 	certname=dealoldit
+2017-03-01 17:43:10.464 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:43:10.468 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:43:10.471 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:43:10.475 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:43:10.479 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:43:10.482 [01] 	log=pcc.log
+2017-03-01 17:43:10.486 [01] providers: Kinomax
+2017-03-01 17:43:10.490 [01] 	host=http://localhost:8000/
+2017-03-01 17:43:10.494 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:43:10.498 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:43:10.502 [01] 	log=kinomax.log
+2017-03-01 17:43:10.505 [01] providers: smtp
+2017-03-01 17:43:10.509 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:43:10.513 [01] 	code-page=866
+2017-03-01 17:43:10.516 [01] 	log=smtp.log
+2017-03-01 17:43:10.520 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:43:10.524 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:43:10.528 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:43:10.532 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:43:10.536 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:43:10.540 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:43:10.544 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:43:10.547 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:43:10.551 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:43:10.555 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:43:10.559 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:43:10.564 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:43:10.568 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:43:10.572 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:43:10.575 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:43:10.579 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:43:10.583 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:43:10.587 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:43:10.591 [01] 	Lst: ".\lists\lists.xml"
+
+
+2017-03-01 17:43:33.526 [01] Конфигурация шлюза:
+2017-03-01 17:43:33.534 [01] GWHost=oldigw/
+2017-03-01 17:43:33.538 [01] Port=300
+2017-03-01 17:43:33.543 [01] SslPort=301
+2017-03-01 17:43:33.547 [01] SMPPEndpoint=http://192.168.1.5:1100/sms/send
+2017-03-01 17:43:33.552 [01] ConnectionString=Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;
+2017-03-01 17:43:33.556 [01] GorodConnectionString=Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;
+2017-03-01 17:43:33.560 [01] DbCheckTimeout=2
+2017-03-01 17:43:33.565 [01] fake-tpp-id=880
+2017-03-01 17:43:33.569 [01] fake-tpp-type=1
+2017-03-01 17:43:33.574 [01] tz=6
+2017-03-01 17:43:33.578 [01] Conveyor-Size=20
+2017-03-01 17:43:33.582 [01] Safe-Interval=3
+2017-03-01 17:43:33.585 [01] Root=.\
+2017-03-01 17:43:33.589 [01] LogPath=log\
+2017-03-01 17:43:33.593 [01] Templates=templates\
+2017-03-01 17:43:33.597 [01] Registers=registers\
+2017-03-01 17:43:33.601 [01] XSD=xsd\
+2017-03-01 17:43:33.605 [01] Attachments=attachments\
+2017-03-01 17:43:33.609 [01] Cyber=cyber\
+2017-03-01 17:43:33.613 [01] Lists=lists\lists.xml
+2017-03-01 17:43:33.617 [01] LogLevel=DEBUG,REQ,HDR,CONF
+2017-03-01 17:43:33.621 [01] Delivery=0
+
+
+2017-03-01 17:43:33.625 [01] Providers:
+2017-03-01 17:43:33.629 [01] providers: mts
+2017-03-01 17:43:33.633 [01] 	ott=1_25
+2017-03-01 17:43:33.637 [01] 	xsd=5_02
+2017-03-01 17:43:33.641 [01] 	host=https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+2017-03-01 17:43:33.645 [01] 	as-vps=226581085
+2017-03-01 17:43:33.649 [01] 	vps-code=1380200801234
+2017-03-01 17:43:33.653 [01] 	contract=9904000052
+2017-03-01 17:43:33.656 [01] 	security-code=98
+2017-03-01 17:43:33.661 [01] 	certname=1380200801234;98;226581085
+2017-03-01 17:43:33.664 [01] 	terminal-prefix=OLDIT-00001
+2017-03-01 17:43:33.668 [01] 	code-page=utf-8
+2017-03-01 17:43:33.672 [01] 	content-type=text/html
+2017-03-01 17:43:33.676 [01] 	timeout=40
+2017-03-01 17:43:33.680 [01] 	header=
+2017-03-01 17:43:33.684 [01] 	schemas=schemas\
+2017-03-01 17:43:33.688 [01] 	log=mts.log
+2017-03-01 17:43:33.691 [01] providers: ekt
+2017-03-01 17:43:33.695 [01] 	host=https://dealer.telepayural.ru:8181/external/process
+2017-03-01 17:43:33.699 [01] 	point-id=12415
+2017-03-01 17:43:33.703 [01] 	certname=EBURG-NEW
+2017-03-01 17:43:33.707 [01] 	code-page=utf-8
+2017-03-01 17:43:33.711 [01] 	content-type=text/html
+2017-03-01 17:43:33.715 [01] 	timeout=60
+2017-03-01 17:43:33.719 [01] 	log=ekt.log
+2017-03-01 17:43:33.722 [01] providers: cyber
+2017-03-01 17:43:33.726 [01] 	SD=1839361
+2017-03-01 17:43:33.730 [01] 	AP=1354719
+2017-03-01 17:43:33.734 [01] 	OP=1354720
+2017-03-01 17:43:33.738 [01] 	SecretKey=secret.key
+2017-03-01 17:43:33.742 [01] 	PublicKeys=pubkeys.key
+2017-03-01 17:43:33.746 [01] 	Passwd=TohoroazH1!
+2017-03-01 17:43:33.750 [01] 	BankKeySerial=904291
+2017-03-01 17:43:33.754 [01] 	host=https://service.cyberplat.ru/cgi-bin/
+2017-03-01 17:43:33.758 [01] 	pay-check={0}/{1}_pay_check.cgi
+2017-03-01 17:43:33.762 [01] 	pay={0}/{1}_pay.cgi
+2017-03-01 17:43:33.766 [01] 	pay-status={0}/{1}_pay_status.cgi
+2017-03-01 17:43:33.770 [01] 	api-check={0}/pay_check.cgi
+2017-03-01 17:43:33.774 [01] 	api-pay={0}/pay.cgi
+2017-03-01 17:43:33.777 [01] 	api-status={0}/pay_status.cgi
+2017-03-01 17:43:33.781 [01] 	timeout=120
+2017-03-01 17:43:33.785 [01] 	log=cyber.log
+2017-03-01 17:43:33.789 [01] providers: rt
+2017-03-01 17:43:33.793 [01] 	host=https://espp.rt.ru:8443/uni
+2017-03-01 17:43:33.797 [01] 	hash=54378b7cdef26ec1de00ee5a5a500da55baa6534
+2017-03-01 17:43:33.801 [01] 	cn=Rostelecom
+2017-03-01 17:43:33.805 [01] 	log=rt.log
+2017-03-01 17:43:33.809 [01] providers: rtm
+2017-03-01 17:43:33.812 [01] 	host=https://espp.ural.rt.ru:8443/uni
+2017-03-01 17:43:33.817 [01] 	hash=915889c7544bed573cadce14030648d9651380c4
+2017-03-01 17:43:33.821 [01] 	cn=regplat2rtmobile
+2017-03-01 17:43:33.825 [01] 	log=rtm.log
+2017-03-01 17:43:33.828 [01] providers: rapida
+2017-03-01 17:43:33.832 [01] 	host=https://epay.rapida.ru/hyperkassa/
+2017-03-01 17:43:33.836 [01] 	cn=RegPlat.ru
+2017-03-01 17:43:33.840 [01] 	log=rapida.log
+2017-03-01 17:43:33.844 [01] providers: xsolla
+2017-03-01 17:43:33.847 [01] 	host=https://ps.xsolla.com/api/gate
+2017-03-01 17:43:33.851 [01] 	agent=12791
+2017-03-01 17:43:33.855 [01] 	agent-key=regplat
+2017-03-01 17:43:33.859 [01] 	codepage=utf-8
+2017-03-01 17:43:33.862 [01] 	log=xsolla.log
+2017-03-01 17:43:33.866 [01] providers: pcc
+2017-03-01 17:43:33.870 [01] 	certname=dealoldit
+2017-03-01 17:43:33.873 [01] 	host=https://www.controlpay.ru:8443/lfc.aspx/
+2017-03-01 17:43:33.877 [01] 	pay-find={0}?method=custom&payid={1}&addmethod=queryPayeeInfo&recid={2}&pointid={3}
+2017-03-01 17:43:33.881 [01] 	pay-check={0}?method=paycheck&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:43:33.885 [01] 	pay={0}?method=pay&payid={1}&amount={2}&recid={3}&pointid={4}
+2017-03-01 17:43:33.888 [01] 	pay-status={0}?method=paystate&payid={1}
+2017-03-01 17:43:33.892 [01] 	log=pcc.log
+2017-03-01 17:43:33.896 [01] providers: Kinomax
+2017-03-01 17:43:33.900 [01] 	host=http://localhost:8000/
+2017-03-01 17:43:33.903 [01] 	pay-check=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:43:33.907 [01] 	pay=?session={0}&reserv-id={1}&from={2}&sign={3}
+2017-03-01 17:43:33.911 [01] 	log=kinomax.log
+2017-03-01 17:43:33.914 [01] providers: smtp
+2017-03-01 17:43:33.918 [01] 	content-type=text/plain;charset=866
+2017-03-01 17:43:33.922 [01] 	code-page=866
+2017-03-01 17:43:33.926 [01] 	log=smtp.log
+2017-03-01 17:43:33.929 [01] Smtp: host=mail.regplat.ru port=25 user=outbox password=outbox
+2017-03-01 17:43:33.933 [01] FinancialCheck:
+	AmountLimit = "2500" AmountDelay = "20"
+2017-03-01 17:43:33.937 [01] 	Provider = "ekt" Service = "W1-LS" Gateway = "458" Limit = "3000"
+2017-03-01 17:43:33.942 [01] 	Provider = "ekt" Service = "Ydx" Gateway = "24" Limit = "3000"
+2017-03-01 17:43:33.946 [01] 	Provider = "ekt" Service = "Beeline" Gateway = "2" Limit = "2500"
+2017-03-01 17:43:33.949 [01] 	Provider = "ekt" Service = "Beeline-woc" Gateway = "414" Limit = "2500"
+2017-03-01 17:43:33.953 [01] 	Provider = "ekt" Service = "Megafon" Gateway = "3" Limit = "2500"
+2017-03-01 17:43:33.957 [01] 	Provider = "ekt" Service = "Megafon-woc" Gateway = "472" Limit = "2500"
+2017-03-01 17:43:33.961 [01] 	Provider = "ekt" Service = "Megafon-ls" Gateway = "516" Limit = "2500"
+2017-03-01 17:43:33.965 [01] 	Provider = "ekt" Service = "Qiwi-woc" Gateway = "672" Limit = "1000"
+2017-03-01 17:43:33.969 [01] 	Provider = "ekt" Service = "Megafon-ls-woc" Gateway = "517" Limit = "2500"
+2017-03-01 17:43:33.973 [01] 	Provider = "ekt" Service = "Tele2" Gateway = "15" Limit = "2500"
+2017-03-01 17:43:33.977 [01] 	Provider = "ekt" Service = "Tele2-woc" Gateway = "721" Limit = "2500"
+2017-03-01 17:43:33.980 [01] 	Provider = "ekt" Service = "VKontakte" Gateway = "197" Limit = "1000"
+2017-03-01 17:43:33.984 [01] 	Provider = "mts" Service = "7" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:43:33.988 [01] 	Provider = "mts" Service = "8" Gateway = "MTS" Limit = "4500"
+2017-03-01 17:43:33.992 [01] 	Provider = "cyber" Service = "vmt" Gateway = "vmt" Limit = "3000"
+2017-03-01 17:43:33.996 [01] 	Provider = "cyber" Service = "moneysend" Gateway = "mns" Limit = "3000"
+2017-03-01 17:43:34.000 [01] 	Lst: ".\lists\lists.xml"

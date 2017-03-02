@@ -84,3 +84,5 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.exe.manifes
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.application
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.exe
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.pdb
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Ekt.dll
+D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Ekt.pdb

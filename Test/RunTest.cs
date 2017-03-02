@@ -5,7 +5,7 @@ using System.Text;
 using Oldi.Net.Cyber;
 using Oldi.Utility;
 using System.Collections.Specialized;
-
+using Oldi.Ekt;
 
 namespace Test
 {
@@ -14,13 +14,13 @@ namespace Test
 		static void Main(string[] args)
 		{
 
-			XMLTest test = new XMLTest();
-			test.Test();
-			
-			// RTTest test = new RTTest();
-			// test.Run();
+            // XMLTest test = new XMLTest();
+            // test.Test();
 
-			/*
+            // RTTest test = new RTTest();
+            // test.Run();
+
+            /*
 			try
 			{
 				CyberTest cyber = new CyberTest();
@@ -33,10 +33,54 @@ namespace Test
 				Console.WriteLine("IPrivException {0} {1}\r\n{2}", ie.code, ie.ToString(), ie.StackTrace);
 			}
 			*/
-		}
-	}
 
-	class CyberTest : GWCyberRequest
+            Console.WriteLine("Begin");
+            Settings.ReadConfig();
+
+            EktTest ekt = new EktTest();
+
+            Console.WriteLine("ekt.Run()");
+            ekt.Run();
+		}
+
+    }
+
+    public class EktTest : GWEktRequest
+    {
+
+        // string pointid = "";
+        // new Result result = null;
+
+        public EktTest()
+        {
+            InitializeComponents();
+            // terminal = 1224;
+            gateway = "458";
+            service = "W1";
+            amount = 100m;
+            amountAll = 200m;
+            tid = (int)(DateTime.Now.Ticks & 0xFFFF);
+        }
+
+        /// <summary>
+        /// Test new MakeRequest
+        /// </summary>
+        public void Run()
+        {
+            state = 0;
+            phone = "27026503011810";
+            attributes = new AttributesCollection();
+            attributes.Add("id2", "9521822210");
+            int r = MakeRequest(0);
+            if (r == 0)
+                Console.WriteLine(stRequest);
+            else
+                Console.WriteLine($"Err = {r}");
+        }
+
+    }
+
+    class CyberTest : GWCyberRequest
 	{
 		public CyberTest()
 			: base()

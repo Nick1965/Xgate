@@ -446,17 +446,17 @@ namespace Oldi.Net
 		/// <returns>Сумма всех платежей</returns>
 		decimal PaysInTime(int account)
 			{
-			decimal balance = 0;
+			decimal? balance = 0;
 			DateTime start = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day);
 			DateTime finish = start.AddDays(1);
 			using (OldiContext db = new OldiContext(Settings.ConnectionString))
 				{
 				IEnumerable<decimal?> pays = db.ExecuteQuery<decimal?>("select sum(amount) from oldigw.oldigw.pays where datepay between {0} and {1} and account = {2}", start, finish, account);
-				// if (pays != null && pays.Count() > 0)
-					balance = pays.First<decimal?>().Value;
+                // if (pays != null && pays.Count() > 0)
+                balance = pays.First();
 				}
-			RootLog("{0} [DLIM] Account {1} за день выплачено {2}", Tid, account, balance.AsCurrency());
-			return balance;
+			RootLog("{0} [DLIM] Account {1} за день выплачено {2}", Tid, account, balance.Value.AsCurrency());
+			return balance.Value;
 			}
 
 		/// <summary>

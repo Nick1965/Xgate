@@ -7,12 +7,30 @@ using Oldi.Utility;
 
 namespace Oldi.Ekt
 {
-	public partial class GWEktRequest : GWRequest
+
+    /// <summary>
+    /// Результат проверки состояния запроса
+    /// </summary>
+    public class Result
+    {
+        public int state;
+        public int substate;
+        public int code;
+        public Result()
+        {
+            state = 0;
+            substate = 0;
+            code = 0;
+        }
+    }
+
+    public partial class GWEktRequest : GWRequest
 	{
-		string pointid;
+		protected string pointid;
 		new Result result;
 		string Signature;
-		Encoding Enc;
+		protected Encoding Enc;
+        string qiwiGateway = "1418";
 
 		public GWEktRequest()
 			: base()
@@ -22,9 +40,14 @@ namespace Oldi.Ekt
 		public GWEktRequest(GWRequest src)
 			: base(src)
 		{
+            // Номер кассы / ПА
+            terminal = src.Terminal;
 		}
 
-		public override void InitializeComponents()
+        /// <summary>
+        /// Инициализация параметров
+        /// </summary>
+        public override void InitializeComponents()
 		{
 			base.InitializeComponents();
 			host = Settings.Ekt.Host;
@@ -57,5 +80,17 @@ namespace Oldi.Ekt
 					break;
 			}
 		}
-	}
+
+        public override int TimeOut()
+        {
+            return int.Parse(Settings.Ekt.Timeout);
+        }
+
+        protected override string GetLogName()
+        {
+            return Settings.Ekt.LogFile;
+        }
+
+
+    }
 }
