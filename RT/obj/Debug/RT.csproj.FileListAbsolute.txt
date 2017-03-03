@@ -52,3 +52,16 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\RT\bin\Debug\Utility.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\RT\bin\Debug\SMPP.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\RT\obj\Debug\RT.dll
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\RT\obj\Debug\RT.pdb
+D:\Projects\XGate\RT\bin\Debug\RT.dll
+D:\Projects\XGate\RT\bin\Debug\RT.pdb
+D:\Projects\XGate\RT\bin\Debug\Oldi.Net.dll
+D:\Projects\XGate\RT\bin\Debug\Utility.dll
+D:\Projects\XGate\RT\bin\Debug\SMPP.dll
+D:\Projects\XGate\RT\bin\Debug\Oldi.Net.pdb
+D:\Projects\XGate\RT\bin\Debug\Utility.pdb
+D:\Projects\XGate\RT\bin\Debug\SMPP.pdb
+D:\Projects\XGate\RT\obj\Debug\RT.csprojResolveAssemblyReference.cache
+D:\Projects\XGate\RT\obj\Debug\RT.Properties.Resources.resources
+D:\Projects\XGate\RT\obj\Debug\RT.csproj.GenerateResource.Cache
+D:\Projects\XGate\RT\obj\Debug\RT.dll
+D:\Projects\XGate\RT\obj\Debug\RT.pdb

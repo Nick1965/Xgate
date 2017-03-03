@@ -17,11 +17,25 @@ namespace RedirectPay
 		{
 
 		DateTime FromDate;
+        string GorodConnectionString = "";
 
-		/// <summary>
-		/// Номер чека
-		/// </summary>
-		string Outtid
+        public Scan()
+        {
+            GorodConnectionString = Config.AppSettings["GorodConnectionString"];
+        }
+
+        public Scan(string FromDateString): this()
+        {
+
+            if (!DateTime.TryParse(FromDateString, CultureInfo.InvariantCulture, DateTimeStyles.None, out FromDate))
+                FromDate = (DateTime.Now).AddDays(-1);
+
+        }
+
+        /// <summary>
+        /// Номер чека
+        /// </summary>
+        string Outtid
 			{
 			get
 				{
@@ -38,14 +52,6 @@ namespace RedirectPay
 		void Log(string fmt, params object[] prms)
 			{
 			Utility.Log(Properties.Settings.Default.LogFile, fmt, prms);
-			}
-	
-		public Scan(string FromDateString)
-			{
-
-			if (!DateTime.TryParse(FromDateString, CultureInfo.InvariantCulture, DateTimeStyles.None,  out FromDate))
-				FromDate = (DateTime.Now).AddDays(-1);
-
 			}
 
 		public void Run()

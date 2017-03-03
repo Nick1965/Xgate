@@ -712,6 +712,9 @@ namespace Oldi.Net
 						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
 						RootLog("{0} [FCHK - BLCK] {1}/{2} Num={5} A={3} S={4} - Найден в чёрном списке. Отменён.",
 							Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), x);
+
+                        // Перепроведение платежа
+                        BlackRepost();
 						return true;
 						}
 
@@ -1554,9 +1557,32 @@ namespace Oldi.Net
 		/// <returns>Номер чека</returns>
 		public string MakeCheckNumber()
 		{
-			string tpl = string.IsNullOrEmpty(Transaction)? Tid.ToString(): Transaction;
+            string tpl = "";
 
-			// string checknumber = tpl.Replace("-", "");
+            using (DataContext gorod = new DataContext(Config.AppSettings["GorodConnectionString"]))
+            {
+                IEnumerable<string> tids = gorod.ExecuteQuery<string>($"select sub_inner_tid from [gorod].[dbo].[payment] where tid={Tid}");
+                tpl = tids.First<string>();
+            }
+
+            if (!string.IsNullOrEmpty(tpl))
+            {
+                string[] x = tpl.Split(new Char[] { '-' });
+                if (x.Count() == 3)         // aaa-ppp-nnnnnnnnn
+                    tpl = x[1] + x[2];
+                else if (x.Count() == 4)    // card-cccc-s-nnnnnnnnnn
+                    tpl = x[3];
+                else
+                    tpl = x[0];
+            }
+            else
+                tpl = Tid.ToString();
+
+            return tpl;
+            
+            /*
+            
+            // string checknumber = tpl.Replace("-", "");
 			char[] a = tpl.Replace("-", "").Reverse().ToArray();
 			// char[] a = checknumber.Reverse().ToArray();
 			string check = new string(a);
@@ -1577,6 +1603,8 @@ namespace Oldi.Net
 			// b = null;
 
 			return check;
+            
+             */
 		}
 
 

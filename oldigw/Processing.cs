@@ -55,266 +55,205 @@ namespace Oldi.Net
         /// </summary>
 		public void Run()
         {
-        // m_data.stRequest - содержит клиентский запрос
-			// HttpListenerRequest request = m_data.Context.Request;
+            // m_data.stRequest - содержит клиентский запрос
+            // HttpListenerRequest request = m_data.Context.Request;
 
-			if (m_data.Context.Request.HttpMethod.ToUpper() == "GET")
-			{
-				Log("REQ: {0}", m_data.Context.Request.RawUrl);
-				foreach (string key in m_data.Context.Request.QueryString.AllKeys)
-					Log("{0}: {1}", key, m_data.Context.Request.QueryString[key]);
-				m_data.stResponse = "<XML>\r\n\t<Result>OK</Result>\r\n\r\n\t<Remark>OK</Remark>\r\n</XML>";
-				SendAnswer(m_data);
-				return;
-			}
-			
-			// Разбор входного запроса. 0 - запрос разобран.
+            // Разбор входного запроса. 0 - запрос разобран.
             GWRequest Request = new GWRequest();
-			GWRequest Current = Request;
-			string step = "";
+            GWRequest Current = Request;
+            string step = "";
+            bool ValidProvider = true;
 
-			if (Request.Parse(m_data.stRequest) != 0)
+            try
             {
-				Log(Messages.ParseError, Request.errCode, Request.errDesc);
-                SendAnswer(m_data, Request);
-                return;
-            }
+                if (Request?.Parse(m_data.stRequest) == 0)
+                {
+                    // Запустим цикл выполнения запроса:
+                    // Check -->
+                    // Pay -->
+                    // и если необходимо Status.
 
-			// Запустим цикл выполнения запроса:
-            // Check -->
-            // Pay -->
-            // и если необходимо Status.
-
-			switch (Request.RequestType.ToLower())
-            {
-                case "check":
-					Request.ReportRequest("CHCK - strt");
-					step = "CHCK - stop";
-					switch (Request.Provider)
-					{
-						case "cyber":
-							Current = new GWCyberRequest(Request);
-							break;
-						case "rt":
-						case "rtm":
-							Current = new RTRequest(Request);
-							break;
+                    // Для начала определимся с провайдером:
+                    switch (Request.Provider)
+                    {
+                        case "rt":
+                        case "rtm":
+                            Current = new RTRequest(Request);
+                            break;
+                        case "ekt":
+                            Current = new GWEktRequest(Request);
+                            break;
+                        case "cyber":
+                            Current = new GWCyberRequest(Request);
+                            break;
+                        case "mts":
+                            Current = new GWMtsRequest(Request);
+                            break;
                         case "rapida":
                             Current = new GWRapidaRequest(Request);
                             break;
-						default:
-							// Log(Messages.UnknownProvider, Request.Provider);
-							Current.ErrCode = 6;
-							Current.ErrDesc = string.Format(Messages.UnknownProvider, Request.Provider);
-							Current.State = 12;
-							break;
-					}
-					Current.Check();
-					break;
+                        case "xsolla":
+                            Current = new GWXsolllaRequest(Request);
+                            break;
+                        // case "smtp":
+                        //    Current = new Oldi.Smtp.Smtp(Request);
+                        //    break;
+                        default:
+                            // Log(Messages.UnknownProvider, Request.Provider);
+                            Current.ErrCode = 6;
+                            Current.State = 12;
+                            Current.ErrDesc = string.Format(Messages.UnknownProvider, Request.Provider);
+                            Log($"Processing.Run(): Unknown provider {Request.Provider}");
+                            Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
+                            ValidProvider = false;
+                            break;
+                    }
 
-				case "status":
-					// Прочитать из БД информацию о запросе
-					try
-						{
-						// Request.ReportRequest("STATUS - начало");
-						// step = "STAT - stop";
-						if (Request.Provider == "rt" || Request.Provider == "rtm")
-						{
-							Current = new RTRequest(Request);
-							Current.GetPaymentStatus();
-							Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
-							// gw.ReportRequest("status".ToUpper());
-						}
-						else
-						{
-							Current.GetState();
-							if (Current.State == 255)
-							{
-								// Log(string.Format(Messages.PayNotFound, Current.Tid));
-								Current.State = 12;
-								Current.errCode = 11;
-								Current.errDesc = string.Format(Messages.PayNotFound, Current.Tid);
-							}
-						}
-						// Log(Messages.StatusRequest, Current.Tid, Current.ErrDesc);
-					}
-					catch (Exception ex)
-					{
-						Log(Messages.LogError, Request.Tid, ex.Message, ex.StackTrace);
-						Request.errDesc = string.Format(Messages.ErrDesc, Request.Tid, ex.Message);
-						Request.errCode = 11;
-					}
-                    break;
 
-				case "getpaymentsstatus":
-					try
-					{
-						Current = new RTRequest(Request);
-						Log(Messages.StatusRequest, Current.Tid);
-						Current.GetPaymentStatus();
-						Current.UpdateState(Current.Tid, state :Current.State, errCode :Current.ErrCode, errDesc :Current.ErrDesc);
-					}
-					catch (Exception ex)
-					{
-						Log(Messages.LogError, Request.Tid, ex.Message, ex.StackTrace);
-						Request.errDesc = string.Format(Messages.ErrDesc, Request.Tid, ex.Message);
-						Request.errCode = 11;
-					}
-					break;
-				
-				// Отмена платежа
-				// Отменяет платёж на шлюзе, затем в процессинге
-				case "undo":
-					try
-						{
-						Request.GetPaymentInfo();
-						Request.ReportRequest("UNDO - strt");
-						step = "UNDO - stop";
-						if (Request.Provider == "rt" || Request.Provider == "rtm")
-							((RTRequest)Request).Undo();
-						else
-							{
-							// Request.Undo();
-							Request.ErrCode = 6;
-							Request.State = 12;
-							Request.ErrDesc = string.Format(Messages.ManualUndo, Request.Provider);
-							Request.UpdateState(Current.Tid, state :Request.State, errCode :Request.ErrCode, errDesc :Request.ErrDesc);
-							}
-						}
-					catch (Exception ex)
-						{
-						Log(Messages.LogError, Request.Tid, ex.Message, ex.StackTrace);
-						Request.errDesc = string.Format(Messages.ErrDesc, Request.Tid, ex.Message);
-						Request.errCode = 11;
-						}
+                    if (ValidProvider)
+                        switch (Current.RequestType.ToLower())
+                        {
+                            case "check":
+                                Current.ReportRequest("CHCK - strt");
+                                step = "CHCK - stop";
+                                Current.Check();
+                                break;
 
-					break;
+                            case "status":
+                                // Прочитать из БД информацию о запросе
+                                    // Request.ReportRequest("STATUS - начало");
+                                    // step = "STAT - stop";
+                                if (Current.Provider == "rt" || Current.Provider == "rtm")
+                                {
+                                    Current.GetPaymentStatus();
+                                    Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
+                                    // gw.ReportRequest("status".ToUpper());
+                                }
+                                else
+                                {
+                                    Current.GetState();
+                                    if (Current.State == 255)
+                                    {
+                                        // Log(string.Format(Messages.PayNotFound, Current.Tid));
+                                        Current.State = 12;
+                                        Current.errCode = 11;
+                                        Current.errDesc = string.Format(Messages.PayNotFound, Current.Tid);
+                                    }
+                                }
+                                    // Log(Messages.StatusRequest, Current.Tid, Current.ErrDesc);
+                                break;
 
-				// Создание и попытка проведения нового платежа
-				case "payment":
-					// Проверим наличие платежа и его статус.
+                            case "getpaymentsstatus":
+                                Current = new RTRequest(Request);
+                                Log(Messages.StatusRequest, Current.Tid);
+                                Current.GetPaymentStatus();
+                                Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
+                                break;
 
-					try
-					{
-						Request.GetState();
+                            // Отмена платежа
+                            // Отменяет платёж на шлюзе, затем в процессинге
+                            case "undo":
+                                Current.GetPaymentInfo();
+                                Current.ReportRequest("UNDO - strt");
+                                step = "UNDO - stop";
+                                if (Current.Provider == "rt" || Current.Provider == "rtm")
+                                    Current.Undo();
+                                else
+                                {
+                                    Current.ErrCode = 6;
+                                    Current.State = 12;
+                                    Current.ErrDesc = string.Format(Messages.ManualUndo, Request.Provider);
+                                    Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
+                                }
+                                break;
 
-						// Если платёж не существует (state == 255)
-						if (Request.State == 255)
-							{
-							Request.State = 0;
-							Request.GetTerminalInfo();
-							Request.ReportRequest("PAYM - strt");
-							step = "PAYM - stop";
+                            // Создание и попытка проведения нового платежа
+                            case "payment":
+                                // Проверим наличие платежа и его статус.
+                                Current.GetState();
 
-							// Поиск дублей
+                                // Если платёж не существует (state == 255)
+                                if (Current.State == 255)
+                                {
+                                    Current.State = 0;
+                                    Current.GetTerminalInfo();
+                                    Current.ReportRequest("PAYM - strt");
+                                    step = "PAYM - stop";
 
-							int Doubles = 0;
-							// Если sub_inner_tid содержит 3 '-' возвращает непустую строку
-							string SubInnertid = Request.GetGorodSub();
+                                    // Поиск дублей
 
-							if (!string.IsNullOrEmpty(SubInnertid) && (Doubles = Request.GetDoubles(SubInnertid)) > 0)
-								{
-								Log("{0} [DOUB - step] Для sub_inner_tid={1} найдено {2} дублей", Request.Tid, SubInnertid, Doubles);
-								Request.State = 12;
-								Request.errCode = 6;
-								Request.errDesc = string.Format("Найдено {0} подобных платежей в пределах 10 минут. Платёж отменяется.", Doubles);
-								Request.UpdateState(Request.Tid, state :Request.State, errCode :Request.ErrCode, errDesc :Request.ErrDesc);
-								}
-							else
-								{
-								Log("{0} [DOUB - step] Для sub_inner_tid={1} дублей не найдено", Request.Tid, SubInnertid);
-								
-								// Для начала определимся с провайдером:
-								switch (Request.Provider)
-									{
-									case "rt":
-									case "rtm":
-										Current = new RTRequest(Request);
-										break;
-									case "ekt":
-										Current = new GWEktRequest(Request);
-										break;
-									case "cyber":
-										Current = new GWCyberRequest(Request);
-										break;
-									case "mts":
-										Current = new GWMtsRequest(Request);
-										break;
-                                    case "rapida":
-                                        Current = new GWRapidaRequest(Request);
-                                        break;
-                                    case "xsolla":
-                                        Current = new GWXsolllaRequest(Request);
-                                        break;
-                                    case "smtp":
-										Current = new Oldi.Smtp.Smtp(Request);
-										break;
-									default:
-										// Log(Messages.UnknownProvider, Request.Provider);
-										Request.ErrCode = 6;
-										Request.State = 12;
-										Request.ErrDesc = string.Format(Messages.UnknownProvider, Request.Provider);
-										Current.UpdateState(Current.Tid, state :Current.State, errCode :Current.ErrCode, errDesc :Current.ErrDesc);
-										break;
-									}
-								}
+                                    int Doubles = 0;
+                                    // Если sub_inner_tid содержит 3 '-' возвращает непустую строку
+                                    string SubInnertid = Current.GetGorodSub();
 
-							// if (!string.IsNullOrEmpty(SubInnertid))
-							//	Log("{0} [DOUB - stop] {1}", Request.Tid, Request.ErrDesc);
+                                    if (!string.IsNullOrEmpty(SubInnertid) && (Doubles = Current.GetDoubles(SubInnertid)) > 0)
+                                    {
+                                        Log("{0} [DOUB - step] Для sub_inner_tid={1} найдено {2} дублей", Current.Tid, SubInnertid, Doubles);
+                                        Current.State = 12;
+                                        Current.errCode = 6;
+                                        Current.errDesc = string.Format("Найдено {0} подобных платежей в пределах 10 минут. Платёж отменяется.", Doubles);
+                                        Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
+                                    }
+                                    else
+                                    {
+                                        Log("{0} [DOUB - step] Для sub_inner_tid={1} дублей не найдено", Current.Tid, SubInnertid);
+                                    }
 
-							// Если статус равен 0
-							// И если возможность есть -- провести его
-							if (Current.State == 0)
-								Current.Processing(true);
-							}
-						// Платёж существует - вернём его статус
-						else if (Request.Provider == "rt" || Request.Provider == "rtm")
-							{
-							Current = new RTRequest(Request);
-							Current.GetPaymentStatus();
-							Current.UpdateState(Current.Tid, state :Current.State, errCode :Current.ErrCode, errDesc :Current.ErrDesc);
-							// gw.ReportRequest("status".ToUpper());
-							}
-						else if (/* Request.State == 12 || */ Request.State == 11)
-							{
-							Current = Reposting(Request);
-							step = "REPT - stop";
-							}
-						else
-							step = "STAT - stop";
-							
-					}
-					catch (Exception ex)
-					{
-						Current.errDesc = string.Format(Messages.InternalPaymentError, ex.Message);
-						Log("{0}\r\n{1}", Current.errDesc, ex.StackTrace);
-						Current.UpdateState(Current.Tid, state :Current.State, errCode :Current.ErrCode, errDesc :Current.ErrDesc);
-						// m_data.stResponse = string.Format(Properties.Settings.Default.FailResponse, 11, errDesc);
-						// SendAnswer(m_data);
-						// return;
-					}
-					finally
-					{
-						if (Current != null) Current.SetLock(0);
-					}
-					
-					break;
+                                    // if (!string.IsNullOrEmpty(SubInnertid))
+                                    //	Log("{0} [DOUB - stop] {1}", Request.Tid, Request.ErrDesc);
 
-				// Перепроведение
-				// case "reposting":
-				//	break;
+                                    // Если статус равен 0
+                                    // И если возможность есть -- провести его
+                                    if (Current.State == 0)
+                                        Current.Processing(true);
+                                }
+                                // Платёж существует - вернём его статус
+                                else if (Current.Provider == "rt" || Current.Provider == "rtm")
+                                {
+                                    Current.GetPaymentStatus();
+                                    Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
+                                    // gw.ReportRequest("status".ToUpper());
+                                }
+                                else if (/* Request.State == 12 || */ Request.State == 11)
+                                {
+                                    Current = Reposting(Current);
+                                    step = "REPT - stop";
+                                }
+                                else
+                                    step = "STAT - stop";
+                                break;
 
-				default:
-					Request.errDesc = string.Format(Messages.UnknownRequest, Request.RequestType);
-					// Log(Messages.UnknownRequest, m_data.stRequest);
-					break;
-					// m_data.stResponse = string.Format(Properties.Settings.Default.FailResponse, 6, "Неверный запрос");
-					// SendAnswer(m_data);
-					// return;
+                            // Перепроведение
+                            // case "reposting":
+                            //	break;
+
+                            default:
+                                Current.errDesc = string.Format(Messages.UnknownRequest, Current.RequestType);
+                                Log(Messages.UnknownRequest, m_data.stRequest);
+                                break;
+                                // m_data.stResponse = string.Format(Properties.Settings.Default.FailResponse, 6, "Неверный запрос");
+                                // SendAnswer(m_data);
+                                // return;
+                        }
+                }
+                else
+                {
+                    Log(Messages.ParseError, Current.errCode, Current.errDesc);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Current.errCode = 11;
+                Current.errDesc = ex.Message;
+                Log(ex.ToString());
+            }
+            finally
+            {
+                Current?.SetLock(0);
             }
 
-
-			if (Request.RequestType.ToLower() != "status")
+			if (Current.RequestType.ToLower() != "status")
 				Current.ReportRequest(step);
 			SendAnswer(m_data, Current);
 			Interlocked.Decrement(ref GWListener.processes);
