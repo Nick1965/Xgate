@@ -22,7 +22,17 @@ using System.Xml.XPath;
 
 namespace Oldi.Net
 {
-	public partial class GWRequest
+
+    public class BlackListEventArgs: EventArgs
+    {
+        public int Tid { get; set; }
+        public string Service { get; set; }
+        public string Gateway { get; set; }
+        public decimal Amount { get; set; }
+        public decimal AmountAll { get; set; }
+    }
+
+    public partial class GWRequest
 	{
 		/// <summary>
 		/// Конструктор
@@ -711,7 +721,7 @@ namespace Oldi.Net
 						errDesc = string.Format("[BLACK] Отменён вручную");
 						UpdateState(Tid, state :State, errCode :ErrCode, errDesc :ErrDesc, locked :0);
 						RootLog("{0} [FCHK - BLCK] {1}/{2} Num={5} A={3} S={4} - Найден в чёрном списке. Отменён.",
-							Tid, Service, Gateway, XConvert.AsAmount(Amount), XConvert.AsAmount(AmountAll), x);
+							Tid, Service, Gateway, Amount.AsCurrency(), AmountAll.AsCurrency(), x);
 
                         // Перепроведение платежа
                         BlackRepost();
