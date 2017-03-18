@@ -113,8 +113,18 @@ namespace Oldi.Net
         {
             CodePage = Settings.Xsolla.CodePage;
             host = Settings.Xsolla.Host;
-            Agent = Settings.Xsolla.Agent;
-            AgentKey = Settings.Xsolla.AgentKey;
+            // Agent = Settings.Xsolla.Agent;
+            // AgentKey = Settings.Xsolla.AgentKey;
+            if (Service.ToLower() == "2pay-game")
+            {
+                Agent = "12791";
+                AgentKey = "regplat";
+            }
+            else
+            {
+                Agent = "2581";
+                AgentKey = "regplat1";
+            }
         }
 
         #endregion Constructors
