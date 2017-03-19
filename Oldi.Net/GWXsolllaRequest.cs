@@ -115,7 +115,7 @@ namespace Oldi.Net
             host = Settings.Xsolla.Host;
             // Agent = Settings.Xsolla.Agent;
             // AgentKey = Settings.Xsolla.AgentKey;
-            if (Service.ToLower() == "2pay-game")
+            if (Service.ToLower() == "2pay")
             {
                 Agent = "12791";
                 AgentKey = "regplat";
