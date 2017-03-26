@@ -151,12 +151,13 @@ namespace Oldi.Net
 
             using (Crypto Crypto = new Crypto(""))
             {
-                if (!string.IsNullOrEmpty(Number))
+                if (!string.IsNullOrEmpty(Number) || !string.IsNullOrEmpty(Account) && Gateway == "5450")
                 {
-                    Log("Xsolla md5: {7}|{0}|{1}|{2}|{3}|{4}|{5}|{6}", Gateway, Number, Amount.AsCurrency(), Tid, Agent, date, AgentKey, Command);
+                    if (string.IsNullOrEmpty(Number) && Gateway == "5450")
+                        number = Account;
+                    Log($"Xsolla md5: {Command}|{Gateway}|{Number}|{Amount.AsCurrency()}|{Tid}|{Agent}|{date}|{AgentKey}");
                     md5 = Crypto.Hash(Command + Gateway + Number + Amount.AsCurrency() + Tid + Agent + date + AgentKey, 5, Encoding.UTF8);
-                    stRequest = string.Format("command={0}&project={1}&v1={2}&sum={3}&id={4}&type={5}&date={6}&md5={7}",
-                        Command, Gateway, Number, Amount.AsCurrency(), Tid, Agent, date, md5);
+                    stRequest = string.Format($"command={Command}&project={Gateway}&v1={Number}&sum={Amount.AsCurrency()}&id={Tid}&type={Agent}&date={date}&md5={md5}");
                 }
                 else if (!string.IsNullOrEmpty(Account))
                 {
