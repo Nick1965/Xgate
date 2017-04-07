@@ -73,7 +73,7 @@ namespace Oldi.Net
                     // Pay -->
                     // и если необходимо Status.
 
-                    Log($"REQ: Provider=\"{Request.Provider}\" Request=\"{Request.RequestType}\"");
+                    // Log($"REQ: Provider=\"{Request.Provider}\" Request=\"{Request.RequestType}\"");
 
                     // Для начала определимся с провайдером:
                     switch (Request.Provider)
@@ -177,7 +177,7 @@ namespace Oldi.Net
                                 // Проверим наличие платежа и его статус.
                                 Current.GetState();
 
-                                Log($"{Current.Tid} [PAYM strt] Status={Current.State}");
+                                // Log($"{Current.Tid} [PAYM strt] Status={Current.State}");
                                 
                                 // Если платёж не существует (state == 255)
                                 if (Current.State == 255)
@@ -195,10 +195,10 @@ namespace Oldi.Net
 
                                     if (!string.IsNullOrEmpty(SubInnertid) && (Doubles = Current.GetDoubles(SubInnertid)) > 0)
                                     {
-                                        Log("{0} [DOUB - step] Для sub_inner_tid={1} найдено {2} дублей", Current.Tid, SubInnertid, Doubles);
+                                        Log($"{Current.Tid} [DOUB - step] Для sub_inner_tid={SubInnertid} найдено {Doubles} дублей");
                                         Current.State = 12;
                                         Current.errCode = 6;
-                                        Current.errDesc = string.Format("Найдено {0} подобных платежей в пределах 10 минут. Платёж отменяется.", Doubles);
+                                        Current.errDesc = $"Найдено {Doubles} подобных платежей в пределах 10 минут. Платёж отменяется.";
                                         Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
                                     }
                                     else
