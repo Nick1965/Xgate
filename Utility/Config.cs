@@ -351,6 +351,8 @@ namespace Oldi.Utility
             public static string CodePage { get { return Config.Providers["xsolla"]["codepage"]; } }
             public static string Agent { get { return Config.Providers["xsolla"]["agent"]; } }
             public static string AgentKey { get { return Config.Providers["xsolla"]["agent-key"]; } }
+            public static string Agent1 { get { return Config.Providers["xsolla"]["agent1"]; } }
+            public static string AgentKey1 { get { return Config.Providers["xsolla"]["agent-key1"]; } }
             public static string Log { get { return Config.Providers["xsolla"]["log"]; } }
 
         }
@@ -676,6 +678,8 @@ namespace Oldi.Utility
             public static string Host { get { return ProvidersSettings.Xsolla.Host; } }
             public static string Agent { get { return ProvidersSettings.Xsolla.Agent; } }
             public static string AgentKey { get { return ProvidersSettings.Xsolla.AgentKey; } }
+            public static string Agent1 { get { return ProvidersSettings.Xsolla.Agent1; } }
+            public static string AgentKey1 { get { return ProvidersSettings.Xsolla.AgentKey1; } }
             public static string CodePage { get { return ProvidersSettings.Xsolla.CodePage; } }
             public static string Log { get { return LogPath + ProvidersSettings.Xsolla.Log; } }
 

@@ -151,6 +151,6 @@
     <value>Неизвестный провайдер {0}</value>
   </data>
   <data name="UnknownRequest" xml:space="preserve">
-    <value>Неизвестный запрос {0}</value>
+    <value>Неизвестный запрос {0} для {1}</value>
   </data>
 </root>

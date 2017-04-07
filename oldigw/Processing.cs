@@ -73,6 +73,8 @@ namespace Oldi.Net
                     // Pay -->
                     // и если необходимо Status.
 
+                    Log($"REQ: Provider=\"{Request.Provider}\" Request=\"{Request.RequestType}\"");
+
                     // Для начала определимся с провайдером:
                     switch (Request.Provider)
                     {
@@ -100,18 +102,21 @@ namespace Oldi.Net
                         //    break;
                         default:
                             // Log(Messages.UnknownProvider, Request.Provider);
-                            Current.ErrCode = 6;
-                            Current.State = 12;
-                            Current.ErrDesc = string.Format(Messages.UnknownProvider, Request.Provider);
-                            Log($"Processing.Run(): Unknown provider {Request.Provider}");
-                            Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
-                            ValidProvider = false;
+                            if (Request.RequestType.ToLower() != "status")
+                            {
+                                Current.ErrCode = 6;
+                                Current.State = 12;
+                                Current.ErrDesc = string.Format(Messages.UnknownProvider, Request.Provider);
+                                Log($"Processing.Run(): Unknown provider \"{Request.Provider}\"");
+                                Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
+                                ValidProvider = false;
+                            }
                             break;
                     }
 
 
                     if (ValidProvider)
-                        switch (Current.RequestType.ToLower())
+                        switch (Request.RequestType.ToLower())
                         {
                             case "check":
                                 Current.ReportRequest("CHCK - strt");
@@ -121,9 +126,9 @@ namespace Oldi.Net
 
                             case "status":
                                 // Прочитать из БД информацию о запросе
-                                    // Request.ReportRequest("STATUS - начало");
-                                    // step = "STAT - stop";
-                                if (Current.Provider == "rt" || Current.Provider == "rtm")
+                                // Request.ReportRequest("STATUS - начало");
+                                // step = "STAT - stop";
+                                if (Request.Provider == "rt" || Request.Provider == "rtm")
                                 {
                                     Current.GetPaymentStatus();
                                     Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
@@ -140,7 +145,7 @@ namespace Oldi.Net
                                         Current.errDesc = string.Format(Messages.PayNotFound, Current.Tid);
                                     }
                                 }
-                                    // Log(Messages.StatusRequest, Current.Tid, Current.ErrDesc);
+                                // Log(Messages.StatusRequest, Current.Tid, Current.ErrDesc);
                                 break;
 
                             case "getpaymentsstatus":
@@ -172,6 +177,8 @@ namespace Oldi.Net
                                 // Проверим наличие платежа и его статус.
                                 Current.GetState();
 
+                                Log($"{Current.Tid} [PAYM strt] Status={Current.State}");
+                                
                                 // Если платёж не существует (state == 255)
                                 if (Current.State == 255)
                                 {
@@ -228,8 +235,8 @@ namespace Oldi.Net
                             //	break;
 
                             default:
-                                Current.errDesc = string.Format(Messages.UnknownRequest, Current.RequestType);
-                                Log(Messages.UnknownRequest, m_data.stRequest);
+                                Current.errDesc = $"Неизвестный запрос {Request.RequestType}";
+                                Log($"Неизвестный запрос \"{Request.RequestType}\" в {m_data.stRequest}");
                                 break;
                                 // m_data.stResponse = string.Format(Properties.Settings.Default.FailResponse, 6, "Неверный запрос");
                                 // SendAnswer(m_data);

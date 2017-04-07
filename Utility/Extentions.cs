@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Data.SqlClient;
 using System.Globalization;
+using System.Xml.XPath;
+using System.IO;
 
 namespace Oldi.Utility
 {
@@ -426,6 +428,45 @@ namespace Oldi.Utility
 			{
 			return d.ToString("0.00", CultureInfo.InvariantCulture);
 			}
-		
-		}
+
+        /// <summary>
+        /// Извлекает выражение Xpath[expression] из self
+        /// </summary>
+        /// <param name="self">Xml-документ. содержащий expression</param>
+        /// <param name="Expression">Выражение Xpath, которое нужно ихзвлечь</param>
+        /// <returns></returns>
+        public static string XPath(this string self, string Expression)
+        {
+
+            if (string.IsNullOrEmpty(self))
+                return "";
+
+            try
+            {
+
+                XPathDocument doc = new XPathDocument(new StringReader(self.ToLower()));
+                XPathNavigator nav = doc.CreateNavigator();
+                // XPathNodeIterator items = nav.Select(expr);
+                XPathNavigator node = nav.SelectSingleNode(Expression.ToLower());
+
+                // Log("****************************************************");
+                // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
+                // Log("****************************************************");
+
+
+                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
+                return node.Select(Expression.ToLower()).Current.Value;
+
+            }
+            catch (Exception /*ex*/)
+            {
+                // Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+                // Log(answer);
+            }
+
+            return "";
+
+        }
+
+    }
 }

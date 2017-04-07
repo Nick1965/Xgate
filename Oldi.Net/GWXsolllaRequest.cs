@@ -113,17 +113,15 @@ namespace Oldi.Net
         {
             CodePage = Settings.Xsolla.CodePage;
             host = Settings.Xsolla.Host;
-            // Agent = Settings.Xsolla.Agent;
-            // AgentKey = Settings.Xsolla.AgentKey;
             if (Service.ToLower() == "2pay")
             {
-                Agent = "12791";
-                AgentKey = "regplat";
+                Agent = Settings.Xsolla.Agent; // "12791";
+                AgentKey = Settings.Xsolla.AgentKey; // "regplat";
             }
             else
             {
-                Agent = "2581";
-                AgentKey = "regplat1";
+                Agent = Settings.Xsolla.Agent1; // "2581";
+                AgentKey = Settings.Xsolla.AgentKey1; // "regplat1";
             }
         }
 
@@ -155,26 +153,26 @@ namespace Oldi.Net
                 {
                     if (string.IsNullOrEmpty(Number) && Gateway == "5450")
                         number = Account;
-                    Log($"Xsolla md5: {Command}|{Gateway}|{Number}|{Amount.AsCurrency()}|{Tid}|{Agent}|{date}|{AgentKey}");
+                    RootLog($"{Tid} [Xsolla md5] {Command}|{Gateway}|{Number}|{Amount.AsCurrency()}|{Tid}|{Agent}|{date}|{AgentKey}");
                     md5 = Crypto.Hash(Command + Gateway + Number + Amount.AsCurrency() + Tid + Agent + date + AgentKey, 5, Encoding.UTF8);
                     stRequest = string.Format($"command={Command}&project={Gateway}&v1={Number}&sum={Amount.AsCurrency()}&id={Tid}&type={Agent}&date={date}&md5={md5}");
                 }
                 else if (!string.IsNullOrEmpty(Account))
                 {
-                    Log("Xsolla md5: {6}|{0}|{1}|{2}|{3}|{4}|{5}", Account, Amount.AsCurrency(), Tid, Agent, date, AgentKey, Command);
+                    RootLog($"{Tid} [Xsolla md5] {Command}|{Account}|{Amount.AsCurrency()}|{Tid}|{Agent}|{date}|{AgentKey}");
                     md5 = Crypto.Hash(Command + Gateway + Account + Amount.AsCurrency() + Tid + Agent + date + AgentKey, 5, Encoding.ASCII);
-                    stRequest = string.Format("command={0}&account={1}&sum={2}&id={3}&type={4}&date={5}&md5={6}",
-                        Command, Account, Amount.AsCurrency(), Tid, Agent, date, md5);
+                    stRequest = string.Format("command={0}&account={1}&sum={2}&id={3}&type={4}&date={5}&md5={6}", Command, Account, Amount.AsCurrency(), Tid, Agent, date, md5);
                 }
                 else
                 {
-                    Log("Number or Account must be sets!");
+                    RootLog($"{Tid} Number or Account must be sets!");
                     errDesc = "Number or Account must be sets!";
                     return 1;
                 }
             }
 
-            Log("XSolla request: {0}?{1}", Host, stRequest);
+            Log($"Host: {Host}?{stRequest}");
+            Log($"Md5:  {md5}");
 
             return 0;
         }
@@ -185,10 +183,14 @@ namespace Oldi.Net
             if (!string.IsNullOrEmpty(stRequest))
             {
                 stResponse = Get(Host + "?" + stRequest);
-                errCode = GetValueFromAnswer(stResponse, "/response/result").ToInt();
-                errDesc = GetValueFromAnswer(stResponse, "/response/comment");
-                addinfo = GetValueFromAnswer(stResponse, "/response/projectName/ru");
-                outtid = GetValueFromAnswer(stResponse, "/response/order");
+                // errCode = GetValueFromAnswer(stResponse, "/response/result").ToInt();
+                errCode = stResponse.XPath("/response/result").ToInt();
+                // errDesc = GetValueFromAnswer(stResponse, "/response/comment");
+                errDesc = stResponse.XPath("/response/comment");
+                // addinfo = GetValueFromAnswer(stResponse, "/response/projectName/ru");
+                addinfo = stResponse.XPath("/response/projectName/ru");
+                // outtid = GetValueFromAnswer(stResponse, "/response/order");
+                outtid = stResponse.XPath("/response/order");
             }
         }
 
