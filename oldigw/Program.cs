@@ -42,8 +42,8 @@ namespace Oldi.Net
 			catch(Exception ex)
 				{
 				logFile = Settings.OldiGW.LogFile;
-				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
-				Console.WriteLine("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				Log(ex.ToString());
+				Console.WriteLine(ex.ToString());
 				}
 			finally
 				{
@@ -184,7 +184,7 @@ namespace Oldi.Net
 			// Запуск слушателя
 			try
 				{
-				Log("Регистрация сертифика службы SMPP: {0}", SubjectName);
+				Log($"Регистрация сертифика службы SMPP: {SubjectName}");
 
 				GWListener listener = new GWListener(Settings.OldiGW.LogFile, Settings.Port, Settings.SslPort);
 				listener.Run();
@@ -194,7 +194,7 @@ namespace Oldi.Net
 				}
 			catch (Exception ex)
 				{
-				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				Log(ex.ToString());
 				}
 
 			Console.WriteLine("{0} останавливается...", Settings.Title);
@@ -206,7 +206,7 @@ namespace Oldi.Net
             
 			// Остановка службы
 			// Console.WriteLine("Служба {0} остановлена", Settings.Title);
-			Log("Служба {0} остановлена", Settings.Title);
+			Log($"Служба {Settings.Title} остановлена");
 
 			// Перезагрузка службы
 			if (Reload)
@@ -225,9 +225,7 @@ namespace Oldi.Net
         /// </summary>
         static bool CheckDbConnection()
         {
-            string stRequest = "Select Top 1 tid From OldiGW.Queue";
-
-            // Log("Проверка соединения с БД...");
+            Log("Проверка соединения с БД...");
 
             // Время задержки меду тестами
             int idle = 20;
@@ -240,7 +238,7 @@ namespace Oldi.Net
                 try
                 {
                     using (SqlConnection cnn = new SqlConnection(Settings.ConnectionString))
-                    using (SqlCommand cmd = new SqlCommand(stRequest, cnn))
+                    using (SqlCommand cmd = new SqlCommand("Select Top 1 tid From OldiGW.Queue", cnn))
                     {
                         cnn.Open();
                         using (SqlDataReader dr = cmd.ExecuteReader())
@@ -249,9 +247,9 @@ namespace Oldi.Net
                     }
                     break;
                 }
-                catch (SqlException ex)
+                catch (SqlException)
                 {
-                    Log("CheckDbConnection: Нет соединения с БД: {0}", ex.Message);
+                    Log("CheckDbConnection: Нет соединения с БД");
                 }
 
                 if (++count > attempts)
