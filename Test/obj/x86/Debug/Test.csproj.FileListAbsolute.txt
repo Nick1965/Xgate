@@ -86,6 +86,26 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.exe
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\obj\x86\Debug\Test.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Ekt.dll
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Test\bin\Debug\Ekt.pdb
+D:\Projects\XGate\Test\bin\Debug\Test.exe.config
+D:\Projects\XGate\Test\bin\Debug\Test.exe.manifest
+D:\Projects\XGate\Test\bin\Debug\Test.application
+D:\Projects\XGate\Test\bin\Debug\Test.exe
+D:\Projects\XGate\Test\bin\Debug\Test.pdb
+D:\Projects\XGate\Test\bin\Debug\Cyber.dll
+D:\Projects\XGate\Test\bin\Debug\Ekt.dll
+D:\Projects\XGate\Test\bin\Debug\Oldi.Net.dll
+D:\Projects\XGate\Test\bin\Debug\Utility.dll
+D:\Projects\XGate\Test\bin\Debug\SMPP.dll
+D:\Projects\XGate\Test\bin\Debug\Cyber.pdb
+D:\Projects\XGate\Test\bin\Debug\Ekt.pdb
+D:\Projects\XGate\Test\bin\Debug\Oldi.Net.pdb
+D:\Projects\XGate\Test\bin\Debug\Utility.pdb
+D:\Projects\XGate\Test\bin\Debug\SMPP.pdb
 D:\Projects\XGate\Test\obj\x86\Debug\Test.csprojResolveAssemblyReference.cache
 D:\Projects\XGate\Test\obj\x86\Debug\Test.Properties.Resources.resources
 D:\Projects\XGate\Test\obj\x86\Debug\Test.csproj.GenerateResource.Cache
+D:\Projects\XGate\Test\obj\x86\Debug\Test.TrustInfo.xml
+D:\Projects\XGate\Test\obj\x86\Debug\Test.exe.manifest
+D:\Projects\XGate\Test\obj\x86\Debug\Test.application
+D:\Projects\XGate\Test\obj\x86\Debug\Test.exe
+D:\Projects\XGate\Test\obj\x86\Debug\Test.pdb
