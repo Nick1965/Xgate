@@ -58,3 +58,13 @@ D:\Projects\XGate\Ekt\obj\Debug\Ekt.csprojResolveAssemblyReference.cache
 D:\Projects\XGate\Ekt\obj\Debug\Oldi.Ekt.Messages.resources
 D:\Projects\XGate\Ekt\obj\Debug\Oldi.Ekt.Properties.Resources.resources
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.csproj.GenerateResource.Cache
+D:\Projects\XGate\Ekt\bin\Debug\Ekt.dll
+D:\Projects\XGate\Ekt\bin\Debug\Ekt.pdb
+D:\Projects\XGate\Ekt\bin\Debug\Oldi.Net.dll
+D:\Projects\XGate\Ekt\bin\Debug\Utility.dll
+D:\Projects\XGate\Ekt\bin\Debug\SMPP.dll
+D:\Projects\XGate\Ekt\bin\Debug\Oldi.Net.pdb
+D:\Projects\XGate\Ekt\bin\Debug\Utility.pdb
+D:\Projects\XGate\Ekt\bin\Debug\SMPP.pdb
+D:\Projects\XGate\Ekt\obj\Debug\Ekt.dll
+D:\Projects\XGate\Ekt\obj\Debug\Ekt.pdb

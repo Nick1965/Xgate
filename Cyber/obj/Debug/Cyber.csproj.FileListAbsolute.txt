@@ -55,3 +55,13 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Cyber\obj\Debug\Cyber.pdb
 D:\Projects\XGate\Cyber\obj\Debug\Cyber.csprojResolveAssemblyReference.cache
 D:\Projects\XGate\Cyber\obj\Debug\Oldi.Net.Cyber.Properties.Resources.resources
 D:\Projects\XGate\Cyber\obj\Debug\Cyber.csproj.GenerateResource.Cache
+D:\Projects\XGate\Cyber\bin\Debug\Cyber.dll
+D:\Projects\XGate\Cyber\bin\Debug\Cyber.pdb
+D:\Projects\XGate\Cyber\bin\Debug\Oldi.Net.dll
+D:\Projects\XGate\Cyber\bin\Debug\Utility.dll
+D:\Projects\XGate\Cyber\bin\Debug\SMPP.dll
+D:\Projects\XGate\Cyber\bin\Debug\Oldi.Net.pdb
+D:\Projects\XGate\Cyber\bin\Debug\Utility.pdb
+D:\Projects\XGate\Cyber\bin\Debug\SMPP.pdb
+D:\Projects\XGate\Cyber\obj\Debug\Cyber.dll
+D:\Projects\XGate\Cyber\obj\Debug\Cyber.pdb
