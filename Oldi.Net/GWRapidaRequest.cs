@@ -312,27 +312,27 @@ namespace Oldi.Net
                 return;
             }
 
-            string ResultStatus = GetValueFromAnswer(Result, "/Response/Result");
+            string ResultStatus = XPath.GetString(Result, "/Response/Result");
             if (string.IsNullOrEmpty(ResultStatus))
-                ResultStatus = GetValueFromAnswer(Result, "/Response/CheckResult");
+                ResultStatus = XPath.GetString(Result, "/Response/CheckResult");
 
-            if (!string.IsNullOrEmpty(ResultStatus) && ResultStatus.ToUpper() == "OK")
+            if (ResultStatus.ToUpper() == "OK")
             {
                 // Баланс агента
-                Balance = GetValueFromAnswer(Result, "/Response/Balance").ToDecimal();
-                errDesc = GetValueFromAnswer(Result, "/Response/Description");
+                Balance = XPath.GetDec(Result, "/Response/Balance").Value;
+                errDesc = XPath.GetString(Result, "/Response/Description");
                 errCode = 3;
                 state = 6;
             }
             else
             {
-                errCode = GetValueFromAnswer(Result, "/Response/ErrCode").ToInt();
-                errDesc = string.Format("({0}) {1}", errCode, GetValueFromAnswer(Result, "/Response/Description"));
+                errCode = XPath.GetInt(Result, "/Response/ErrCode").Value;
+                errDesc = $"({errCode}) {XPath.GetString(Result, "/Response/Description")}";
                 errCode = 6;
                 state = 12;
             }
 
-            RootLog("{0} [TplPay - finish] Ext={1} TID={2} Trm={3} Balance={4} err={5} {6}", Tid, Session, TemplateTid, PPID, Balance.AsCurrency(), ErrCode, ErrDesc);
+            RootLog($"{Tid} [TplPay - finish] Ext={Session} TID={TemplateTid} Trm={PPID} Balance={Balance.AsCurrency()} err={ErrCode} {ErrDesc}");
 
         }
 
@@ -366,38 +366,37 @@ namespace Oldi.Net
                 return;
             }
 
-            string ResultStatus = GetValueFromAnswer(Result, "/Response/CheckResult");
-            if (!string.IsNullOrEmpty(ResultStatus) && ResultStatus.ToUpper() == "OK")
+            string ResultStatus = XPath.GetString(Result, "/Response/CheckResult");
+            if (ResultStatus.ToUpper() == "OK")
             {
-                Fam = GetValueFromAnswer(Result, "/Response/Fam");
-                Name = GetValueFromAnswer(Result, "/Response/Name");
-                SName = GetValueFromAnswer(Result, "/Response/SName");
+                Fam = XPath.GetString(Result, "/Response/Fam");
+                Name = XPath.GetString(Result, "/Response/Name");
+                SName = XPath.GetString(Result, "/Response/SName");
 
                 fio = Fam + " " + Name + " " + SName;
 
                 // Код требования
-                TemplateTid = GetValueFromAnswer(Result, "/Response/Tid");
+                TemplateTid = XPath.GetString(Result, "/Response/Tid");
                 // Банк
-                Bank = GetValueFromAnswer(Result, "/Response/Description");
+                Bank = XPath.GetString(Result, "/Response/Description");
                 // Bank = GetValueFromAnswer(Result, "/Response/B_Name");
                 // Номер платежа в системе
-                PaymNumb = GetValueFromAnswer(Result, "/Response/PaymNumb");
+                PaymNumb = XPath.GetString(Result, "/Response/PaymNumb");
                 // Баланс агента
-                Balance = GetValueFromAnswer(Result, "/Response/Balance").ToDecimal();
-                errDesc = GetValueFromAnswer(Result, "/Response/Description");
+                Balance = XPath.GetDec(Result, "/Response/Balance").Value;
+                errDesc = XPath.GetString(Result, "/Response/Description");
                 errCode = 0;
                 state = 0;
             }
             else
             {
-                errCode = GetValueFromAnswer(Result, "/Response/ErrCode").ToInt();
-                errDesc = string.Format("({0}) {1}", errCode, GetValueFromAnswer(Result, "/Response/Description"));
+                errCode = XPath.GetInt(Result, "/Response/ErrCode").Value;
+                errDesc = string.Format("({0}) {1}", errCode, XPath.GetString(Result, "/Response/Description"));
                 errCode = 6;
                 state = 12;
             }
 
-            RootLog("{0} [RegTpl - finish] Ext={1} TID={2} FIO={3} Trm={4} PayNumb={5} Balance={6} err={7}\r\n\t\t{8}", 
-                Tid, Session, TemplateTid, Fam + " " + Name + " " + SName, PPID, PaymNumb, Balance.AsCurrency(), ErrCode, ErrDesc);
+            RootLog($"{Tid} [RegTpl - finish] Ext={Session} TID={TemplateTid} FIO={Fam + " " + Name + " " + SName} Trm={PPID} PayNumb={PaymNumb} Balance={Balance.AsCurrency()} \r\nerr={ErrCode}: {ErrDesc}");
 
         }
 
@@ -426,23 +425,23 @@ namespace Oldi.Net
                 return;
             }
 
-            string ResultStatus = GetValueFromAnswer(Result, "/Response/Result");
-            if (!string.IsNullOrEmpty(ResultStatus) && ResultStatus.ToUpper() == "OK")
+            string ResultStatus = XPath.GetString(Result, "/Response/Result");
+            if (ResultStatus.ToUpper() == "OK")
             {
-                GKID = GetValueFromAnswer(Result, "/Response/Gkid");
-                errDesc = GetValueFromAnswer(Result, "/Response/Description");
+                GKID = XPath.GetString(Result, "/Response/Gkid");
+                errDesc = XPath.GetString(Result, "/Response/Description");
                 errCode = 0;
                 state = 0;
             }
             else
             {
-                errCode = GetValueFromAnswer(Result, "/Response/ErrCode").ToInt();
-                errDesc = string.Format("({0}) {1}", errCode, GetValueFromAnswer(Result, "/Response/Description"));
+                errCode = XPath.GetInt(Result, "/Response/ErrCode").Value;
+                errDesc = $"({errCode}) {XPath.GetString(Result, "/Response/Description")}";
                 errCode = 6;
                 state = 12;
             }
 
-            RootLog("{0} [RegPay - finish]  Ext={1} GkID={2} err={3}\r\n{4}", Tid, Session, GKID, ErrCode, ErrDesc);
+            RootLog($"{Tid} [RegPay - finish]  Ext={Session} GkID={GKID}\r\nerr={ErrCode}: {ErrDesc}");
 
         }
 
@@ -458,26 +457,25 @@ namespace Oldi.Net
             string Result = Get(Host + string.Format("?function=getbalance&PaymExtId={0}", Session));
 
             // Получение статуса запроса
-            string sResult = GetValueFromAnswer(Result, "/Response/Result");
-            errDesc = GetValueFromAnswer(Result, "/Response/Description");
+            string sResult = XPath.GetString(Result, "/Response/Result");
+            errDesc = XPath.GetString(Result, "/Response/Description");
 
 
             // Если запрос завершился с ошибкой вернем -1
             if (sResult.ToUpper() != "OK")
             {
-                errCode = GetValueFromAnswer(Result, "/Response/ErrCode").ToInt();
+                errCode = XPath.GetInt(Result, "/Response/ErrCode").Value;
                 state = 12; // Ошибка на стороне сервиса РАРИДА
-                RootLog("{0} [CheckBalance - finish] Result={1} {2}", Session, sResult, ErrDesc);
+                RootLog($"{Session} [CheckBalance - finish] Result={sResult} {ErrDesc}");
                 return false;
             }
 
             // Проверка баланса
-            string sBalance = GetValueFromAnswer(Result, "/Response/Data/Balance");
-            Balance = sBalance.ToDecimal();
+            Balance = XPath.GetDec(Result, "/Response/Data/Balance").Value;
 
             if (Balance < Amount)
             {
-                RootLog("{0} [CheckBalance - finish] Result={1} {2}\r\nБаланс {3} меньше размера платежа. Сервис приостанавливается", Session, sResult, ErrDesc, Balance);
+                RootLog($"{Session} [CheckBalance - finish] Баланс {Balance} меньше размера платежа. Сервис приостанавливается\r\nResult={sResult}: {ErrDesc}");
                 errCode = 12;
                 errDesc = "Шлюз временно заблокирован";
                 state = 0;
@@ -485,7 +483,7 @@ namespace Oldi.Net
             }
             else
             {
-                RootLog("{0} [CheckBalance - finish] Result={1} {2}\r\nБаланс {3}", Session, sResult, ErrDesc, Balance);
+                RootLog($"{Session} [CheckBalance - finish] Баланс {Balance}\r\nResult={sResult}: {ErrDesc}");
             }
 
             errCode = 0;

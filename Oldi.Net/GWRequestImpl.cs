@@ -1814,12 +1814,10 @@ namespace Oldi.Net
 
             ContentType = "utf-8";
 
-            string answer = Get(ep, string.Format("from={0}&phone=7{1}&message={2}", From, Phone, Message));
+            string answer = Get(ep, $"from={From}&phone=7{Phone}&message={Message}");
 
-			if (!string.IsNullOrEmpty(answer) && answer.IndexOf("<errCode>0</errCode>") != -1)
-				return true;
-			else
-				return false;
+            return XPath.GetInt(answer, "/Response/errCode") == 0 ? true : false;
+
 			}
 
 
@@ -1928,45 +1926,6 @@ namespace Oldi.Net
 
 			return buf;
 			}
-
-        /// <summary>
-        /// Извлекает параметр из ответа в виде XPath запроса
-        /// </summary>
-        /// <param name="answer"></param>
-        /// <param name="expr"></param>
-        /// <returns></returns>
-        protected String GetValueFromAnswer(string answer, string expr)
-        {
-
-            if (string.IsNullOrEmpty(answer))
-                return "";
-
-            try
-            {
-
-                XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
-                XPathNavigator nav = doc.CreateNavigator();
-                // XPathNodeIterator items = nav.Select(expr);
-                XPathNavigator node = nav.SelectSingleNode(expr.ToLower());
-
-                // Log("****************************************************");
-                // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
-                // Log("****************************************************");
-
-
-                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
-                return node.Select(expr.ToLower()).Current.Value;
-
-            }
-            catch (Exception /*ex*/)
-            {
-                // Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
-                // Log(answer);
-            }
-
-            return "";
-        }
-
 
         /// <summary>
 		/// Запись в основной лог

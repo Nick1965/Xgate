@@ -13,18 +13,15 @@ using System.Xml.XPath;
 namespace Oldi.Net
 {
 
-    public static class Utility
+    public static class XPath
     {
-
-        static Object LockObj = new Object();
-
         /// <summary>
         /// Извлекает параметр из ответа в виде XPath запроса
         /// </summary>
         /// <param name="answer"></param>
         /// <param name="expr"></param>
         /// <returns></returns>
-        public static String XGetString(string answer, string expr)
+        public static String GetString(string answer, string expr)
         {
 
             string result = "";
@@ -58,7 +55,7 @@ namespace Oldi.Net
         /// <param name="answer"></param>
         /// <param name="expr"></param>
         /// <returns></returns>
-        public static int? XGetInt(string answer, string expr)
+        public static int? GetInt(string answer, string expr)
         {
 
             int? result = null;
@@ -85,6 +82,46 @@ namespace Oldi.Net
 
             return result;
         }
+
+        /// <summary>
+        /// Извлекает параметр decimal? из ответа в виде XPath запроса
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <param name="expr"></param>
+        /// <returns></returns>
+        public static decimal? GetDec(string answer, string expr)
+        {
+
+            decimal? result = null;
+
+            try
+            {
+
+                XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
+                XPathNavigator nav = doc.CreateNavigator();
+                // XPathNodeIterator items = nav.Select(expr);
+                XPathNavigator node = nav.SelectSingleNode(expr.ToLower());
+
+                // Log("****************************************************");
+                // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
+                // Log("****************************************************");
+
+
+                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
+                if (!string.IsNullOrEmpty(node.Select(expr.ToLower()).Current.Value))
+                    result = node.Select(expr.ToLower()).Current.Value.ToInt();
+
+            }
+            catch (Exception) { }
+
+            return result;
+        }
+    }
+
+    public static class Utility
+    {
+
+        static Object LockObj = new Object();
 
         public static void Log(string log, string text)
 		{

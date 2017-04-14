@@ -200,10 +200,10 @@ namespace Oldi.Net
             if (!string.IsNullOrEmpty(stRequest))
             {
                 stResponse = Get(Host + "?" + stRequest);
-                errCode = GetValueFromAnswer(stResponse, "/response/result").ToInt();
-                errDesc = GetValueFromAnswer(stResponse, "/response/comment");
-                addinfo = (string.IsNullOrEmpty(addinfo))? GetValueFromAnswer(stResponse, "/response/projectName/ru"): addinfo;
-                outtid = (string.IsNullOrEmpty(Outtid)) ? GetValueFromAnswer(stResponse, "/response/order"): Outtid;
+                errCode = XPath.GetInt(stResponse, "/response/result").Value;
+                errDesc = XPath.GetString(stResponse, "/response/comment");
+                addinfo = (string.IsNullOrEmpty(addinfo))? XPath.GetString(stResponse, "/response/projectName/ru"): addinfo;
+                outtid = (string.IsNullOrEmpty(Outtid)) ? XPath.GetString(stResponse, "/response/order"): Outtid;
             }
         }
 
