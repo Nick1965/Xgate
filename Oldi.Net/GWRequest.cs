@@ -119,13 +119,7 @@ namespace Oldi.Net
 		/// <summary>
 		/// Номер агента
 		/// </summary>
-		public int AgentId
-			{
-			get
-				{
-				return agentId;
-				}
-			}
+		public int AgentId {get{return agentId;}}
 		protected int agentId = int.MinValue;
 
 		/// <summary>
@@ -393,18 +387,6 @@ namespace Oldi.Net
         public string Contact { get { return contact; } }
         protected string contact = "";
         
-        // Код авторизации на Кибере -- AcceptCode
-        // public string Authcode { get { return authcode; } }
-        // protected string  authcode = "";
-
-        // Номер транзакции (13) -- Outtid
-        // public string TransID { get { return transID; } }
-        // protected string transID = "";
-        
-        // Номер платежа в системе контрагента (Tid)
-        // public string RRN { get { return rrn; } }
-        // protected string rrn = "";
-
 		/// <summary>
 		/// Ответ Кибера: Ожидается сумма PRICE / Рекомендуемый платёж
 		/// </summary>
@@ -543,6 +525,21 @@ namespace Oldi.Net
 
 		protected int? statusType = null;
 		public int? StatusType { get { return statusType; } }
+
+        protected decimal amountLimit = 0M;
+        /// <summary>
+        /// Максимальный размер платежа
+        /// </summary>
+        public decimal AmountLimit { get { return amountLimit; } }
+
+        protected int amountDelay = 0;
+        /// <summary>
+        /// Задержка платежа в часах
+        /// </summary>
+        public int AmountDelay { get { return amountDelay; } }
+
+        protected string notify = "";
+        public string Notify { get { return notify; } }
 
 		#endregion
 

@@ -93,7 +93,7 @@ namespace Oldi.Ekt
 			{
 				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
 				if (State == 0)
-					if (FinancialCheck(New)) return;
+					if (FinancialCheck(false)) return;
 				DoPay(state, 6);
 			}
 		}

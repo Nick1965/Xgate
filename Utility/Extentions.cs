@@ -429,6 +429,37 @@ namespace Oldi.Utility
 			return d.ToString("0.00", CultureInfo.InvariantCulture);
 			}
 
+
+        /// <summary>
+        /// Преобразовывает Дату в Строку канонического вида
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static string AsCF(this DateTime d)
+        {
+            return d.ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Преобразовывает Сумму в строку канонического вида
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static string AsCF(this decimal d)
+        {
+            return d.ToString("0.00", CultureInfo.InvariantCulture);
+        }
+
+        /// <summary>
+        /// Преобразовывает Сумму в строку канонического вида
+        /// </summary>
+        /// <param name="d"></param>
+        /// <returns></returns>
+        public static string AsCF(this decimal? d)
+        {
+            return d != null? d.Value.ToString("0.00", CultureInfo.InvariantCulture): "0.00";
+        }
+
         /// <summary>
         /// Извлекает выражение Xpath[expression] из self
         /// </summary>

@@ -96,27 +96,6 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\Utility.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Redo\bin\Debug\SMPP.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\Redo.dll
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Redo\obj\x86\Debug\Redo.pdb
-D:\Projects\XGate\Redo\bin\Debug\Redo.dll.config
-D:\Projects\XGate\Redo\bin\Debug\Redo.dll
-D:\Projects\XGate\Redo\bin\Debug\Redo.pdb
-D:\Projects\XGate\Redo\bin\Debug\Autoshow.dll
-D:\Projects\XGate\Redo\bin\Debug\Cyber.dll
-D:\Projects\XGate\Redo\bin\Debug\Ekt.dll
-D:\Projects\XGate\Redo\bin\Debug\Mts.dll
-D:\Projects\XGate\Redo\bin\Debug\Oldi.Net.dll
-D:\Projects\XGate\Redo\bin\Debug\RT.dll
-D:\Projects\XGate\Redo\bin\Debug\Utility.dll
-D:\Projects\XGate\Redo\bin\Debug\SMPP.dll
-D:\Projects\XGate\Redo\bin\Debug\Autoshow.pdb
-D:\Projects\XGate\Redo\bin\Debug\Cyber.pdb
-D:\Projects\XGate\Redo\bin\Debug\Ekt.pdb
-D:\Projects\XGate\Redo\bin\Debug\Mts.pdb
-D:\Projects\XGate\Redo\bin\Debug\Oldi.Net.pdb
-D:\Projects\XGate\Redo\bin\Debug\RT.pdb
-D:\Projects\XGate\Redo\bin\Debug\Utility.pdb
-D:\Projects\XGate\Redo\bin\Debug\SMPP.pdb
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csprojResolveAssemblyReference.cache
 D:\Projects\XGate\Redo\obj\x86\Debug\OldiGW.Redo.Net.Properties.Resources.resources
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csproj.GenerateResource.Cache
-D:\Projects\XGate\Redo\obj\x86\Debug\Redo.dll
-D:\Projects\XGate\Redo\obj\x86\Debug\Redo.pdb
