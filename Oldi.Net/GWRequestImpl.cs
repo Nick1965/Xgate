@@ -1364,7 +1364,7 @@ namespace Oldi.Net
 
 			RootLog("\r\nGetПолучен ответ:");
 			foreach (string key in response.Headers.AllKeys)
-				Log("{0} = {1}", key, response.Headers[key]);
+				RootLog("{0} = {1}", key, response.Headers[key]);
 
 			// Pipes the stream to a higher level stream reader with the required encoding format. 
 			Encoding enc;
@@ -1412,7 +1412,9 @@ namespace Oldi.Net
 
 			receiveStream.Close();
 
-			return buf;
+            RootLog(buf);
+
+            return buf;
 			}
 
         /// <summary>
