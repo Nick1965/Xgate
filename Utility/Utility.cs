@@ -8,6 +8,7 @@ using System.Threading;
 using System.Globalization;
 using System.Reflection;
 using Oldi.Utility;
+using System.Xml.XPath;
 
 namespace Oldi.Net
 {
@@ -17,7 +18,75 @@ namespace Oldi.Net
 
         static Object LockObj = new Object();
 
-		public static void Log(string log, string text)
+        /// <summary>
+        /// Извлекает параметр из ответа в виде XPath запроса
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <param name="expr"></param>
+        /// <returns></returns>
+        public static String XGetString(string answer, string expr)
+        {
+
+            string result = "";
+
+            try
+            {
+
+                XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
+                XPathNavigator nav = doc.CreateNavigator();
+                // XPathNodeIterator items = nav.Select(expr);
+                XPathNavigator node = nav.SelectSingleNode(expr.ToLower());
+
+                // Log("****************************************************");
+                // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
+                // Log("****************************************************");
+
+
+                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
+                result = node.Select(expr.ToLower()).Current.Value;
+
+            }
+            catch (Exception) { }
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// Извлекает параметр int? из ответа в виде XPath запроса
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <param name="expr"></param>
+        /// <returns></returns>
+        public static int? XGetInt(string answer, string expr)
+        {
+
+            int? result = null;
+
+            try
+            {
+
+                XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
+                XPathNavigator nav = doc.CreateNavigator();
+                // XPathNodeIterator items = nav.Select(expr);
+                XPathNavigator node = nav.SelectSingleNode(expr.ToLower());
+
+                // Log("****************************************************");
+                // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
+                // Log("****************************************************");
+
+
+                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
+                if (!string.IsNullOrEmpty(node.Select(expr.ToLower()).Current.Value))
+                    result = node.Select(expr.ToLower()).Current.Value.ToInt();
+
+            }
+            catch (Exception) { }
+
+            return result;
+        }
+
+        public static void Log(string log, string text)
 		{
 			if (log.Substring(0, 1) == "{")
 				throw new ApplicationException("Не задан файл журнала");
