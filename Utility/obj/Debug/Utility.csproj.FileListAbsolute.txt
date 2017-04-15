@@ -40,8 +40,8 @@ D:\Projects\XGate\Utility\bin\Debug\Utility.dll
 D:\Projects\XGate\Utility\bin\Debug\Utility.pdb
 D:\Projects\XGate\Utility\bin\Debug\SMPP.dll
 D:\Projects\XGate\Utility\bin\Debug\SMPP.pdb
-D:\Projects\XGate\Utility\obj\Debug\Utility.csprojResolveAssemblyReference.cache
 D:\Projects\XGate\Utility\obj\Debug\Oldi.Utility.Properties.Resources.resources
 D:\Projects\XGate\Utility\obj\Debug\Utility.csproj.GenerateResource.Cache
 D:\Projects\XGate\Utility\obj\Debug\Utility.dll
 D:\Projects\XGate\Utility\obj\Debug\Utility.pdb
+D:\Projects\XGate\Utility\obj\Debug\Utility.csprojResolveAssemblyReference.cache

@@ -357,14 +357,7 @@ namespace Oldi.Net
 				if (MakePayment() != 0) return;
 
 				// Проверка дневного лимита для данного плательщика
-				try
-					{
-					DayLimitExceeded();
-					}
-				catch (Exception ex)
-					{
-					RootLog(ex.ToString());
-					}
+				if (DayLimitExceeded(true)) return; // Отложить платёж
 				
 				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
 				if (FinancialCheck(New)) return;
@@ -377,7 +370,10 @@ namespace Oldi.Net
 			{
 				if (State == 0)
 					{
-					if (FinancialCheck(New)) return;
+                    // Проверка дневного лимита для данного плательщика
+                    if (DayLimitExceeded(false)) return;
+
+                    if (FinancialCheck(New)) return;
 					if (DoPay(0, 1) != 0) return;
 					if (DoPay(1, 3) != 0) return;
 					}
@@ -1256,14 +1252,14 @@ namespace Oldi.Net
 			string From = "RegPlat";
 			string[] phones = null;
 
-			// Открыть TCP-канал
-			// NetTcpBinding binding = new NetTcpBinding(SecurityMode.None);
-			// EndpointAddress endPointAddress = new EndpointAddress("http://odbs1.regplat.ru:1101/sms");
-			// ChannelFactory<IXSMPP> myChannelFactory = new ChannelFactory<IXSMPP>(binding, endPointAddress);
-			// IXSMPP Client = myChannelFactory.CreateChannel();
-			// Response r = null;
+            // Открыть TCP-канал
+            // NetTcpBinding binding = new NetTcpBinding(SecurityMode.None);
+            // EndpointAddress endPointAddress = new EndpointAddress("http://odbs1.regplat.ru:1101/sms");
+            // ChannelFactory<IXSMPP> myChannelFactory = new ChannelFactory<IXSMPP>(binding, endPointAddress);
+            // IXSMPP Client = myChannelFactory.CreateChannel();
+            // Response r = null;
 
-			if (List.IndexOf(',') != -1 || List.IndexOf(';') != -1 || List.IndexOf('|') != -1 || List.IndexOf(' ') != -1)
+            if (List.Contains(new Char[] {',', ';', '|', ' ' }))
 				{
 				phones = List.Split(new Char[] { ' ', ',', ';', '|' });
 				StringBuilder sb = new StringBuilder();
@@ -1298,12 +1294,12 @@ namespace Oldi.Net
 		public bool SendSMS(string From, string Phone, string Message)
 			{
 			string ep = Config.AppSettings["SMPPEndpoint"];
-			RootLog("Send SMS(\"{3}\") {0} From={1} To={2}", From, Message, Phone, ep);
+			RootLog($"Send SMS(\"{ep}\") \"{Message}\" From={From} To={Phone}");
 
             ContentType = "utf-8";
 
             string answer = Get(ep, $"from={From}&phone=7{Phone}&message={Message}");
-
+            RootLog($"ErrCode={XPath.GetString(answer, "/Response/errCode")} ID={XPath.GetString(answer, "/Response/messageId")}");
             return XPath.GetInt(answer, "/Response/errCode") == 0 ? true : false;
 
 			}

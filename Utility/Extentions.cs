@@ -461,6 +461,21 @@ namespace Oldi.Utility
         }
 
         /// <summary>
+        /// Проверяет входит ли символ с в строку s
+        /// </summary>
+        /// <param name="s">Исходная строка</param>
+        /// <param name="c">Массив символов</param>
+        /// <returns></returns>
+        public static bool Contains(this string s, Char[] c)
+        {
+            if (!string.IsNullOrEmpty(s))
+                foreach (var cc in c)
+                    if (s.Contains<char>(c[0]))
+                        return true;
+            return false;
+        }
+        
+        /// <summary>
         /// Извлекает выражение Xpath[expression] из self
         /// </summary>
         /// <param name="self">Xml-документ. содержащий expression</param>

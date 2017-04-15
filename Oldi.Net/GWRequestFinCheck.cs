@@ -16,28 +16,57 @@ namespace Oldi.Net
         /// Проверка дневного лимита пользователя сайта
         /// </summary>
         /// <returns></returns>
-        public bool DayLimitExceeded()
+        public bool DayLimitExceeded(bool New)
         {
             int account = 0;
             decimal pays = 0M;
-            decimal DayLimit = 1000M;
+            decimal DayLimit = 30000M;
+            bool exceeded = false;
 
-            RootLog($"{Tid} [DLIM - strt] Проверка дневного лимита. Точка = {Terminal}");
-            // Получить номер лицевого счёта плательщика
-            if ((account = GetPayerAccount()) != 0)
+            try
             {
-                pays = PaysInTime(account);
-                if (pays + Amount > DayLimit)
-                {
-                    RootLog($"{Tid} [DLIM - stop] *** Exceeded Account {account} Pays {(pays + Amount).AsCF()} Limit {DayLimit.AsCF()}");
-                    return true;
-                }
-                // Добавить платёж в Pays
-                AddPay(account);
-            }
-            RootLog($"{Tid} [DLIM - stop] Проверка дневного лимита конец.");
 
-            return false;
+                RootLog($"{Tid} [DLIM - strt] Проверка дневного лимита. Точка = {Terminal}");
+                // Получить номер лицевого счёта плательщика
+                if (Terminal == Settings.SiteTppId && (account = GetPayerAccount()) != 0)
+                {
+                    pays = PaysInTime(account);
+                    if (pays + Amount > DayLimit)
+                    {
+                        RootLog($"{Tid} [DLIM - stop] *** Exceeded Account {account} Pays {(pays + Amount).AsCF()} Limit {DayLimit.AsCF()}");
+
+                        state = 0;
+                        errCode = 11;
+                        errDesc = $"[Фин.кон-ль] превышен дневной лимт. Отложен.";
+                        UpdateState(Tid, state: State, errCode: ErrCode, errDesc: ErrDesc, locked: 0);
+
+                        // Ищем переопределение для агента.
+                        GetAgentFromList();
+                        RootLog($"{Tid} [DLIM] Для агента AgentID=\"{AgentId}\" заданы параметры: Limit={AmountLimit.AsCurrency()} Delay={AmountDelay} часов Notify={Notify}");
+
+                        // Отправить СМС-уведомление, усли список уведомлений не пуст
+                        if (New && State == 0)
+                            SendNotification(Notify, $"Card={account} S={AmountAll.AsCF()} превышен дневной лимит.");
+
+                        RootLog($"{Tid} [DLIM - stop] {Service}/{Gateway} Card={account} Pays={(pays + Amount).AsCF()} Lim={DayLimit.AsCF()} превышен дневной лимт - State={State}");
+
+                        exceeded = true;
+
+                    }
+                    // Добавить платёж в Pays
+                    if (New && State == 0)
+                        AddPay(account);
+                }
+                RootLog($"{Tid} [DLIM - stop] Проверка дневного лимита конец.");
+
+            }
+            catch(Exception ex)
+            {
+                RootLog($"{Tid} [DLIM - stop] Ph={Phone} Ac={Account}\r\n{ex}");
+            }
+
+            return exceeded;
+
         }
 
         /// <summary>
@@ -49,7 +78,7 @@ namespace Oldi.Net
 
             try
             {
-                RootLog($"{Tid} [DLIM] {1} {2}", Tid, "SELECT sub_inner_tid FROM Gorod.dbo].payment where tid =");
+                RootLog($"{Tid} [DLIM] {"SELECT [Card_number] FROM Gorod.dbo].payment where tid ="} {Tid}");
 
                 int? Card = null;
 
@@ -101,7 +130,7 @@ namespace Oldi.Net
                 balance = pays.First();
             }
             RootLog($"{Tid} [DLIM] Account {account} за день выплачено {balance.AsCF()}");
-            return balance.Value;
+            return balance == null ? 0M : balance.Value;
         }
 
         /// <summary>
@@ -112,9 +141,9 @@ namespace Oldi.Net
         {
             using (OldiContext db = new OldiContext(Settings.ConnectionString))
             {
-                db.ExecuteCommand("insert into oldigw.oldigw.pays (tid, datepay, account, amount, balance) values({0}, {1}, {2}, {3}, {4})", Tid, account, DateTime.Now, Amount, 0M);
+                db.ExecuteCommand("insert into oldigw.oldigw.pays (tid, datepay, account, amount, balance) values({0}, {1}, {2}, {3}, {4})", Tid, DateTime.Now, account, Amount, 0M);
             }
-            RootLog("{0} [DLIM] Account {1} добавлен платёж {2}", Tid, account, Amount.AsCF());
+            RootLog($"{0} [DLIM] Account {account} добавлен платёж {Amount.AsCF()}");
         }
 
         /// <summary>
@@ -188,10 +217,11 @@ namespace Oldi.Net
                     return false;
                 }
 
-                if (AmountAll >= AmountLimit && Pcdate.AddHours(AmountDelay) >= DateTime.Now) // Проверка отправки СМС
+                // Строго больше!
+                if (AmountAll > AmountLimit && Pcdate.AddHours(AmountDelay) >= DateTime.Now) // Проверка отправки СМС
                 {
 
-                    RootLog($"{Tid} [FCHK - chck] {Service}/{Gateway} Trm={Terminal} Limit={AmountLimit.AsCF()} Amount{AmountAll.AsCF()}");
+                    RootLog($"{Tid} [FCHK - delay] {Service}/{Gateway} Trm={Terminal} Limit={AmountLimit.AsCF()} Amount{AmountAll.AsCF()}");
 
                     state = 0;
                     errCode = 11;

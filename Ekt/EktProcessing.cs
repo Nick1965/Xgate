@@ -70,30 +70,30 @@ namespace Oldi.Ekt
 
                 if (MakePayment() == 0)
 				{
-                    // TraceRequest("New");
+                // TraceRequest("New");
 
-                    // Проверка дневного лимита для данного плательщика
-				try
-					{
-					DayLimitExceeded();
-					}
-				catch (Exception ex)
-					{
-					RootLog(ex.ToString());
-					}
-				
-				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-					if (FinancialCheck(New)) return;
-					DoPay(0, 3);
+                // Проверка дневного лимита для нового плательщика
+                if (DayLimitExceeded(true)) return;
+
+                // Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
+                RootLog($"{Tid} [EktProcessing.Processing - NEW start] {Provider} {Service}/{Gateway} {AmountAll.AsCF()}");
+				if (FinancialCheck(New)) return;
+				DoPay(0, 3);
 				}
                 TechInfo = $"state={result.state} substate={result.substate} code={result.code}";
 				// TraceRequest("End");
 			}
 			else // Redo
 			{
-				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-				if (State == 0)
-					if (FinancialCheck(false)) return;
+                // Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
+                if (State == 0)
+                {
+                    // Проверка дневного лимита для нового плательщика
+                    if (DayLimitExceeded(false)) return;
+
+                    RootLog($"{Tid} [EktProcessing.Processing - REDO start] {Provider} {Service}/{Gateway} {AmountAll.AsCF()}");
+                    if (FinancialCheck(false)) return;
+                }
 				DoPay(state, 6);
 			}
 		}

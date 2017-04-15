@@ -620,14 +620,7 @@ namespace Oldi.Mts
 						{
 		
 						// Проверка дневного лимита для данного плательщика
-						try
-							{
-							DayLimitExceeded();
-							}
-						catch (Exception ex)
-							{
-							RootLog(ex.ToString());
-							}
+                        if (DayLimitExceeded(true)) return;
 
 						// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
 						if (FinancialCheck(New)) return;
