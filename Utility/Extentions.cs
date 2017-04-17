@@ -396,14 +396,29 @@ namespace Oldi.Utility
 		/// </summary>
 		/// <param name="s"></param>
 		/// <returns></returns>
-		public static int ToInt(this string s)
+		public static long ToLong(this string s)
 			{
-			int x;
-			if (int.TryParse(s, out x))
+			long x;
+			if (long.TryParse(s, out x))
 				return x;
 			else
 				return -1;
 			}
+
+        /// <summary>
+        /// Преобразовывает в целое число
+        /// </summary>
+        /// <param name="s"></param>
+        /// <returns></returns>
+        public static int ToInt(this string s)
+        {
+            int x;
+            if (int.TryParse(s, out x))
+                return x;
+            else
+                return -1;
+        }
+
 
         /// <summary>
         /// Преобразует в decimal

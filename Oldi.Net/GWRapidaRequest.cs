@@ -466,16 +466,18 @@ namespace Oldi.Net
             {
                 errCode = XPath.GetInt(Result, "/Response/ErrCode").Value;
                 state = 12; // Ошибка на стороне сервиса РАРИДА
-                RootLog($"{Session} [CheckBalance - finish] Result={sResult} {ErrDesc}");
+                RootLog($"{Tid} {Session} [CheckBalance - finish] Result={sResult} {ErrDesc}");
                 return false;
             }
 
             // Проверка баланса
             Balance = XPath.GetDec(Result, "/Response/Data/Balance").Value;
 
+            RootLog($"{Tid} {Session} {Service} sResult={sResult} Balance={Balance.AsCF()} Amount={Amount.AsCF()}");
+
             if (Balance < Amount)
             {
-                RootLog($"{Session} [CheckBalance - finish] Баланс {Balance} меньше размера платежа. Сервис приостанавливается\r\nResult={sResult}: {ErrDesc}");
+                RootLog($"{Tid} {Session} [CheckBalance - finish] Баланс {Balance} меньше размера платежа. Сервис приостанавливается\r\nResult={sResult}: {ErrDesc}");
                 errCode = 12;
                 errDesc = "Шлюз временно заблокирован";
                 state = 0;
@@ -483,7 +485,7 @@ namespace Oldi.Net
             }
             else
             {
-                RootLog($"{Session} [CheckBalance - finish] Баланс {Balance}\r\nResult={sResult}: {ErrDesc}");
+                RootLog($"{Tid} {Session} [CheckBalance - finish] Баланс {Balance}\r\nResult={sResult}: {ErrDesc}");
             }
 
             errCode = 0;
@@ -645,6 +647,43 @@ namespace Oldi.Net
                 // Console.WriteLine(ex.ToString());
                 errCode = 500;
                 errDesc = "Внутрення ошибка сервиса HYPERCASSA";
+            }
+
+            return "";
+        }
+
+        /// <summary>
+        /// Извлекает параметр из ответа в виде XPath запроса
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <param name="expr"></param>
+        /// <returns></returns>
+        String GetValueFromAnswer(string answer, string expr)
+        {
+
+            if (string.IsNullOrEmpty(answer))
+                return "";
+
+            try
+            {
+
+                XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
+                XPathNavigator nav = doc.CreateNavigator();
+                // XPathNodeIterator items = nav.Select(expr);
+                XPathNavigator node = nav.SelectSingleNode(expr.ToLower());
+
+                // Log("****************************************************");
+                // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
+                // Log("****************************************************");
+
+
+                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
+                return node.Select(expr.ToLower()).Current.Value;
+
+            }
+            catch (Exception ex)
+            {
+                Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
             }
 
             return "";

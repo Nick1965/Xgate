@@ -9,6 +9,8 @@ using System.Globalization;
 using System.Reflection;
 using Oldi.Utility;
 using System.Xml.XPath;
+using System.Xml;
+using System.Text.RegularExpressions;
 
 namespace Oldi.Net
 {
@@ -29,21 +31,56 @@ namespace Oldi.Net
             try
             {
 
-                XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
+                string e = expr.ToLower();
+
+                XmlDocument x = new XmlDocument();
+                x.LoadXml(answer.ToLower());
+
+                StringBuilder sb = new StringBuilder();
+                StringWriter sw = new StringWriter(sb);
+                XmlTextWriter xw = new XmlTextWriter(sw);
+
+                xw.Formatting = Formatting.Indented;
+
+                x.WriteContentTo(xw);
+                // x.Save(xw);
+
+
+                string pattern = @"xmlns=""(.*)""";
+                Regex regex = new Regex(pattern);
+                string xDoc = sb.ToString();
+
+                Console.WriteLine($"Поиск для образца: {pattern}");
+                foreach (Match match in regex.Matches(sb.ToString()))
+                {
+                    // Console.WriteLine("Found '{0}' at position {1}", match.Value, match.Index);
+                    xDoc = xDoc.Replace(match.Value, "");
+                    // Console.WriteLine($"Traget: \r\n{xDoc}\r\n");
+                    break;
+                }
+
+                // XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
+
+
+                XPathDocument doc = new XPathDocument(new StringReader(xDoc));
                 XPathNavigator nav = doc.CreateNavigator();
                 // XPathNodeIterator items = nav.Select(expr);
-                XPathNavigator node = nav.SelectSingleNode(expr.ToLower());
+                XPathNavigator node = nav.SelectSingleNode(e);
 
                 // Log("****************************************************");
                 // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
                 // Log("****************************************************");
 
 
-                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
-                result = node.Select(expr.ToLower()).Current.Value;
+                // Console.WriteLine("{0}={1}", expr, node.Select(expr).Current.Value);
+                // Console.WriteLine("{0} of {1}", expr, node.Select(expr));
+                result = node.Select(e).Current.Value;
 
             }
-            catch (Exception) { }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"{expr}: {ex.ToString()}");
+            }
 
             return result;
         }
@@ -59,26 +96,27 @@ namespace Oldi.Net
         {
 
             int? result = null;
+            string sResult = GetString(answer, expr);
+            if (!string.IsNullOrEmpty(sResult))
+                result = sResult.ToInt();
 
-            try
-            {
+            return result;
+        }
 
-                XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
-                XPathNavigator nav = doc.CreateNavigator();
-                // XPathNodeIterator items = nav.Select(expr);
-                XPathNavigator node = nav.SelectSingleNode(expr.ToLower());
+        /// <summary>
+        /// Извлекает параметр long? из ответа в виде XPath запроса
+        /// </summary>
+        /// <param name="answer"></param>
+        /// <param name="expr"></param>
+        /// <returns></returns>
+        public static long? GetLong(string answer, string expr)
+        {
 
-                // Log("****************************************************");
-                // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
-                // Log("****************************************************");
+            long? result = null;
 
-
-                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
-                if (!string.IsNullOrEmpty(node.Select(expr.ToLower()).Current.Value))
-                    result = node.Select(expr.ToLower()).Current.Value.ToInt();
-
-            }
-            catch (Exception) { }
+            string sResult = GetString(answer, expr);
+            if (!string.IsNullOrEmpty(sResult))
+                result = sResult.ToLong();
 
             return result;
         }
@@ -94,30 +132,19 @@ namespace Oldi.Net
 
             decimal? result = null;
 
-            try
-            {
-
-                XPathDocument doc = new XPathDocument(new StringReader(answer.ToLower()));
-                XPathNavigator nav = doc.CreateNavigator();
-                // XPathNodeIterator items = nav.Select(expr);
-                XPathNavigator node = nav.SelectSingleNode(expr.ToLower());
-
-                // Log("****************************************************");
-                // Log("XPath: {0} = {1}", expr, node.Select(expr).Current.Value);
-                // Log("****************************************************");
-
-
-                // Console.WriteLine("{0}={1}", expr, node.Select(expr.ToLower()).Current.Value);
-                if (!string.IsNullOrEmpty(node.Select(expr.ToLower()).Current.Value))
-                    result = node.Select(expr.ToLower()).Current.Value.ToInt();
-
-            }
-            catch (Exception) { }
+            string sResult = GetString(answer, expr);
+            if (!string.IsNullOrEmpty(sResult))
+                result = sResult.ToDecimal();
 
             return result;
         }
+
+
     }
 
+    /// <summary>
+    /// Клас функций логгера
+    /// </summary>
     public static class Utility
     {
 

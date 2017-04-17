@@ -6,6 +6,7 @@ using Oldi.Net.Cyber;
 using Oldi.Utility;
 using System.Collections.Specialized;
 using Oldi.Ekt;
+using Oldi.Net;
 
 namespace Test
 {
@@ -34,14 +35,28 @@ namespace Test
 			}
 			*/
 
-            Console.WriteLine("Begin");
-            Settings.ReadConfig();
+            Console.WriteLine("Test begin");
+            // Settings.ReadConfig();
 
-            EktTest ekt = new EktTest();
+            // EktTest ekt = new EktTest();
 
-            Console.WriteLine("ekt.Run()");
-            ekt.Run();
-		}
+
+            string TestString = @"<Response xmlns=""http://schemas.datacontract.org/2004/07/XSMPP"" xmlns:i=""http://www.w3.org/2001/XMLSchema-instance""><errCode>0</errCode><errDesc/><messageId>92245687605</messageId><messageState>1</messageState></Response>";
+            // string TestString = @"<Response><errCode>0</errCode><errDesc/><messageId>92245687605</messageId><messageState>1</messageState></Response>";
+            Console.WriteLine(TestString);
+            Console.WriteLine();
+
+            Console.WriteLine("errCode={0}", XPath.GetLong(TestString, "/Response/ErrCode"));
+            Console.WriteLine("messageId={0}", XPath.GetLong(TestString, "/Response/MessageId"));
+            // Console.WriteLine("errCode={0}", XPath.GetString(TestString, "/Response/errCode"));
+            // Console.WriteLine("messageId={0}", XPath.GetString(TestString, "/Response/messageId"));
+
+            // Console.WriteLine("ekt.Run()");
+            // ekt.Run();
+
+            Console.WriteLine("Test end");
+
+        }
 
     }
 
