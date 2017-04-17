@@ -26,10 +26,10 @@ namespace Oldi.Net
             try
             {
 
-                RootLog($"{Tid} [DLIM - strt] Проверка дневного лимита. Точка = {Terminal}");
                 // Получить номер лицевого счёта плательщика
-                if (Terminal == Settings.SiteTppId && (account = GetPayerAccount()) != 0)
+                if ((account = GetPayerAccount()) != 0)
                 {
+                    RootLog($"{Tid} [DLIM - strt] Проверка дневного лимита. Плательщик = {account}");
                     pays = PaysInTime(account);
                     if (pays + Amount > DayLimit)
                     {
@@ -46,7 +46,7 @@ namespace Oldi.Net
 
                         // Отправить СМС-уведомление, усли список уведомлений не пуст
                         if (New && State == 0)
-                            SendNotification(Notify, $"Card={account} S={AmountAll.AsCF()} превышен дневной лимит.");
+                            SendNotification(Notify, $"Payer={account} S={AmountAll.AsCF()} превышен дневной лимит.");
 
                         RootLog($"{Tid} [DLIM - stop] {Service}/{Gateway} Card={account} Pays={(pays + Amount).AsCF()} Lim={DayLimit.AsCF()} превышен дневной лимт - State={State}");
 
@@ -56,8 +56,9 @@ namespace Oldi.Net
                     // Добавить платёж в Pays
                     if (New && State == 0)
                         AddPay(account);
+
+                    RootLog($"{Tid} [DLIM - stop] Проверка дневного лимита конец.");
                 }
-                RootLog($"{Tid} [DLIM - stop] Проверка дневного лимита конец.");
 
             }
             catch(Exception ex)
@@ -78,7 +79,7 @@ namespace Oldi.Net
 
             try
             {
-                RootLog($"{Tid} [DLIM] {"SELECT [Card_number] FROM Gorod.dbo].payment where tid ="} {Tid}");
+                // RootLog($"{Tid} [DLIM] {"SELECT [Card_number] FROM Gorod.dbo].payment where tid ="} {Tid}");
 
                 int? Card = null;
 
@@ -143,7 +144,7 @@ namespace Oldi.Net
             {
                 db.ExecuteCommand("insert into oldigw.oldigw.pays (tid, datepay, account, amount, balance) values({0}, {1}, {2}, {3}, {4})", Tid, DateTime.Now, account, Amount, 0M);
             }
-            RootLog($"{0} [DLIM] Account {account} добавлен платёж {Amount.AsCF()}");
+            RootLog($"{Tid} [DLIM] Account {account} добавлен платёж {Amount.AsCF()}");
         }
 
         /// <summary>
