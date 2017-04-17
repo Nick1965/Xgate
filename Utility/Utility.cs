@@ -50,7 +50,7 @@ namespace Oldi.Net
                 Regex regex = new Regex(pattern);
                 string xDoc = sb.ToString();
 
-                Console.WriteLine($"Поиск для образца: {pattern}");
+                // Console.WriteLine($"Поиск для образца: {pattern}");
                 foreach (Match match in regex.Matches(sb.ToString()))
                 {
                     // Console.WriteLine("Found '{0}' at position {1}", match.Value, match.Index);
