@@ -182,7 +182,7 @@ namespace Oldi.Net
                     x = Card;
                 else
                 {
-                    RootLog($"{Tid} [FCHK stop] {Service}/{Gateway} Не задан номер счёта");
+                    RootLog($"{Tid} [FCHK] {Provider} {Service}/{Gateway} Не задан номер счёта");
                     return false;
                 }
 
@@ -193,7 +193,7 @@ namespace Oldi.Net
                 // Если номер телефона в списке исключаемых завершить финансовый контроль
                 if (FindInLists(Settings.Lists, x, 1) == 1) // Найден в белом списке
                 {
-                    RootLog($"{Tid} [FCHK - stop] Provider={Provider} {Service}/{Gateway} Num=\"{x}\" найден в белом списке, завершение проверки");
+                    RootLog($"{Tid} [FCHK] Provider={Provider} {Service}/{Gateway} Num=\"{x}\" найден в белом списке, завершение проверки");
                     return false;
                 }
 
@@ -209,45 +209,46 @@ namespace Oldi.Net
 
                 // Ищем переопределение для агента.
                 GetAgentFromList();
-                RootLog($"{Tid} [FCHK] Для агента AgentID=\"{AgentId}\" заданы параметры: Limit={AmountLimit.AsCurrency()} Delay={AmountDelay} часов Notify={Notify}");
+                // RootLog($"{Tid} [FCHK] Для агента AgentID=\"{AgentId}\" заданы параметры: Limit={AmountLimit.AsCurrency()} Delay={AmountDelay} часов Notify={Notify}");
 
                 foreach (var item in ProviderList)
                 {
-                    if (Provider.ToLower() == item.Name.ToLower() && Service.ToLower() == item.Service.ToLower() && Gateway.ToLower() == item.Gateway.ToLower() && item.TerminalType == tt)
+                    if (Service.ToLower() == item.Service.ToLower() && Gateway.ToLower() == item.Gateway.ToLower() && item.TerminalType == tt)
                     {
                         // Переопределяем правило лимитов для провайдера
                         amountLimit = item.Limit;
                         // check = true;
-                        RootLog($"{Tid} [FCHK] Переопределение для ПУ {Provider} {Service}/{Gateway} Type={tt}: AmountLimit={AmountLimit.AsCF()} State={State}");
+                        // RootLog($"{Tid} [FCHK] Переопределение для ПУ {Provider} {Service}/{Gateway} Type={tt}: AmountLimit={AmountLimit.AsCF()} State={State}");
                         break;
                     }
-                }
-
-                // Если меньше допустимого лимита, не ставить на контроль
-                if (AmountAll < AmountLimit)
-                {
-                    RootLog($"{Tid} [FCHK - stop] {Service}/{Gateway} Num=\"{x}\" сумма платежа {AmountAll.AsCurrency()} меньше общего лимита {AmountLimit.AsCurrency()}, завершение проверки");
-                    return false;
                 }
 
                 // Строго больше!
                 if (AmountAll > AmountLimit && Pcdate.AddHours(AmountDelay) >= DateTime.Now) // Проверка отправки СМС
                 {
 
-                    RootLog($"{Tid} [FCHK - delay] {Service}/{Gateway} Trm={Terminal} Limit={AmountLimit.AsCF()} Amount{AmountAll.AsCF()}");
+                    // RootLog($"{Tid} [FCHK] {Provider} {Service}/{Gateway} Trm={Terminal} Limit={AmountLimit.AsCF()} Amount{AmountAll.AsCF()}");
+                    RootLog($"{Tid} [FCHK] {Provider} {Service}/{Gateway} Pcdate+delay={Pcdate.AddHours(AmountDelay).AsCF()} Limit={AmountLimit.AsCF()} Amount{AmountAll.AsCF()}");
 
                     state = 0;
                     errCode = 11;
                     errDesc = $"[Фин.кон-ль] Отложен до {Pcdate.AddHours(AmountDelay)}";
                     UpdateState(Tid, state: State, errCode: ErrCode, errDesc: ErrDesc, locked: 0);
-                    RootLog($"{Tid} [FCHK - stop] {Service}/{Gateway} Trm={Terminal} Num={x} A={Amount.AsCF()} S={AmountAll.AsCF()} - Отложен до {Pcdate.AddHours(AmountDelay).AsCF()} State={State}");
+                    RootLog($"{Tid} [FCHK] {Provider} {Service}/{Gateway} Trm={Terminal} Acc={x} A={Amount.AsCF()} S={AmountAll.AsCF()} Limit={AmountLimit.AsCF()} - Отложен до {Pcdate.AddHours(AmountDelay).AsCF()}");
 
                     // Отправить СМС-уведомление, усли список уведомлений не пуст
-                    if (newPay && !string.IsNullOrEmpty(Notify))
+                    // Отправлять СМС только для терминалов
+                    if (newPay && !string.IsNullOrEmpty(Notify) && TerminalType == 1)
                         SendNotification(Notify, $"Num={x} S={AmountAll.AsCF()} Trm={Terminal} блок до {Pcdate.AddHours(AmountDelay).AsCF()}");
 
                     // Не найден  в белом списке - на контроль!
                     return true;
+                }
+                else
+                {
+                    // Если меньше допустимого лимита, не ставить на контроль
+                    RootLog($"{Tid} [FCHK - stop] {Service}/{Gateway} Num=\"{x}\" сумма платежа {AmountAll.AsCurrency()} меньше общего лимита {AmountLimit.AsCurrency()}, завершение проверки");
+                    return false;
                 }
 
 
@@ -439,7 +440,7 @@ namespace Oldi.Net
             }
             catch (Exception ex)
             {
-                RootLog("[FCHK] Agents lists: {0}", ex.Message);
+                RootLog($"{Tid} {Provider} {Service}/{Gateway} [FCHK] исключение:\r\n{ex}");
             }
 
         }
