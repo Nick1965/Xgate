@@ -20,7 +20,8 @@ namespace Oldi.Net
         {
             int account = 0;
             decimal pays = 0M;
-            decimal DayLimit = 30000M;
+            decimal DayLimit = 10000M;
+            decimal OnePayment = 5000M;
             bool exceeded = false;
 
             try
@@ -29,41 +30,52 @@ namespace Oldi.Net
                 // Получить номер лицевого счёта плательщика
                 if ((account = GetPayerAccount()) != 0)
                 {
-                    RootLog($"{Tid} [DLIM - strt] Проверка дневного лимита. Плательщик = {account}");
+                    RootLog($"{Tid} [DLIM] Account={account} Проверка дневного лимита.");
                     pays = PaysInTime(account);
                     if (pays + Amount > DayLimit)
                     {
-                        RootLog($"{Tid} [DLIM - stop] *** Exceeded Account {account} Pays {(pays + Amount).AsCF()} Limit {DayLimit.AsCF()}");
+                        RootLog($"{Tid} [DLIM] Превышен дневной лимит для {account} Сумма= {(pays + Amount).AsCF()} Лимит= {DayLimit.AsCF()}");
 
                         state = 0;
-                        errCode = 11;
+                        errCode = 12;
                         errDesc = $"[Фин.кон-ль] превышен дневной лимт. Отложен.";
                         UpdateState(Tid, state: State, errCode: ErrCode, errDesc: ErrDesc, locked: 0);
 
                         // Ищем переопределение для агента.
-                        GetAgentFromList();
-                        RootLog($"{Tid} [DLIM] Для агента AgentID=\"{AgentId}\" заданы параметры: Limit={AmountLimit.AsCurrency()} Delay={AmountDelay} часов Notify={Notify}");
+                        // GetAgentFromList();
+                        // RootLog($"{Tid} [DLIM] Для агента AgentID=\"{AgentId}\" заданы параметры: Limit={AmountLimit.AsCurrency()} Delay={AmountDelay} часов Notify={Notify}");
 
+                        // Сообщать о превышении не будем СМС !!!
                         // Отправить СМС-уведомление, усли список уведомлений не пуст
-                        if (New && State == 0)
-                            SendNotification(Notify, $"Payer={account} S={AmountAll.AsCF()} превышен дневной лимит.");
+                        // if (New && State == 0)
+                        //    SendNotification(Notify, $"Payer={account} S={AmountAll.AsCF()} превышен дневной лимит.");
 
-                        RootLog($"{Tid} [DLIM - stop] {Service}/{Gateway} Card={account} Pays={(pays + Amount).AsCF()} Lim={DayLimit.AsCF()} превышен дневной лимт - State={State}");
+                        // RootLog($"{Tid} [DLIM - stop] {Service}/{Gateway} Card={account} Pays={(pays + Amount).AsCF()} Lim={DayLimit.AsCF()} превышен дневной лимт - State={State}");
 
                         exceeded = true;
 
+                    }
+                    if (Amount > OnePayment)
+                    {
+                        RootLog($"{Tid} [DLIM - stop] Превышен размер разового платежа для {account} Платёж= {Amount.AsCF()} Лимит= {OnePayment.AsCF()}");
+
+                        state = 0;
+                        errCode = 12;
+                        errDesc = $"[Фин.кон-ль] превышен разовый платёж. Отложен.";
+                        UpdateState(Tid, state: State, errCode: ErrCode, errDesc: ErrDesc, locked: 0);
+                        exceeded = true;
                     }
                     // Добавить платёж в Pays
                     if (New && State == 0)
                         AddPay(account);
 
-                    RootLog($"{Tid} [DLIM - stop] Проверка дневного лимита конец.");
+                    RootLog($"{Tid} [DLIM] Account={account} Конец проверки.");
                 }
 
             }
             catch(Exception ex)
             {
-                RootLog($"{Tid} [DLIM - stop] Ph={Phone} Ac={Account}\r\n{ex}");
+                RootLog($"{Tid} [DLIM] Ph={Phone} Ac={Account} Number={Number}\r\n{ex}");
             }
 
             return exceeded;
