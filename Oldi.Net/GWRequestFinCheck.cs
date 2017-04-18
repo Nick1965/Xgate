@@ -288,7 +288,11 @@ namespace Oldi.Net
 
                 foreach (var item in ProviderList)
                 {
-                    if (Provider.ToLower() == item.Name.ToLower() && Service.ToLower() == item.Service.ToLower() && Gateway.ToLower() == item.Gateway.ToLower() && item.TerminalType == tt)
+                    string _provider = string.IsNullOrEmpty(Provider) ? "": Provider.ToLower();
+                    string _service = string.IsNullOrEmpty(Service) ? "" : Service.ToLower();
+                    string _gateway = string.IsNullOrEmpty(Gateway) ? "" : Gateway.ToLower();
+
+                    if (_provider == item.Name.ToLower() && _service == item.Service.ToLower() && _gateway == item.Gateway.ToLower() && item.TerminalType == tt)
                     {
                         // Переопределяем правило лимитов для провайдера
                         amountLimit = item.Limit;
@@ -336,6 +340,14 @@ namespace Oldi.Net
             public string Gateway;      // шлюз
             public decimal Limit;       // предельное значение платежа
             public int TerminalType;    // тип терминала 1, 2 или 3
+            public CheckedProvider()
+            {
+                Name = "";
+                Service = "";
+                Gateway = "";
+                Limit = decimal.MinusOne;
+                TerminalType = 1;
+            }
         }
 
         /// <summary>

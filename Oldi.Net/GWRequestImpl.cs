@@ -360,7 +360,7 @@ namespace Oldi.Net
 				if (DayLimitExceeded(true)) return; // Отложить платёж
 				
 				// Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-				if (FinancialCheck(New)) return;
+				if (FinancialCheck(true)) return;
 
 				if (DoPay(0, 1) != 0) return;
 				if (DoPay(1, 3) != 0) return;
@@ -370,10 +370,12 @@ namespace Oldi.Net
 			{
 				if (State == 0)
 					{
+                    RootLog($"{Tid} base.Processing {Provider} {Service}/{Gateway} {Phone}{Account}{Number}{Card} {AmountAll.AsCF()}");
+
                     // Проверка дневного лимита для данного плательщика
                     if (DayLimitExceeded(false)) return;
 
-                    if (FinancialCheck(New)) return;
+                    if (FinancialCheck(false)) return;
 					if (DoPay(0, 1) != 0) return;
 					if (DoPay(1, 3) != 0) return;
 					}
