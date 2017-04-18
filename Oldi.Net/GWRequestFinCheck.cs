@@ -209,16 +209,16 @@ namespace Oldi.Net
 
                 // Ищем переопределение для агента.
                 GetAgentFromList();
-                // RootLog($"{Tid} [FCHK] Для агента AgentID=\"{AgentId}\" заданы параметры: Limit={AmountLimit.AsCurrency()} Delay={AmountDelay} часов Notify={Notify}");
+                RootLog($"{Tid} [FCHK] Для агента AgentID=\"{AgentId}\" заданы параметры: Limit={AmountLimit.AsCurrency()} Delay={AmountDelay} часов Notify={Notify}");
 
                 foreach (var item in ProviderList)
                 {
-                    if (Service.ToLower() == item.Service.ToLower() && Gateway.ToLower() == item.Gateway.ToLower() && item.TerminalType == tt)
+                    if (Provider.ToLower() == item.Name.ToLower() && Service.ToLower() == item.Service.ToLower() && Gateway.ToLower() == item.Gateway.ToLower() && item.TerminalType == tt)
                     {
                         // Переопределяем правило лимитов для провайдера
                         amountLimit = item.Limit;
                         // check = true;
-                        // RootLog($"{Tid} [FCHK] Переопределение для ПУ {Provider} {Service}/{Gateway} Type={tt}: AmountLimit={AmountLimit.AsCF()} State={State}");
+                        RootLog($"{Tid} [FCHK] Переопределение для {Provider} {Service}/{Gateway} Type={tt}: AmountLimit={AmountLimit.AsCF()}");
                         break;
                     }
                 }
@@ -228,7 +228,7 @@ namespace Oldi.Net
                 {
 
                     // RootLog($"{Tid} [FCHK] {Provider} {Service}/{Gateway} Trm={Terminal} Limit={AmountLimit.AsCF()} Amount{AmountAll.AsCF()}");
-                    RootLog($"{Tid} [FCHK] {Provider} {Service}/{Gateway} Pcdate+delay={Pcdate.AddHours(AmountDelay).AsCF()} Limit={AmountLimit.AsCF()} Amount{AmountAll.AsCF()}");
+                    // RootLog($"{Tid} [FCHK] {Provider} {Service}/{Gateway} Pcdate+delay={Pcdate.AddHours(AmountDelay).AsCF()} Limit={AmountLimit.AsCF()} Amount{AmountAll.AsCF()}");
 
                     state = 0;
                     errCode = 11;
@@ -244,13 +244,9 @@ namespace Oldi.Net
                     // Не найден  в белом списке - на контроль!
                     return true;
                 }
-                else
-                {
-                    // Если меньше допустимого лимита, не ставить на контроль
-                    RootLog($"{Tid} [FCHK - stop] {Service}/{Gateway} Num=\"{x}\" сумма платежа {AmountAll.AsCurrency()} меньше общего лимита {AmountLimit.AsCurrency()}, завершение проверки");
-                    return false;
-                }
-
+                
+                // Если меньше допустимого лимита, не ставить на контроль
+                RootLog($"{Tid} [FCHK - stop] {Service}/{Gateway} Num=\"{x}\" сумма платежа {AmountAll.AsCurrency()} меньше общего лимита {AmountLimit.AsCurrency()}, завершение проверки");
 
             }
 
@@ -321,9 +317,9 @@ namespace Oldi.Net
                                         if (item.Name.LocalName == "Gateway")
                                             providerItem.Gateway = item.Value;
                                         if (item.Name.LocalName == "Limit")
-                                            providerItem.Limit = XConvert.ToDecimal(item.Value);
+                                            providerItem.Limit = item.Value.ToDecimal();
                                         if (item.Name.LocalName == "TerminalType")
-                                            providerItem.TerminalType = int.Parse(item.Value);
+                                            providerItem.TerminalType = item.Value.ToInt();
                                     }
                                     // Settings.checkedProviders.Add(new ProviderItem(Name, Service, Gateway, Limit));
                                     CheckedProviders.Add(providerItem);
@@ -337,7 +333,7 @@ namespace Oldi.Net
             }
             else
             {
-                RootLog("Нет секции FinancialCheck");
+                RootLog($"{Tid} Нет секции FinancialCheck");
             }
 
             return CheckedProviders;
@@ -416,8 +412,8 @@ namespace Oldi.Net
 
                                     foreach (var item in s.Attributes())
                                     {
-                                        if (item.Name.LocalName == "Limit") _amountLimit = decimal.Parse(item.Value);
-                                        if (item.Name.LocalName == "AmountDelay") _amountDelay = int.Parse(item.Value);
+                                        if (item.Name.LocalName == "Limit") _amountLimit = item.Value.ToDecimal();
+                                        if (item.Name.LocalName == "AmountDelay") _amountDelay = item.Value.ToInt();
                                         if (item.Name.LocalName == "Notify") _notify = item.Value;
                                         if (item.Name.LocalName == "ID") _agent = item.Value;
                                     }
