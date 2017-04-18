@@ -52,7 +52,7 @@ namespace Oldi.Net
 
                         // RootLog($"{Tid} [DLIM - stop] {Service}/{Gateway} Card={account} Pays={(pays + Amount).AsCF()} Lim={DayLimit.AsCF()} превышен дневной лимт - State={State}");
 
-                        exceeded = true;
+                        return true;
 
                     }
                     if (Amount > OnePayment)
@@ -63,7 +63,7 @@ namespace Oldi.Net
                         errCode = 12;
                         errDesc = $"[Фин.кон-ль] превышен разовый платёж. Отложен.";
                         UpdateState(Tid, state: State, errCode: ErrCode, errDesc: ErrDesc, locked: 0);
-                        exceeded = true;
+                        return true;
                     }
                     // Добавить платёж в Pays
                     if (New && State == 0)
@@ -78,7 +78,7 @@ namespace Oldi.Net
                 RootLog($"{Tid} [DLIM] Ph={Phone} Ac={Account} Number={Number}\r\n{ex}");
             }
 
-            return exceeded;
+            return false;
 
         }
 
