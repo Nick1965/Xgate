@@ -6,12 +6,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using System.Xml.Serialization;
 
 namespace Oldi.Net
 {
     public partial class GWRequest
     {
 
+        /// <summary>
+        /// Дневной лимит
+        /// </summary>
+        decimal DayLimit = 0M;
+        /// <summary>
+        /// Разовый максимальный платёж
+        /// </summary>
+        decimal OnePayment = 0M;
+        
         /// <summary>
         /// Проверка дневного лимита пользователя сайта
         /// </summary>
@@ -20,9 +30,6 @@ namespace Oldi.Net
         {
             int account = 0;
             decimal pays = 0M;
-            decimal DayLimit = 10000M;
-            decimal OnePayment = 5000M;
-            bool exceeded = false;
 
             try
             {
@@ -30,7 +37,13 @@ namespace Oldi.Net
                 // Получить номер лицевого счёта плательщика
                 if ((account = GetPayerAccount()) != 0)
                 {
-                    RootLog($"{Tid} [DLIM] Account={account} Проверка дневного лимита.");
+
+                    // RootLog($"{Tid} [DLIM] Проверка дневного лимита.");
+
+                    // Чтение информации о переопределении для Account
+                    RedefineForAccount(account);
+                    RootLog($"{Tid} [DLIM] Проверка дневного лимита {Account} лимит={DayLimit.AsCF()} разовый={OnePayment.AsCF()}");
+
                     pays = PaysInTime(account);
                     if (pays + Amount > DayLimit)
                     {
@@ -83,6 +96,68 @@ namespace Oldi.Net
         }
 
         /// <summary>
+        /// Чтение переопределений для Account
+        /// </summary>
+        /// <returns></returns>
+        void RedefineForAccount(int account)
+        {
+
+            XElement root = XElement.Load(Settings.Root + @"Lists\Site.xml");
+            // XElement root = XElement.Parse(Site);
+            IEnumerable<XAttribute> RootAttributes = root.Elements().Attributes();
+
+            // Установка общих значений
+            foreach (XAttribute at in RootAttributes)
+                switch (at.Name.LocalName)
+                {
+                    case "DayLimit":
+                        DayLimit = at.Value.ToDecimal();
+                        break;
+                    case "OnePayment":
+                        OnePayment = at.Value.ToDecimal();
+                        break;
+                }
+
+            // Чтение индивидуальных значений для Account
+            IEnumerable<XElement> Blocks =
+                from el in root.Elements("Blocks").Elements("Block")
+                    // where el.Attributes().ToString() == account.ToString()
+                select el;
+
+            decimal _dayLimit = 0M;
+            decimal _onePayment = 0M;
+
+            foreach (XElement el in Blocks)
+            {
+                string acnt = "";
+                // Переопределение общих значений
+                foreach (XAttribute at in el.Attributes())
+                    switch (at.Name.LocalName)
+                    {
+                        case "DayLimit":
+                            _dayLimit = at.Value.ToDecimal();
+                            break;
+                        case "OnePayment":
+                            _onePayment = at.Value.ToDecimal();
+                            break;
+                        case "Account":
+                            acnt = at.Value;
+                            break;
+                    }
+
+                if (acnt == account.ToString())
+                {
+                    if (_dayLimit > 0M)
+                        DayLimit = _dayLimit;
+                    if (_onePayment > 0M)
+                        OnePayment = _onePayment;
+                    break; // Завершим дальнейший перебор
+                    // Console.WriteLine($"\t\tName={el.Name.LocalName} account={acnt}");
+                }
+            }
+        }
+
+        /// <summary>
         /// Добыча номера карты плательщика
         /// </summary>
         /// <returns></returns>
@@ -117,7 +192,7 @@ namespace Oldi.Net
                 else
                     return 0;
 */
-        }
+            }
             catch (Exception ex)
             {
                 RootLog($"{Tid} [DLIM - stop] {ex}");

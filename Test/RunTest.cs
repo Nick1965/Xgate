@@ -7,12 +7,13 @@ using Oldi.Utility;
 using System.Collections.Specialized;
 using Oldi.Ekt;
 using Oldi.Net;
+using System.Xml.Linq;
 
 namespace Test
 {
 	class RunTest
 	{
-		static void Main(string[] args)
+        static void Main(string[] args)
 		{
 
             // XMLTest test = new XMLTest();
@@ -35,30 +36,113 @@ namespace Test
 			}
 			*/
 
-            Console.WriteLine("Test begin");
             // Settings.ReadConfig();
 
             // EktTest ekt = new EktTest();
 
 
-            string TestString = @"<Response xmlns=""http://schemas.datacontract.org/2004/07/XSMPP"" xmlns:i=""http://www.w3.org/2001/XMLSchema-instance""><errCode>0</errCode><errDesc/><messageId>92245687605</messageId><messageState>1</messageState></Response>";
-            // string TestString = @"<Response><errCode>0</errCode><errDesc/><messageId>92245687605</messageId><messageState>1</messageState></Response>";
-            Console.WriteLine(TestString);
-            Console.WriteLine();
-
-            Console.WriteLine("errCode={0}", XPath.GetLong(TestString, "/Response/ErrCode"));
-            Console.WriteLine("messageId={0}", XPath.GetLong(TestString, "/Response/MessageId"));
-            // Console.WriteLine("errCode={0}", XPath.GetString(TestString, "/Response/errCode"));
-            // Console.WriteLine("messageId={0}", XPath.GetString(TestString, "/Response/messageId"));
 
             // Console.WriteLine("ekt.Run()");
             // ekt.Run();
+
+            int Account = 744;
+
+            Console.WriteLine($"Account={Account} DayLimit={DayLimit.AsCF()} OnePayment={OnePayment.AsCF()}");
+
+            RedefineForAccount(Account);
+
+            Console.WriteLine($"Account={Account} DayLimit={DayLimit.AsCF()} OnePayment={OnePayment.AsCF()}");
 
             Console.WriteLine("Test end");
 
         }
 
+        static string Site = @"
+            <Site>
+	            <!-- DayLimit:		дневной лимит
+	                 OnePayment:	максимальный единовременный платёж
+	            В корне задаётся значение по умолчанию.
+	            В каждом элементе устанавливается значение для текущего счёта (account)
+	            -->
+	            <Blocks DayLimit=""10000.00"" OnePayment=""5000.00"">
+		            <!-- Модэл -->
+		            <Block Account = ""941171"" DayLimit=""15000.00"" />
+		            <Block Account = ""938744"" DayLimit=""50000.00"" />  <!-- Аскольдович -->
+		            <!-- Островское, ТСЖ -->
+		            <Block Account = ""942175"" DayLimit=""15000.00"" />
+	            </Blocks>
+            </Site>        
+            ";
+
+        static decimal DayLimit = 0M;
+        static decimal OnePayment = 0M;
+        
+        /// <summary>
+        /// Чтение переопределений для Account
+        /// </summary>
+        /// <returns></returns>
+        static void RedefineForAccount(int account)
+        {
+
+            // XElement root = XElement.Load(Settings.Root + @"Lists\Site.xml");
+            XElement root = XElement.Parse(Site);
+            IEnumerable<XAttribute> RootAttributes = root.Elements().Attributes();
+
+            // Установка общих значений
+            foreach (XAttribute at in RootAttributes)
+                switch (at.Name.LocalName)
+                {
+                    case "DayLimit":
+                        DayLimit = at.Value.ToDecimal();
+                        break;
+                    case "OnePayment":
+                        OnePayment = at.Value.ToDecimal();
+                        break;
+                }
+
+            // Чтение индивидуальных значений для Account
+            IEnumerable<XElement> Blocks =
+                from el in root.Elements("Blocks").Elements("Block")
+                // where el.Attributes().ToString() == account.ToString()
+                select el;
+
+            decimal _dayLimit = 0M;
+            decimal _onePayment = 0M;
+
+            foreach (XElement el in Blocks)
+            {
+                string acnt = "";
+                // Переопределение общих значений
+                foreach (XAttribute at in el.Attributes())
+                    switch (at.Name.LocalName)
+                    {
+                        case "DayLimit":
+                            _dayLimit = at.Value.ToDecimal();
+                            break;
+                        case "OnePayment":
+                            _onePayment = at.Value.ToDecimal();
+                            break;
+                        case "Account":
+                            acnt = at.Value;
+                            break;
+                    }
+
+                if (acnt == account.ToString())
+                {
+                    if (_dayLimit > 0M)
+                        DayLimit = _dayLimit;
+                    if (_onePayment > 0M)
+                        OnePayment = _onePayment;
+                    Console.WriteLine($"\t\tName={el.Name.LocalName} account={acnt}");
+                }
+            }
+
+
+        }
+
     }
+
+
 
     public class EktTest : GWEktRequest
     {
@@ -70,10 +154,6 @@ namespace Test
         {
             InitializeComponents();
             // terminal = 1224;
-            gateway = "458";
-            service = "W1";
-            amount = 100m;
-            amountAll = 200m;
             tid = (int)(DateTime.Now.Ticks & 0xFFFF);
         }
 
@@ -84,6 +164,7 @@ namespace Test
         {
             state = 0;
             phone = "27026503011810";
+            account = "938744";
             attributes = new AttributesCollection();
             attributes.Add("id2", "9521822210");
             int r = MakeRequest(0);
