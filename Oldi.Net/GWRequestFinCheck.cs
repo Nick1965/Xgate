@@ -42,7 +42,7 @@ namespace Oldi.Net
 
                     // Чтение информации о переопределении для Account
                     RedefineForAccount(account);
-                    RootLog($"{Tid} [DLIM] Проверка дневного лимита {Account} лимит={DayLimit.AsCF()} разовый={OnePayment.AsCF()}");
+                    RootLog($"{Tid} [DLIM] Проверка дневного лимита {account} лимит={DayLimit.AsCF()} разовый={OnePayment.AsCF()}");
 
                     pays = PaysInTime(account);
                     if (pays + Amount > DayLimit)
