@@ -295,7 +295,7 @@ namespace Oldi.Net
                     if (_provider == item.Name.ToLower() && _service == item.Service.ToLower() && _gateway == item.Gateway.ToLower() && item.TerminalType == tt)
                     {
                         // Переопределяем правило лимитов для провайдера
-                        amountLimit = item.Limit;
+                        amountLimit = item.Limit > amountLimit? item.Limit: AmountLimit;
                         // check = true;
                         RootLog($"{Tid} [FCHK] Переопределение для {Provider} {Service}/{Gateway} Type={tt}: AmountLimit={AmountLimit.AsCF()}");
                         break;
