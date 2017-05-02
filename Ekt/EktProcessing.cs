@@ -460,12 +460,14 @@ namespace Oldi.Ekt
 		/// <returns></returns>
 		public override int MakeRequest(int state)
 		{
-			if (string.IsNullOrEmpty(pointid) || string.IsNullOrEmpty(Gateway))
+            string acnt = !string.IsNullOrEmpty(Account) ? Account : !string.IsNullOrEmpty(Card) ? Card : Phone;
+
+            if (string.IsNullOrEmpty(acnt) || string.IsNullOrEmpty(pointid) || string.IsNullOrEmpty(Gateway))
 			{
 				state = 0;
 				errCode = 2;
 				errDesc = string.Format(Messages.Err_NoDefaults, state);
-                RootLog($"Pointid=\"{pointid}\"\r\nGateway=\"{Gateway}\"");
+                RootLog($"Account=\"{Account}\"\r\nPhone=\"{Phone}\"\r\nCard=\"{Card}\"\r\nPointid=\"{pointid}\"\r\nGateway=\"{Gateway}\"");
                 RootLog(ErrDesc);
                 return 1;
 			}
@@ -488,10 +490,7 @@ namespace Oldi.Ekt
             string sAmount = Math.Round(Amount * 100).ToString();
             string sAmountAll = Math.Round(AmountAll * 100).ToString();
             string check = MakeCheckNumber();
-            string acnt = !string.IsNullOrEmpty(Account)? Account: !string.IsNullOrEmpty(Card)? Card: Phone;
             string sAttributes = "";
-
-
 
             stRequest = Properties.Resources.Template_XmlHeader + "\r\n";
 
