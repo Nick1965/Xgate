@@ -462,25 +462,30 @@ namespace Oldi.Ekt
 		{
             string acnt = !string.IsNullOrEmpty(Account) ? Account : !string.IsNullOrEmpty(Card) ? Card : Phone;
 
-            if (string.IsNullOrEmpty(acnt) || string.IsNullOrEmpty(pointid) || string.IsNullOrEmpty(Gateway))
-			{
-				state = 0;
-				errCode = 2;
-				errDesc = string.Format(Messages.Err_NoDefaults, state);
-                RootLog($"Account=\"{Account}\"\r\nPhone=\"{Phone}\"\r\nCard=\"{Card}\"\r\nPointid=\"{pointid}\"\r\nGateway=\"{Gateway}\"");
-                RootLog(ErrDesc);
-                return 1;
-			}
+            if (State == 0)
+            {
 
-			if (Amount == decimal.MinusOne)
-			{
-				state = 0;
-				errCode = 7;
-				errDesc = Messages.Err_NoAmount;
-                RootLog($"Pointid=\"{pointid}\"\r\nGateway=\"{Gateway}\"");
-                RootLog(Messages.Err_NoAmount);
-				return 1;
-			}
+                if (string.IsNullOrEmpty(acnt) || string.IsNullOrEmpty(pointid) || string.IsNullOrEmpty(Gateway))
+                {
+                    state = 0;
+                    errCode = 2;
+                    errDesc = string.Format(Messages.Err_NoDefaults, state);
+                    RootLog($"Account=\"{Account}\"\r\nPhone=\"{Phone}\"\r\nCard=\"{Card}\"\r\nPointid=\"{pointid}\"\r\nGateway=\"{Gateway}\"");
+                    RootLog(ErrDesc);
+                    return 1;
+                }
+
+                if (Amount == decimal.MinusOne)
+                {
+                    state = 0;
+                    errCode = 2;
+                    errDesc = Messages.Err_NoAmount;
+                    RootLog($"Pointid=\"{pointid}\"\r\nGateway=\"{Gateway}\"");
+                    RootLog(Messages.Err_NoAmount);
+                    return 1;
+                }
+
+            }
 
 			if (Pcdate == DateTime.MinValue)
 				pcdate = DateTime.Now;
