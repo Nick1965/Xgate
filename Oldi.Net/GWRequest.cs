@@ -31,11 +31,11 @@ namespace Oldi.Net
     {
         #region Properties
 
+        protected string provider;
         /// <summary>
         /// Шлюз / ПУ
         /// </summary>
         public string Provider { get { return provider; } }
-        protected string provider;
 
         /// <summary>
         /// Номер транзакции
