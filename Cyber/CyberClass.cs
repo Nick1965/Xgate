@@ -311,7 +311,7 @@ namespace Oldi.Net.Cyber
 								}
 							 */
 							}
-						RootLog(sb.ToString());
+						Log(sb.ToString());
 						}
 
 					prm.AppendLine("INN", Inn);
