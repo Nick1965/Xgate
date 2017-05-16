@@ -79,7 +79,8 @@ namespace Oldi.Net
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"{expr}: {ex.ToString()}");
+                Utility.Log("Log\\oldigw.log", $"{expr}: {ex.ToString()}");
+                Utility.Log("Log\\oldigw.log", $"{answer}");
             }
 
             return result;
