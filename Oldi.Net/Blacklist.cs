@@ -23,6 +23,8 @@ namespace Oldi.Net.Repost
         public string PIN;
     }
 
+
+    #region Gorod
     public class GorodContext : DataContext
     {
         public GorodContext() : base(Oldi.Utility.Settings.GorodConnectionString)
@@ -63,6 +65,7 @@ namespace Oldi.Net.Repost
         }
 
     }
+    #endregion Gorod
 
     class Payment
     {
