@@ -227,25 +227,14 @@ namespace Oldi.Utility
 			public static string Hash { get { return Config.Providers["rt"]["hash"]; } }
 		}
 
-		/// <summary>
-		/// RT-Mobile
-		/// </summary>
-		public static class Rtm
+        #region Rtm
+        /// <summary>
+        /// RT-Mobile
+        /// </summary>
+        public static class Rtm
 			{
-			public static string Name
-				{
-				get
-					{
-					return Config.Providers["rtm"]["name"];
-					}
-				}
-			public static string Host
-				{
-				get
-					{
-					return Config.Providers["rtm"]["host"];
-					}
-				}
+			public static string Name { get { return Config.Providers["rtm"]["name"]; } }
+			public static string Host { get { return Config.Providers["rtm"]["host"]; } }
 			public static string Log
 				{
 				get
@@ -268,16 +257,20 @@ namespace Oldi.Utility
 					}
 				}
 			}
+        #endregion Rtm
 
-		public static class Pcc
+        #region Pcc
+        public static class Pcc
 		{
 			public static string Name { get { return Config.Providers["pcc"]["name"]; } }
 			public static string Host { get { return Config.Providers["pcc"]["host"]; } }
 			public static string Log { get { return Config.Providers["pcc"]["log"]; } }
 			public static string Certname { get { return Config.Providers["pcc"]["certname"]; } }
 		}
+        #endregion Pcc
 
-		public static class Ekt
+        #region Ekt
+        public static class Ekt
 		{
 			public static string Name { get { return Config.Providers["ekt"]["name"]; } }
 			public static string Host { get { return Config.Providers["ekt"]["host"]; } }
@@ -288,8 +281,10 @@ namespace Oldi.Utility
 			public static string ContentType { get { return Config.Providers["ekt"]["content-type"]; } }
 			public static string Pointid { get { return Config.Providers["ekt"]["point-id"]; } }
 		}
+        #endregion Ekt
 
-		public static class Mts
+        #region Mts
+        public static class Mts
 		{
 			public static string Name { get { return Config.Providers["mts"]["name"]; } }
 			public static string Host { get { return Config.Providers["mts"]["host"]; } }
@@ -312,8 +307,10 @@ namespace Oldi.Utility
 
 			public static string Timeout { get { return Config.Providers["mts"]["timeout"]; } }
 		}
+        #endregion Mts
 
-		public static class Cyber
+        #region Cyber
+        public static class Cyber
 		{
 			public static string Name { get { return Config.Providers["cyber"]["name"]; } }
 			public static string Host { get { return Config.Providers["cyber"]["host"]; } }
@@ -334,7 +331,9 @@ namespace Oldi.Utility
 			public static string BankKeySerial { get { return Config.Providers["cyber"]["BankKeySerial"]; } }
 			public static string Timeout { get { return Config.Providers["cyber"]["timeout"]; } }
 		}
+        #endregion Cyber
 
+        #region Rapida
         public static class Rapida
         {
             public static string Name { get { return Config.Providers["rapida"]["name"]; } }
@@ -343,7 +342,9 @@ namespace Oldi.Utility
             public static string Log { get { return Config.Providers["rapida"]["log"]; } }
 
         }
+        #endregion Rapida
 
+        #region Xsolla
         public static class Xsolla
         {
             public static string Name { get { return Config.Providers["xsolla"]["name"]; } }
@@ -356,19 +357,22 @@ namespace Oldi.Utility
             public static string Log { get { return Config.Providers["xsolla"]["log"]; } }
 
         }
+        #endregion Xsolla
 
+        #region Smtp
         public static class Smtp
 		{
 			public static string Log { get { return Config.Providers["smtp"]["log"]; } }
 		}
-	
-	}
+        #endregion Smtp
+
+    }
 
 
-	/// <summary>
-	/// Установки
-	/// </summary>
-	public static class Settings
+    /// <summary>
+    /// Установки
+    /// </summary>
+    public static class Settings
 	{
 
 		static string root = "";
@@ -389,27 +393,8 @@ namespace Oldi.Utility
 		/// <summary>
 		/// Контролируемые поставщики
 		/// </summary>
-		public static List<ProviderItem> CheckedProviders
-			{
-			get
-				{
-				return checkedProviders;
-				}
-			}
+		public static List<ProviderItem> CheckedProviders { get { return checkedProviders; } }
 		internal static List<ProviderItem> checkedProviders = new List<ProviderItem>();
-		/// <summary>
-		/// Список номеров, исключаемых из проверки
-		/// </summary>
-		/*
-		public static List<string> Excludes
-			{
-			get
-				{
-				return excludes;
-				}
-			}
-		internal static List<string> excludes = new List<string>();
-		*/
 
         static int connectionLimit = 2;
 		// static int deliveryStart;
@@ -433,7 +418,7 @@ namespace Oldi.Utility
 			get { return root; }
 			set 
 				{ 
-				root = !string.IsNullOrEmpty(value)? value: "\\";
+				root = !string.IsNullOrEmpty(value)? value: ".\\";
 				if (root.Substring(root.Length - 1, 1) != "\\") root += "\\";
 				}
 		}

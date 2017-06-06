@@ -2,18 +2,13 @@
 <Configuration>
 
 
-  <!-- 
-    amount-limit: максимальный размер платежа, до постановки на финансовый контроль 
-    amount-delay: время задержки на финансовый контроль (в часах)
-  -->
-  
-  <!-- mode = Gateway, Server -->
-  <!-- redo = yes, no -->
-  <gateway mode="Gateway" redo="yes" />
-
+<!--
+https://      espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher
+host="https://espp1.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher/"
+-->
 
   <Provider name="mts" ott="1_25" xsd="5_02"
-                host="https://espp1.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher/"
+		host="https://espp3.mts.ru/PaymentProcessingXMLEndpointServerProxy/XMLPaymentProcessingDispatcher"
                 as-vps="226581085" vps-code="1380200801234" contract="9904000052" security-code="98"
                 certname="1380200801234;98;226581085"
                 terminal-prefix="OLDIT-00001"
@@ -23,9 +18,13 @@
                 header = ""
                 schemas="schemas\"
                 log="mts.log" />
+<!--
+new: https://217.199.242.228:8182/external2/extended
+old: https://dealer.telepayural.ru:8181/external/process
+-->
 
   <Provider name="ekt" 
-                host="https://dealer.telepayural.ru:8181/external/process"
+                host="https://217.199.242.228:8182/external2/extended"
                 point-id="12415"
                 certname="EBURG-NEW"
                 code-page="utf-8"
@@ -36,7 +35,7 @@
   <Provider name="cyber" SD="1839361" AP="1354719" OP="1354720"
                 SecretKey="secret.key"
                 PublicKeys="pubkeys.key"
-                Passwd="ЕщрщкщфяР1!"
+                Passwd="TohoroazH1!"
                 BankKeySerial="904291"
                 host="https://service.cyberplat.ru/cgi-bin/"
                 pay-check="{0}/{1}_pay_check.cgi"
@@ -45,13 +44,28 @@
                 api-check="{0}/pay_check.cgi"
                 api-pay="{0}/pay.cgi"
                 api-status="{0}/pay_status.cgi"
-                timeout="60"
-                log="cyber.log"/>
+                timeout="120"
+                log="cyber.log" />
 
-  <Provider name="rt" host="https://espp-test.rt.ru:8443/uni" 
+  <Provider name="rt" host="https://espp.rt.ru:8443/uni" 
                 hash="54378b7cdef26ec1de00ee5a5a500da55baa6534"
-                cn="Regplat.ru"
+                cn="Rostelecom"
                 log="rt.log" />
+
+  <Provider name="rtm" host="https://espp.ural.rt.ru:8443/uni" 
+                hash="915889c7544bed573cadce14030648d9651380c4"
+                cn="regplat2rtmobile"
+                log="rtm.log" />
+
+  <Provider name="rapida" host="https://epay.rapida.ru/hyperkassa/" 
+                cn="RegPlat.ru"
+                log="rapida.log" />
+
+  <Provider name="xsolla" 
+		host="https://ps.xsolla.com/api/gate" 
+		agent="12791" agent-key="regplat" 
+		agent1="2581" agent-key1="regplat1" 
+		codepage="utf-8" log="xsolla.log" />
 
     <Provider name="pcc"
               certname="dealoldit"
@@ -78,6 +92,12 @@
     <password>outbox</password>
   </Smtp>
 
+
+  <!-- 
+    Перепроведение платежей из блэклиста
+  -->
+  <Blackrepost Card="900080" Template="193" Register="Blackregister.log" />
+  
   <!--
       Финансовый контроль
         AmountLimit: максимальный размер платежа, до постановки на финансовый контроль 
@@ -85,42 +105,91 @@
         Описание провайдеров находится options.ini Online Exchange
 -->
   <FinancialCheck>
-    <AmountLimit>1000</AmountLimit>
-    <AmountDelay>24</AmountDelay>
+    <AmountLimit>2500</AmountLimit>
+    <AmountDelay>20</AmountDelay>
     <Providers>
       <Provider Name="ekt" Service="W1-LS" Gateway="458" Limit="3000"/>
-      <Provider Name="ekt" Service="Beeline" Gateway="2" Limit="2000"/>
-      <Provider Name="ekt" Service="Beeline-woc" Gateway="414" Limit="2000"/>
+      <Provider Name="ekt" Service="Ydx" Gateway="24" Limit="3000"/>
+      <Provider Name="ekt" Service="Beeline" Gateway="2" Limit="2500"/>
+      <Provider Name="ekt" Service="Beeline-woc" Gateway="414" Limit="2500"/>  
+      <Provider Name="ekt" Service="Megafon" Gateway="3" Limit="2500"/>
+      <Provider Name="ekt" Service="Megafon-woc" Gateway="472" Limit="2500"/>
+      <Provider Name="ekt" Service="Megafon-ls" Gateway="516" Limit="2500"/>
+	  
+	 <!--
+      Финансовый контроль
+        AmountLimit: максимальный размер платежа, до постановки на финансовый контроль 
+        AmountDelay: время задержки на финансовый контроль (в часах)
+        Описание провайдеров находится options.ini Online Exchange
+		QIWI - сайт : лимиты 100 рублей нужно поставить!!!
+-->  
+	  
+      <Provider Name="ekt" Service="Qiwi-woc" Gateway="672" Limit="1000"/> 
+
+      <Provider Name="ekt" Service="Megafon-ls-woc" Gateway="517" Limit="2500"/> 
+      <Provider Name="ekt" Service="Tele2" Gateway="15" Limit="2500"/>
+      <Provider Name="ekt" Service="Tele2-woc" Gateway="721" Limit="2500"/>
+      <Provider Name="ekt" Service="VKontakte" Gateway="197" Limit="1000"/>
+      <Provider Name="mts" Service="7" Gateway="MTS" Limit="4500"/>
+      <Provider Name="mts" Service="8" Gateway="MTS" Limit="4500"/>        
+      <Provider Name="cyber" Service="vmt" Gateway="vmt" Limit="3000"/>        
+      <Provider Name="cyber" Service="moneysend" Gateway="mns" Limit="3000"/>        
     </Providers>
+<!--
+    Префиксы номеров, которые исключаются из проверки
+    <whilist config="whitelist.xml" />
+-->
+    <Exclude Prefix="913820" />
+    <Exclude Prefix="913827" />
+    <Exclude Prefix="913829" />
+    <Exclude Prefix="913234" />
+    <Exclude Prefix="923457" />
+    <Exclude Prefix="903955" />
+    <Exclude Prefix="909543" />
+    <Exclude Prefix="9234115588" /> <!-- ООО КОРЖ -->
+    <Exclude Prefix="9246651517" /> <!-- плательщик с Чукотки -->
+    <Exclude Prefix="9618918597" /> <!-- плательщик с Чукотки -->
+    <Exclude Prefix="9138865859" />
+    <Exclude Prefix="9642986572" />
+    <Exclude Prefix="9069817595" />
+<!-- 
+	Временно
+-->
   </FinancialCheck>
 
   <AppSettings>
       <add key="GWHost" value="oldigw/" />
-      <add key="Port" value="200" />
-      <add key="SslPort" value="201" />
-      <add key="ConnectionLimit" value="10" />
-      <add key="SMPPEndpoint" value="http://192.168.1.5:1100/sms/send"/>
+      <add key="Port" value="300" />
+      <add key="SslPort" value="301" />
+      <add key="SMPPEndpoint" value="http://192.168.1.11:302/sms/send"/>
+      <!-- Перепроведение платежей из блэклиста -->
+      <add key="SimpleEndpoint" value="http://192.168.1.1:100/server-redo.mdl/pay.xml"/>
 
-    <add key="ConnectionString" value="Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;" />
-      <add key="GorodConnectionString" value="Data Source=odbs1.regplat.ru; Initial Catalog=Gorod; User ID=sa; Password=5;" />
+      <add key="ConnectionString" value="Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;" />
+      <add key="GorodConnectionString" value="Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;" />
       <add key="DbCheckTimeout" value="2" />
-      <add key="fake-tpp-id" value="281" />
-      <add key="fake-tpp-type" value="2" />
-      <add key="tz" value="7" />
+      <add key="fake-tpp-id" value="880" />
+      <add key="fake-tpp-type" value="1" />
+      <add key="tz" value="6" />
 
-      <add key="Conveyor-Size" value="10" />
+      <add key="Conveyor-Size" value="20" />
+      <add key="Safe-Interval" value="3" />
 
-      <add key="Root" value=".\" />
-      <add key="LogPath" value="log\" />
+      <add key="Root" value="d:\Gateway\OLDIGW\" />
+      <add key="LogPath" value="Log\" />
       <add key="Templates" value="templates\" />
       <add key="Registers" value="registers\" />
       <add key="XSD" value="xsd\"/>
       <add key="Attachments" value="attachments\"/>
 
       <add key="Cyber" value="cyber\" />
+    
+      <!-- Префиксы номеров, которые исключаются из проверки -->
+      <add key="Lists" value="lists\lists.xml" />
+      <add key="BlacklistLog" value="Blacklist.log" />
 
-      <!-- DEBUG,REQ,OEREQ,HDR,PARS -->
-      <add key="LogLevel" value="DEBUG,REQ,CONF,OEREQ,HDR,PARS" />
+    <!-- DEBUG,REQ,OEREQ,HDR,PARS,CONF -->
+      <add key="LogLevel" value="DEBUG,REQ,HDR,CONF" />
 
       <!-- Номер рассылки. 0 - нет ничего для рассылки -->
       <add key="Delivery" value="0" />

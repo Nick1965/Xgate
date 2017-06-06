@@ -1,0 +1,172 @@
+﻿<!--
+      Финансовый контроль
+        AmountLimit: максимальный размер платежа, до постановки на финансовый контроль 
+        AmountDelay: время задержки на финансовый контроль (в часах)
+        Описание провайдеров находится options.ini Online Exchange
+		QIWI - сайт : лимиты 100 рублей нужно поставить!!!
+-->  
+ <FinancialCheck>
+
+    <AmountLimit>1000</AmountLimit>
+    <AmountDelay>20</AmountDelay>
+
+    <!-- TerminalType по умолчанию 
+	    1 - терминал
+		2 - Рабочее место 
+		3 - Сайт
+	-->
+	
+	<Providers>
+
+	<!-- Кредиты -->
+
+		<Provider Name="rapida" Service="hyperkass" Gateway="pay" Limit="15000" TerminalType="1"/>
+		<Provider Name="rapida" Service="hyperkass" Gateway="pay" Limit="15000" TerminalType="2"/>
+		<Provider Name="rapida" Service="hyperkass" Gateway="pay" Limit="15000" TerminalType="3"/>
+
+		<Provider Name="rapida" Service="hyperkass" Gateway="regpay" Limit="15000" TerminalType="1"/>
+		<Provider Name="rapida" Service="hyperkass" Gateway="regpay" Limit="15000" TerminalType="2"/>
+		<Provider Name="rapida" Service="hyperkass" Gateway="regpay" Limit="15000" TerminalType="3"/>
+		
+<!-- Электронные кошельки -->
+
+		<Provider Name="ekt" Service="W1-LS" Gateway="458" Limit="50" TerminalType="1"/>
+		<Provider Name="ekt" Service="W1-LS" Gateway="458" Limit="50" TerminalType="3"/>
+          
+	      <Provider Name="ekt" Service="Qiwi-woc" Gateway="1418" Limit="999" TerminalType="1"/> 
+          <Provider Name="ekt" Service="Qiwi-woc" Gateway="1418" Limit="200" TerminalType="3"/> 
+	  
+      <Provider Name="ekt" Service="Ydx" Gateway="24" Limit="1000" TerminalType="1"/>
+	   <Provider Name="ekt" Service="Ydx" Gateway="24" Limit="3000" TerminalType="2"/>
+	    <Provider Name="ekt" Service="Ydx" Gateway="24" Limit="100" TerminalType="3"/>
+		
+	<!-- Сотовые операторы -->  
+	
+      <Provider Name="ekt" Service="Beeline" Gateway="2" Limit="1500" TerminalType="1"/>
+      <Provider Name="ekt" Service="Beeline-woc" Gateway="414" Limit="1000" TerminalType="1"/>  
+      <Provider Name="ekt" Service="Beeline" Gateway="2" Limit="2000" TerminalType="2"/>
+      <Provider Name="ekt" Service="Beeline-woc" Gateway="414" Limit="2000" TerminalType="2"/>  
+      <Provider Name="ekt" Service="Beeline" Gateway="2" Limit="100" TerminalType="3"/>
+      <Provider Name="ekt" Service="Beeline-woc" Gateway="414" Limit="100" TerminalType="3"/>  
+	  
+      <Provider Name="ekt" Service="Megafon" Gateway="3" Limit="3000" TerminalType="2"/>
+
+      <Provider Name="ekt" Service="Megafon" Gateway="3" Limit="1500" TerminalType="1"/>
+      <Provider Name="ekt" Service="Megafon-woc" Gateway="472" Limit="500" TerminalType="1"/>
+      <Provider Name="ekt" Service="Megafon-ls" Gateway="516" Limit="1500" TerminalType="1"/>'
+      <Provider Name="ekt" Service="Megafon" Gateway="3" Limit="499" TerminalType="3"/>
+      <Provider Name="ekt" Service="Megafon-woc" Gateway="472" Limit="499" TerminalType="3"/>
+      <Provider Name="ekt" Service="Megafon-ls" Gateway="516" Limit="499" TerminalType="3"/>
+	  
+<!--
+      Финансовый контроль
+        AmountLimit: максимальный размер платежа, до постановки на финансовый контроль 
+        AmountDelay: время задержки на финансовый контроль (в часах)
+        Описание провайдеров находится options.ini Online Exchange
+		QIWI - сайт : лимиты 100 рублей нужно поставить!!!
+-->  
+	  
+	  
+      <!--  <Provider Name="rapida" Service="hyperkass" Gateway="regpay" Limit="500" TerminalType="1"/>  для чека -->
+	  
+      <Provider Name="ekt" Service="Qiwi-woc" Gateway="1418" Limit="100" TerminalType="3"/> 
+	  
+      <Provider Name="ekt" Service="Webmoney" Gateway="25" Limit="200" TerminalType="3"/> 
+
+      <Provider Name="ekt" Service="Megafon-ls-woc" Gateway="517" Limit="2500" TerminalType="1"/>
+	  
+      <Provider Name="ekt" Service="Tele2" Gateway="15" Limit="1500" TerminalType="1"/>
+      <Provider Name="ekt" Service="Tele2" Gateway="15" Limit="3000" TerminalType="2"/>
+      <Provider Name="ekt" Service="Tele2-woc" Gateway="15" Limit="100" TerminalType="3"/>
+	  
+      <Provider Name="ekt" Service="VKontakte" Gateway="197" Limit="50" TerminalType="3"/>
+
+      <Provider Name="ekt" Service="MTS" Gateway="1" Limit="3000" TerminalType="1"/>
+      <Provider Name="ekt" Service="MTS" Gateway="1" Limit="3000" TerminalType="2"/>
+      <Provider Name="ekt" Service="MTS" Gateway="1" Limit="499" TerminalType="3"/>
+	  
+      <Provider Name="ekt" Service="MTS-WOC" Gateway="192" Limit="3000" TerminalType="1"/>
+      <Provider Name="ekt" Service="MTS-WOC" Gateway="192" Limit="3000" TerminalType="2"/>
+      <Provider Name="ekt" Service="MTS-WOC" Gateway="192" Limit="499" TerminalType="3"/>
+
+      <Provider Name="ekt" Service="faberlic" Gateway="213" Limit="9999" TerminalType="1"/>
+      <Provider Name="ekt" Service="faberlic" Gateway="213" Limit="10000" TerminalType="2"/>
+      <Provider Name="ekt" Service="faberlic" Gateway="213" Limit="1000" TerminalType="3"/>
+
+      <Provider Name="ekt" Service="orion" Gateway="479" Limit="3300" TerminalType="1"/>
+      <Provider Name="ekt" Service="orion" Gateway="479" Limit="5000" TerminalType="2"/>
+      <Provider Name="ekt" Service="orion" Gateway="479" Limit="1200" TerminalType="3"/>
+
+      <Provider Name="ekt" Service="tricolor" Gateway="118" Limit="3300" TerminalType="1"/>
+      <Provider Name="ekt" Service="tricolor" Gateway="118" Limit="5000" TerminalType="2"/>
+      <Provider Name="ekt" Service="tricolor" Gateway="118" Limit="1200" TerminalType="3"/>
+
+      <Provider Name="ekt" Service="tricolor2" Gateway="118" Limit="3300" TerminalType="1"/>
+      <Provider Name="ekt" Service="tricolor2" Gateway="118" Limit="5000" TerminalType="2"/>
+      <Provider Name="ekt" Service="tricolor2" Gateway="118" Limit="1200" TerminalType="3"/>
+
+<!-- Кибер -->
+	<!-- ФМС -->
+      	<Provider Name="cyber" Service="fs" Gateway="" Limit="3000" TerminalType="1"/>
+      	<Provider Name="cyber" Service="fs" Gateway="" Limit="3000" TerminalType="2"/>
+      	<Provider Name="cyber" Service="fs" Gateway="" Limit="300" TerminalType="3"/>
+
+	<!-- Теле2 -->
+      	<Provider Name="cyber" Service="t2" Gateway="" Limit="999" TerminalType="1"/>
+      	<Provider Name="cyber" Service="t2" Gateway="" Limit="3000" TerminalType="2"/>
+      	<Provider Name="cyber" Service="t2" Gateway="" Limit="30" TerminalType="3"/>
+
+	<!-- МТС -->
+      	<Provider Name="cyber" Service="es" Gateway="" Limit="999" TerminalType="1"/>
+      	<Provider Name="cyber" Service="es" Gateway="" Limit="3000" TerminalType="2"/>
+      	<Provider Name="cyber" Service="es" Gateway="" Limit="300" TerminalType="3"/>
+
+	<!-- Мегафон -->
+      	<Provider Name="cyber" Service="mb" Gateway="" Limit="999" TerminalType="1"/>
+      	<Provider Name="cyber" Service="mb" Gateway="" Limit="3000" TerminalType="2"/>
+      	<Provider Name="cyber" Service="mb" Gateway="" Limit="300" TerminalType="3"/>
+
+	<!-- Visa/MasterCard -->
+      	<Provider Name="cyber" Service="vmt" Gateway="vmt" Limit="3000" TerminalType="1"/> 
+      	<Provider Name="cyber" Service="vmt" Gateway="vmt" Limit="15000" TerminalType="2"/> 
+      	<Provider Name="cyber" Service="vmt" Gateway="vmt" Limit="100" TerminalType="3"/> 
+
+      	<Provider Name="cyber" Service="moneysend" Gateway="mns" Limit="3000" TerminalType="1"/>        
+      	<Provider Name="cyber" Service="moneysend" Gateway="mns" Limit="15000" TerminalType="2"/>        
+      	<Provider Name="cyber" Service="moneysend" Gateway="mns" Limit="100" TerminalType="3"/>        
+
+      	<Provider Name="cyber" Service="rk" Gateway="3196" Limit="15000" TerminalType="1"/>        
+      	<Provider Name="cyber" Service="rk" Gateway="3196" Limit="15000" TerminalType="2"/>        
+      	<Provider Name="cyber" Service="rk" Gateway="3196" Limit="1500" TerminalType="3"/>        
+
+      	<Provider Name="cyber" Service="gb" Gateway="" Limit="15000" TerminalType="1"/>        
+      	<Provider Name="cyber" Service="gb" Gateway="" Limit="15000" TerminalType="2"/>        
+      	<Provider Name="cyber" Service="gb" Gateway="" Limit="1500" TerminalType="3"/>        
+
+      	<!-- Межрегионгаз -->
+		<Provider Name="cyber" Service="ge" Gateway="3769" Limit="15000" TerminalType="1"/>        
+      	<Provider Name="cyber" Service="ge" Gateway="3769" Limit="15000" TerminalType="2"/>        
+      	<Provider Name="cyber" Service="ge" Gateway="3769" Limit="1500" TerminalType="3"/>        
+
+      	<!-- Триколор -->
+		<Provider Name="cyber" Service="ge" Gateway="484" Limit="3000" TerminalType="1"/>        
+      	<Provider Name="cyber" Service="ge" Gateway="484" Limit="3000" TerminalType="2"/>        
+      	<Provider Name="cyber" Service="ge" Gateway="484" Limit="3000" TerminalType="3"/>        
+
+      	<!-- Эр-Телеком Холдинг -->
+		<Provider Name="cyber" Service="ge" Gateway="282" Limit="3000" TerminalType="1"/>        
+      	<Provider Name="cyber" Service="ge" Gateway="282" Limit="3000" TerminalType="2"/>        
+      	<Provider Name="cyber" Service="ge" Gateway="282" Limit="3000" TerminalType="3"/>        
+
+	</Providers>
+
+<!-- 
+    Перепроведение платежей из блэклиста
+    
+    RepostCard - номер карты для зачисления средств
+    Log        - лог операций
+    Register   - реестр переводов
+-->
+   <BlacklistRepost RepostCard="900080" Log="Blacklist.log" Register="BlackRepost.log" />
+
+</FinancialCheck>

@@ -429,7 +429,7 @@ namespace Oldi.Net
 
         bool FindInBlackList(string x)
         {
-            // RootLog("{0} [FCHK - strt] {1}/{2} Num=\"{3}\" поиск в чёрном списке", Tid, Service, Gateway, x);
+            RootLog($"{Tid} [FCHK - strt] {Service}/{Gateway} Num=\"{x}\" поиск в чёрном списке");
 
             // if (TerminalType == 2)
             //	return false;
@@ -450,13 +450,20 @@ namespace Oldi.Net
                     {
                         state = 12;
                         errCode = 6;
-                        errDesc = string.Format("[BLACK] Отменён вручную");
+                        errDesc = string.Format("[BLACK] Отменён системой");
                         UpdateState(Tid, state: State, errCode: ErrCode, errDesc: ErrDesc, locked: 0);
-                        RootLog("{0} [FCHK - BLCK] {1}/{2} Num={5} A={3} S={4} - Найден в чёрном списке. Отменён.",
-                            Tid, Service, Gateway, Amount.AsCurrency(), AmountAll.AsCurrency(), x);
+                        RootLog($"{Tid} [BLACK] Num={x} A={Amount.AsCF()} S={AmountAll.AsCF()} - Найден в чёрном списке. Отменён.");
 
                         // Перепроведение платежа
-                        BlackRepost();
+                        Oldi.Net.Repost.Blacklist blacklist = new Repost.Blacklist(Tid, x, Amount, AmountAll);
+                        TaskFactory factory = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.LongRunning);
+                        RootLog($"{Tid} [BLACK] Запускается процесс допроведения");
+                        Task blr = factory.StartNew(
+                            // Запуск препроведения в другом потоке. Этот  поток завершается.
+                            () => blacklist.Run()
+                        );
+
+                        RootLog($"{Tid} [BLACK] Передаётся статус в Город");
                         return true;
                     }
 
