@@ -177,11 +177,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Lists\fincheck.xml" />
-    <Content Include="Lists\lists.xml" />
-    <Content Include="Lists\site.xml" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y "$(TargetDir)*.*" "d:\ready\oldigw\*.*"</PostBuildEvent>
