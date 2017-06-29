@@ -616,7 +616,8 @@ namespace Oldi.Net
                             {
                                 Prefix = item.Value.ToString();
                                 // Log("{0} [FCHK - found]  {1}", Tid, Prefix);
-                                if (Prefix != "" && Number.Length >= Prefix.Length && Number.Substring(0, Prefix.Length) == Prefix)
+                                // if (Prefix != "" && Number.Length >= Prefix.Length && Number.Substring(0, Prefix.Length) == Prefix)
+                                if (Prefix != "" && Number == Prefix)
                                 {
                                     // Номер найден в списке
                                     return true;

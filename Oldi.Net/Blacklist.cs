@@ -253,7 +253,7 @@ namespace Oldi.Net.Repost
                 Log($"Tid={Tid} S={payment.Summary_amount.AsCF()} {payment.Amount.AsCF()} Account={payment.ClientAccount} AgentCard={payment.Card_number} PIN={Pin} " +
                     $"Point={payment.Point_oid} Agent={payment.Agent_oid} User={payment.User_id} Nick={user.Login} Password={user.Password}");
 
-                DoRepost();
+                DoRepost(Pin);
             }
 
         }
@@ -261,13 +261,21 @@ namespace Oldi.Net.Repost
         /// <summary>
         /// Перепроведение платежа
         /// </summary>
-        void DoRepost()
+        void DoRepost(string PIN)
         {
 
             Host = Config.AppSettings["SimpleEndpoint"];
             string request =
-                $"Agent_ID={payment.Agent_oid}&Point_ID={payment.Point_oid}&Nick={user.Login}&Password={user.Password}&template_tid={PaymentTemplate}&ls={RepostCard}"
+                $"Agent_ID={payment.Agent_oid}&Point_ID={payment.Point_oid}&template_tid={PaymentTemplate}&ls={RepostCard}"
                 + $"&SUMMARY_AMOUNT={payment.Summary_amount.AsCF()}&tid={Outtid}";
+
+            if (payment.Card_number.ToString().Substring(0) == "9")
+            {
+                request =
+                $"Card_number={payment.Card_number}&PIN={PIN}&Nick={user.Login}&Password={user.Password}&template_tid={PaymentTemplate}&ls={RepostCard}"
+                + $"&SUMMARY_AMOUNT={payment.Summary_amount.AsCF()}&tid={Outtid}";
+                Host = Config.AppSettings["CardEndpoint"];
+            }
 
             Log(Host + "?" + request);
 
