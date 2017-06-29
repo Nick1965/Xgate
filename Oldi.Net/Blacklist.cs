@@ -266,13 +266,13 @@ namespace Oldi.Net.Repost
 
             Host = Config.AppSettings["SimpleEndpoint"];
             string request =
-                $"Agent_ID={payment.Agent_oid}&Point_ID={payment.Point_oid}&template_tid={PaymentTemplate}&ls={RepostCard}"
+                $"Agent_ID={payment.Agent_oid}&Point_ID={payment.Point_oid}&Nick={user.Login}&Password={user.Password}&template_tid={PaymentTemplate}&ls={RepostCard}"
                 + $"&SUMMARY_AMOUNT={payment.Summary_amount.AsCF()}&tid={Outtid}";
 
             if (payment.Card_number.ToString().Substring(0) == "9")
             {
                 request =
-                $"Card_number={payment.Card_number}&PIN={PIN}&Nick={user.Login}&Password={user.Password}&template_tid={PaymentTemplate}&ls={RepostCard}"
+                $"Card_number={payment.Card_number}&PIN={PIN}&template_tid={PaymentTemplate}&ls={RepostCard}"
                 + $"&SUMMARY_AMOUNT={payment.Summary_amount.AsCF()}&tid={Outtid}";
                 Host = Config.AppSettings["CardEndpoint"];
             }
