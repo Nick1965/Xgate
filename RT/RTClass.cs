@@ -330,7 +330,14 @@ namespace RT
 
 			StringBuilder p = new StringBuilder();
 
-            pcdate = Pcdate.AddHours(-1);
+            try
+            {
+                pcdate = Pcdate.AddHours(-1);
+            }
+            catch(Exception)
+            {
+                pcdate = DateTime.Now.AddHours(-1);
+            }
             operdate = DateTime.Now.AddHours(-1);
 
 			try

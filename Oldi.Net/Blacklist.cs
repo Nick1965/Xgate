@@ -284,8 +284,8 @@ namespace Oldi.Net.Repost
             Log(Host + "?" + request);
 
             HttpClient httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Add("IDHTTPSESSIONID", Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
-            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml") { CharSet = "utf-8" });
+            // httpClient.DefaultRequestHeaders.Add("IDHTTPSESSIONID", Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
+            httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/xml") { CharSet = "windows-1251" });
             foreach (var key in httpClient.DefaultRequestHeaders)
             {
                 string s = "";
@@ -319,14 +319,20 @@ namespace Oldi.Net.Repost
                 return; // Ошибка платёжного сервиса
             }
 
-            Log($"----------------------------------------------------\r\n{response}");
+
+            var sourceEncoding = Encoding.GetEncoding(1251);
+            var resultEncoding = Encoding.GetEncoding("65001");
+            byte[] sourceBytes = sourceEncoding.GetBytes(response);
+            byte[] resultBytes = Encoding.Convert(sourceEncoding, resultEncoding, sourceBytes);
+            var response_log = resultEncoding.GetString(resultBytes);
+            Log($"----------------------------------------------------\r\n{response_log}");
 
 
             // Проверка статус и errCode
             Status = XPath.GetInt(response, "/request/result/Status");
             ErrCode = XPath.GetInt(response, "/request/result/errCode");
             Log($"Status={Status} errCode={ErrCode}");
-            ErrDesc = XPath.GetString(response, "/request/result/errDesc");
+            ErrDesc = XPath.GetString(response_log, "/request/result/errDesc");
             if (ErrCode != 0)
                 Log($"errDesc={ErrDesc}");
             if (Status == 0)
