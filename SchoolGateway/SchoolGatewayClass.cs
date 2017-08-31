@@ -37,30 +37,30 @@ namespace SchoolGateway
         private bool ValidateRemote(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
         {
             // allow any certificate...
-            Log(".\\log\\Certificates.log", "Серверный сертификат: CN={0} Hash={1} S/n={2}", certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
+            Log("Серверный сертификат: CN={0} Hash={1} S/n={2}", certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
 
             // policyErrors = SslPolicyErrors.RemoteCertificateChainErrors | SslPolicyErrors.RemoteCertificateNameMismatch | SslPolicyErrors.RemoteCertificateNotAvailable;
 
             if ((policyErrors & SslPolicyErrors.RemoteCertificateChainErrors) != 0)
             {
-                Log(".\\log\\Certificates.log", "Серверный сертификат: CN={0} Hash={1} S/n={2}: Ошибка наследования",
+                Log("Серверный сертификат: CN={0} Hash={1} S/n={2}: Ошибка наследования",
                     certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
                 return false;
             }
             if ((policyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) != 0)
             {
-                Log(".\\log\\Certificates.log", "Серверный сертификат: CN={0} Hash={1} S/n={2}: Имя сертификата не совпадает с именем сервера",
+                Log("Серверный сертификат: CN={0} Hash={1} S/n={2}: Имя сертификата не совпадает с именем сервера",
                     certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
                 return false;
             }
             if ((policyErrors & SslPolicyErrors.RemoteCertificateNotAvailable) != 0)
             {
-                Log(".\\log\\Certificates.log", "Серверный сертификат: CN={0} Hash={1} S/n={2}: Сертификат недействителен",
+                Log("Серверный сертификат: CN={0} Hash={1} S/n={2}: Сертификат недействителен",
                     certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
                 return false;
             }
 
-            Log(".\\log\\Certificates.log", "Серверный сертификат подтверждён: CN={0} Hash={1} S/n={2}",
+            Log("Серверный сертификат подтверждён: CN={0} Hash={1} S/n={2}",
                 certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
 
             return true;
