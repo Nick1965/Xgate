@@ -85,7 +85,7 @@ old: https://dealer.telepayural.ru:8181/external/process
 
   <Provider name="school" host="https://api.in¬-shkola.ru/payments/"
             check = "check?account_id={0}&amp;service={1}"
-            pay = "new?payment_id={0}&amp;account_id={1}&amp;sum=100.00&amp;time={2}&amp;service={3}" />
+            pay = "new?payment_id={0}&amp;account_id={1}&amp;sum=100.00&amp;time={2}&amp;service={3}" log="school.log" />
   
     <Provider name="smtp" content-type="text/plain;charset=866" code-page="866" log="smtp.log" />
 

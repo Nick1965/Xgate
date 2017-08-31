@@ -151,9 +151,14 @@ namespace Oldi.Net
 
         static Object LockObj = new Object();
 
+        public static int timeStamp()
+        {
+            return (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+        }
+
         public static void Log(string log, string text)
 		{
-			if (log.Substring(0, 1) == "{")
+            if (log.Substring(0, 1) == "{")
 				throw new ApplicationException("Не задан файл журнала");
 
 			lock (LockObj)
