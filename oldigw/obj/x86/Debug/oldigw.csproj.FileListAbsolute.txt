@@ -156,3 +156,5 @@ D:\Projects\XGate\oldigw\obj\x86\Debug\Oldi.Net.Properties.Resources.resources
 D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.Cache
 D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.exe
 D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.pdb
+D:\Projects\XGate\oldigw\bin\Debug\SchoolGateway.dll
+D:\Projects\XGate\oldigw\bin\Debug\SchoolGateway.pdb

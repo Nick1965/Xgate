@@ -219,6 +219,7 @@ namespace SchoolGateway
             ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(ValidateRemote);
             ServicePointManager.DefaultConnectionLimit = 10;
             ServicePointManager.UseNagleAlgorithm = true;
+            
             // ServicePointManager.CertificatePolicy = new MyCertPolicy();
 
 
@@ -229,7 +230,6 @@ namespace SchoolGateway
             // Request.Timeout = 300000;
             Request.ProtocolVersion = new Version(1, 1);
             // Request.Credentials = CredentialCache.DefaultNetworkCredentials;
-            Request.Credentials = CredentialCache.DefaultCredentials;
             Request.Method = "GET";
             Request.ContentType = "application/x-www-form-urlencoded";
             Request.Accept = "text/html";
@@ -240,9 +240,9 @@ namespace SchoolGateway
             Request.Headers.Add(HttpRequestHeader.AcceptEncoding, "identity");
             Request.UserAgent = "X-Net Test Client v0.1";
 
-            // CredentialCache cc = new CredentialCache();
-            // cc.Add(new Uri("https://apitest.regplat.ru:10443/"), "Negotiate", new NetworkCredential("Администратор", "1"));
-
+            CredentialCache cc = new CredentialCache();
+            cc.Add(new Uri(Host), "Basic", new NetworkCredential( Config.Providers["school"]["login"], Config.Providers["school"]["password"] ));
+            Request.Credentials = cc;
 
             // Request.UseDefaultCredentials = false;
             Request.ContentLength = 0;

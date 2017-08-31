@@ -125,6 +125,10 @@
       <Project>{55733427-A15A-4424-8165-7232F7BA2A7E}</Project>
       <Name>RT</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SchoolGateway\SchoolGateway.csproj">
+      <Project>{26bb01c1-45c7-41c3-9b38-21294fef512b}</Project>
+      <Name>SchoolGateway</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Smtp\Smtp.csproj">
       <Project>{40D3D9B3-33A5-4EE8-9203-94AFCC138280}</Project>
       <Name>Smtp</Name>

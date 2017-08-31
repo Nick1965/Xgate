@@ -97,6 +97,9 @@ namespace Oldi.Net
                         case "xsolla":
                             Current = new GWXsolllaRequest(Request);
                             break;
+                        case "school":
+                            Current = new SchoolGateway.SchoolGatewayClass (Request);
+                            break;
                         // case "smtp":
                         //    Current = new Oldi.Smtp.Smtp(Request);
                         //    break;
