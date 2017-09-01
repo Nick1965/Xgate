@@ -73,7 +73,7 @@ namespace Oldi.Net
                     // Pay -->
                     // и если необходимо Status.
 
-                    // Log($"REQ: Provider=\"{Request.Provider}\" Request=\"{Request.RequestType}\"");
+                    // Log($"REQ: Provider=\"{Request.Provider}\" Request=\"{Request.RequestType}\" Service=\"{Request.Service}\"");
 
                     // Для начала определимся с провайдером:
                     switch (Request.Provider)

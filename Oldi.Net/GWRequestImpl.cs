@@ -454,7 +454,9 @@ namespace Oldi.Net
 
 			State = 0; // Новый
 
-			return Exec(sp :"MakePayment2", tid :Tid,
+            RootLog($"{Tid} MakePayment {Provider} {Service} {Gateway}");
+
+            return Exec(sp :"MakePayment2", tid :Tid,
 										provider: provider,
 										phone: phone,
 										phoneParam: PhoneParam,

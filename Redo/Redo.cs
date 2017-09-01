@@ -275,8 +275,8 @@ namespace OldiGW.Redo.Net
 				// Если отладка не производится...
 				if (gw.Provider == Settings.Cyber.Name)
 					gw = new GWCyberRequest(gw);
-				else if (gw.Provider == Settings.Mts.Name)
-					gw = new GWMtsRequest(gw);
+				// else if (gw.Provider == Settings.Mts.Name)
+				//	gw = new GWMtsRequest(gw);
 				else if (gw.Provider == Settings.Ekt.Name)
 					gw = new GWEktRequest(gw);
 				else if (gw.Provider == Settings.Rtm.Name)
