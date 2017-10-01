@@ -68,3 +68,5 @@ D:\Projects\XGate\Ekt\obj\Debug\Oldi.Ekt.Properties.Resources.resources
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.csproj.GenerateResource.Cache
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.dll
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.pdb
+D:\Projects\XGate\Ekt\bin\Debug\Oldi.Net.dll.config
+D:\Projects\XGate\Ekt\obj\Debug\Ekt.csproj.CoreCompileInputs.cache

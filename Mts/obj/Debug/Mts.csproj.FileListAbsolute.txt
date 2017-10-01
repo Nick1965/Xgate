@@ -69,3 +69,5 @@ D:\Projects\XGate\Mts\obj\Debug\Oldi.Mts.Properties.Resources.resources
 D:\Projects\XGate\Mts\obj\Debug\Mts.csproj.GenerateResource.Cache
 D:\Projects\XGate\Mts\obj\Debug\Mts.dll
 D:\Projects\XGate\Mts\obj\Debug\Mts.pdb
+D:\Projects\XGate\Mts\bin\Debug\Oldi.Net.dll.config
+D:\Projects\XGate\Mts\obj\Debug\Mts.csproj.CoreCompileInputs.cache

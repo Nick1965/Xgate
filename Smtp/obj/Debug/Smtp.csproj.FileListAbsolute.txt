@@ -70,3 +70,5 @@ D:\Projects\XGate\Smtp\bin\Debug\SMPP.pdb
 D:\Projects\XGate\Smtp\obj\Debug\Smtp.csprojResolveAssemblyReference.cache
 D:\Projects\XGate\Smtp\obj\Debug\Smtp.dll
 D:\Projects\XGate\Smtp\obj\Debug\Smtp.pdb
+D:\Projects\XGate\Smtp\bin\Debug\Oldi.Net.dll.config
+D:\Projects\XGate\Smtp\obj\Debug\Smtp.csproj.CoreCompileInputs.cache

@@ -65,3 +65,5 @@ D:\Projects\XGate\RT\obj\Debug\RT.Properties.Resources.resources
 D:\Projects\XGate\RT\obj\Debug\RT.csproj.GenerateResource.Cache
 D:\Projects\XGate\RT\obj\Debug\RT.dll
 D:\Projects\XGate\RT\obj\Debug\RT.pdb
+D:\Projects\XGate\RT\bin\Debug\Oldi.Net.dll.config
+D:\Projects\XGate\RT\obj\Debug\RT.csproj.CoreCompileInputs.cache

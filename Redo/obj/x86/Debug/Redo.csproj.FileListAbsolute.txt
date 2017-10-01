@@ -120,3 +120,6 @@ D:\Projects\XGate\Redo\obj\x86\Debug\OldiGW.Redo.Net.Properties.Resources.resour
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csproj.GenerateResource.Cache
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.dll
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.pdb
+D:\Projects\XGate\Redo\bin\Debug\Mts.dll.config
+D:\Projects\XGate\Redo\bin\Debug\Oldi.Net.dll.config
+D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csproj.CoreCompileInputs.cache

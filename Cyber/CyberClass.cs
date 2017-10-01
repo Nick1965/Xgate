@@ -440,10 +440,15 @@ namespace Oldi.Net.Cyber
 					
 					// Возвращаемый номер сессии
 					session = GetValue("session");
-					
-					// Результат обработки
-					if (!Int32.TryParse(GetValue("Result"), out result)) 
-						result = 0;
+
+                    // Результат обработки
+                    if (!Int32.TryParse(GetValue("Result"), out result))
+                    {
+                        errCode = 400;
+                        errDesc = "Невозможно разобрать ответ провайдера";
+                        state = 12;
+                        return 100;
+                    }
 
 					// Код авторизации платежа
 					if (string.IsNullOrEmpty(acceptCode)) 
