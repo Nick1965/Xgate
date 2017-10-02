@@ -321,7 +321,7 @@ namespace Oldi.Net.Repost
 
 
             var sourceEncoding = Encoding.GetEncoding(1251);
-            var resultEncoding = Encoding.GetEncoding("65001");
+            var resultEncoding = Encoding.UTF8;
             byte[] sourceBytes = sourceEncoding.GetBytes(response);
             byte[] resultBytes = Encoding.Convert(sourceEncoding, resultEncoding, sourceBytes);
             var response_log = resultEncoding.GetString(resultBytes);
