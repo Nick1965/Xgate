@@ -109,3 +109,5 @@ D:\Projects\XGate\Test\obj\x86\Debug\Test.exe.manifest
 D:\Projects\XGate\Test\obj\x86\Debug\Test.application
 D:\Projects\XGate\Test\obj\x86\Debug\Test.exe
 D:\Projects\XGate\Test\obj\x86\Debug\Test.pdb
+D:\Projects\XGate\Test\bin\Debug\Oldi.Net.dll.config
+D:\Projects\XGate\Test\obj\x86\Debug\Test.csproj.CoreCompileInputs.cache

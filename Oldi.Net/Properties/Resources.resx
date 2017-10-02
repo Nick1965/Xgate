@@ -461,4 +461,7 @@
   <data name="Error100" xml:space="preserve">
     <value>Неверный формат ответа, либо ответ не получен</value>
   </data>
+  <data name="Error270" xml:space="preserve">
+    <value>Ограничение финансового контроля</value>
+  </data>
 </root>

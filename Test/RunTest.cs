@@ -8,6 +8,7 @@ using System.Collections.Specialized;
 using Oldi.Ekt;
 using Oldi.Net;
 using System.Xml.Linq;
+using System.Text.RegularExpressions;
 
 namespace Test
 {
@@ -45,15 +46,58 @@ namespace Test
             // Console.WriteLine("ekt.Run()");
             // ekt.Run();
 
-            int Account = 744;
+            // int Account = 744;
 
-            Console.WriteLine($"Account={Account} DayLimit={DayLimit.AsCF()} OnePayment={OnePayment.AsCF()}");
+            // Console.WriteLine($"Account={Account} DayLimit={DayLimit.AsCF()} OnePayment={OnePayment.AsCF()}");
 
-            RedefineForAccount(Account);
+            // RedefineForAccount(Account);
 
-            Console.WriteLine($"Account={Account} DayLimit={DayLimit.AsCF()} OnePayment={OnePayment.AsCF()}");
+            // Console.WriteLine($"Account={Account} DayLimit={DayLimit.AsCF()} OnePayment={OnePayment.AsCF()}");
 
-            Console.WriteLine("Test end");
+            // Console.WriteLine("Test end");
+
+            CyberAnswerTest();
+
+        }
+
+
+        static void CyberAnswerTest()
+        {
+            string stResponse = @"0000066701SM000004060000040600000125
+                                0J0005              00904291
+                                                    00000000
+                                BEGIN
+                                DATE=11.03.2016 16:32:35
+                                SESSION=OLDIGW10193746
+                                ERROR=0
+                                RESULT=0
+                                TRANSID=1006254576199
+                                ADDINFO=ШТРАФ ПО АДМИНИСТРАТИВНОМУ ПРАВОНАРУШЕНИЮ ПОСТАНОВЛЕНИЕ №18810070150000234892; КБК: 18811630020016000140; Получатель: Отдел ГИБДД МО МВД России ""Стрежевской""; КПП: 701701001; ИНН: 7018016237; Р/СЧ: 40101810900000010007; Банк: ГРКЦ ГУ Банка России по Томской области г.Томск; БИК: 046902001
+                                PRICE = 1000.00
+
+                                END
+                                BEGIN SIGNATURE
+                                iQBRAwkBAA3MY1biyPMBAc4 + Af9Pxrayd6hEwTI1YjAT2qb5YQD5 / lTvJmvRKNsE
+                                am8SiMJskCscXqvbn1qv77utU4YUvyX + uBSZFNY5nkr1aRC6sAHH
+                                = +d62
+                                END SIGNATURE
+                               ";
+
+            Console.WriteLine($"Target:\r\n{stResponse}\r\n");
+
+            Console.WriteLine("Result:");
+            // Получим блок текста между begin ... end
+            string pattern = @"BEGIN(.*)END(.*)begin";
+
+            Match m = Regex.Match(stResponse.Replace("\r", "").Replace("\n", ""), pattern, RegexOptions.IgnoreCase);
+            while (m.Success)
+            {
+                Console.WriteLine($"'{m.Groups[1].Value}'");
+                Console.WriteLine("-------------------------");
+                Console.WriteLine($"'{m.Groups[2].Value}'");
+                Console.WriteLine("=========================");
+                m = m.NextMatch();
+            }
 
         }
 

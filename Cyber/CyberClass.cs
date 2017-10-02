@@ -77,7 +77,7 @@ namespace Oldi.Net.Cyber
 		/// <returns></returns>
 		public override int TimeOut()
 		{
-			int timeout = 40;
+			int timeout = 60;
 			int.TryParse(Settings.Cyber.Timeout, out timeout);
 			return timeout;
 		}
@@ -113,13 +113,12 @@ namespace Oldi.Net.Cyber
 			}
 			catch (Exception ex)
 			{
-				RootLog("{0} {1}\r\n{2}", Tid, ex.Message, ex.StackTrace);
-				// Console.WriteLine("{0}\r\n{1}", ex.Message, ex.StackTrace);
-			}
+                RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ex.ToString()}");
+            }
 
-			// base.InitializeComponents();
+            // base.InitializeComponents();
 
-		}
+        }
 	
 		/// <summary>
 		/// check
@@ -334,8 +333,8 @@ namespace Oldi.Net.Cyber
 					Log("\r\nПодготовлен запрос:\r\n{0}\r\n", s_text);
 				*/
 
-                Log("{0} Подготовлен запрос:\r\n{1}", Session, prm.ToString());
-				Log("Подписан запрос\r\n---------------------------------------{0}\r\n---------------------------------------", stRequest);
+                Log($"{Session}\r\n=====================================================\r\n{prm.ToString()}");
+				Log($"-----------------------------------------------------\r\n{stRequest}\r\n---------------------------------------");
 				
 				errCode = 0;
 				errDesc = null;
@@ -375,9 +374,9 @@ namespace Oldi.Net.Cyber
 				state = 11;
             }
 
-			RootLog("{0} Cyber.MakeRequest: {1}", Tid, errDesc);
+            RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ErrDesc}");
 
-			return 1;
+            return 1;
 
 		}
 
@@ -399,11 +398,11 @@ namespace Oldi.Net.Cyber
 				return 1;
             }
 
+            Log($"{Session} Получен ответ:\r\n-----------------------------------------------------\r\n{stResponse}\r\n=====================================================");
+
             // Проверка подписи сервера
-			try
-			{
-				Log("{0} Получен ответ:\r\n{1}", Session, stResponse);
-			
+            try
+            {
 				lock (TheLock)
 					{
 					IPriv.VerifyMessage(stResponse, public_key_path, serial);
@@ -474,9 +473,12 @@ namespace Oldi.Net.Cyber
 					if (limit == decimal.MinusOne)
 						if (!string.IsNullOrEmpty(s = GetValue("rest")))
 							decimal.TryParse(s, System.Globalization.NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out limit);
+                    if (limit == decimal.MinusOne)
+                        if (!string.IsNullOrEmpty(s = GetValue("restlimit")))
+                            decimal.TryParse(s, System.Globalization.NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out limit);
 
-					// Наименование ПУ
-					if (string.IsNullOrEmpty(opname))
+                    // Наименование ПУ
+                    if (string.IsNullOrEmpty(opname))
 						opname = GetValue("opname");
 
 					// Требуемая сумма
@@ -490,23 +492,25 @@ namespace Oldi.Net.Cyber
 			}
 			catch (ApplicationException ae)
 			{
-				errCode = 400;
-				errDesc = ae.Message;
-				state = state == 1 ? (byte)0 : (byte)3;
-			}
-			catch (IPrivException ie)
+                // Если платёж новый - отменяем и забываем. Иначе надо разбираться
+                errCode = 400;
+                errDesc = ae.Message;
+                state = State == 1 ? (byte)0 : (byte)3;
+                RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ErrDesc}");
+            }
+            catch (IPrivException ie)
 			{
 				ErrCode = ie.code;
 				ErrDesc = string.Format("({0}) {1}", ie.code, ie.ToString());
 				state = state == 1 ? (byte)0 : (byte)3;
-				RootLog("{0} Cyber.ParseAnswer {1}", Tid, errDesc);
-			}
-			catch (Exception ex)
+                RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ErrDesc}");
+            }
+            catch (Exception ex)
 			{
 				ErrCode = 6;
-				ErrDesc = string.Format("ParseAnswer: ({0}) {1}", errCode, ex.Message);
-				RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
-				state = 12;
+				ErrDesc = $"ParseAnswer: ({errCode}) {ex.Message}";
+                RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ex.ToString()}");
+                state = 12;
 			}
 
 			return errCode;
@@ -537,11 +541,11 @@ namespace Oldi.Net.Cyber
 				return 0;
             }
             catch (Exception ex)
-                {
-					errCode = 100;	
-					errDesc = string.Format("Cyber.GetAnswer: {0}", ex.Message);
-					return 1;
-                }
+            {
+			    errCode = 100;
+                errDesc =  $"Cyber.GetAnswer: {ex.Message}";
+				return 1;
+            }
 
             // Log("GetAnswer: stAnswer= {0}", stAnswer);
             
@@ -745,7 +749,7 @@ namespace Oldi.Net.Cyber
 			catch (Exception ex)
 			{
 				reason = null;
-				RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ex.ToString()}");
 			}
 
 		}
@@ -899,7 +903,8 @@ namespace Oldi.Net.Cyber
 							state = 11;
 							errCode = 2;
 							errDesc = "Неизвестная ошибка. Обработка запроса отложена";
-							RootLog("{0} Неизвестная ошибка state={1}\r\nОтвет Кибера:\r\n{2}", Tid, oldState, stAnswer);
+                            RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway} Неизвестная ошибка state={oldState} {ErrCode}");
+                            Log($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway} Неизвестная ошибка state={oldState} {ErrCode}\r\nОтвет CyberPlat\r\n{stAnswer}");
 							return;
 						}
 						else
