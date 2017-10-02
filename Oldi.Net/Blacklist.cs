@@ -168,7 +168,7 @@ namespace Oldi.Net.Repost
             }
             catch(Exception ex)
             {
-                Log(ex.ToString());
+                RootLog($"{Tid} [Black]\r\n{ex.ToString()}");
             }
         }
 
@@ -416,7 +416,7 @@ namespace Oldi.Net.Repost
             }
             catch (Exception ex)
             {
-                Log($"{Tid} исключение: {ex}");
+                RootLog($"{Tid} [BLACK] исключение:\r\n{ex}");
             }
 
         }
@@ -429,6 +429,15 @@ namespace Oldi.Net.Repost
                 Utility.Log(Logfile, fmt, prms);
         }
 
+        /// <summary>
+        /// Запись в основной лог
+        /// </summary>
+        /// <param name="fmt">Формат</param>
+        /// <param name="_params">Параметры</param>
+        protected void RootLog(string fmt, params object[] _params)
+        {
+            Utility.Log(Settings.OldiGW.LogFile, fmt, _params);
+        }
 
     }
 }
