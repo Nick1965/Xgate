@@ -60,7 +60,7 @@ namespace Oldi.Net
 						}
 					else
 					{
-						errDesc = string.Format("{0} {1}", Properties.Resources.MsgCNF, CommonName);
+						errDesc = $"{Properties.Resources.MsgCNF} {CommonName}");
 						errCode = -1;
 					}
 				}
