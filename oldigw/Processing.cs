@@ -85,6 +85,9 @@ namespace Oldi.Net
                         case "ekt":
                             Current = new GWEktRequest(Request);
                             break;
+                        case "boriska":
+                            Current = new ServerGate(Request);
+                            break;
                         case "cyber":
                             Current = new GWCyberRequest(Request);
                             break;

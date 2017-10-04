@@ -61,3 +61,4 @@ D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.csproj.GenerateResource.Cache
 D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.dll
 D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.pdb
 D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.csproj.CoreCompileInputs.cache
+D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.ServerGateMessages.resources

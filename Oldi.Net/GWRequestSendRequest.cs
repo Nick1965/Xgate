@@ -41,7 +41,7 @@ namespace Oldi.Net
 		/// Добавление клиентского сертификата
 		/// </summary>
 		/// <param name="request"></param>
-		public int AddCertificate(HttpWebRequest request)
+		public virtual int AddCertificate(HttpWebRequest request)
 		{
 			errCode = 0;
 			
@@ -60,7 +60,7 @@ namespace Oldi.Net
 						}
 					else
 					{
-						errDesc = $"{Properties.Resources.MsgCNF} {CommonName}");
+						errDesc = $"{Properties.Resources.MsgCNF} {CommonName}";
 						errCode = -1;
 					}
 				}

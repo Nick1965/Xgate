@@ -179,26 +179,10 @@ namespace Oldi.Utility
 
 	public class ProviderItem
 		{
-		public string Name
-			{
-			get;
-			set;
-			}
-		public string Service
-			{
-			get;
-			set;
-			}
-		public string Gateway
-			{
-			get;
-			set;
-			}
-		public decimal Limit
-			{
-			get;
-			set;
-			}
+		public string Name { get; set; }
+		public string Service { get; set; }
+		public string Gateway { get; set; }
+		public decimal Limit { get; set; }
 		public ProviderItem(string Name, string Service, string Gateway, decimal Limit)
 			{
 			this.Name = Name;
@@ -208,7 +192,7 @@ namespace Oldi.Utility
 			}
 		public override string ToString()
 			{
-			return string.Format("Name = \"{0}\" Service = \"{1}\" Gateway = \"{2}\"", Name, Service, Gateway);
+			return $"Name = \"{Name}\" Service = \"{Service}\" Gateway = \"{Gateway}\"";
 			}
 		}
 	
@@ -282,6 +266,21 @@ namespace Oldi.Utility
 			public static string Pointid { get { return Config.Providers["ekt"]["point-id"]; } }
 		}
         #endregion Ekt
+
+        #region Boriska
+        public static class Boriska
+        {
+            const string key = "boriska";
+            public static string Name { get { return Config.Providers[key]["name"]; } }
+            public static string Host { get { return Config.Providers[key]["host"]; } }
+            public static string Log { get { return Config.Providers[key]["log"]; } }
+            public static string Certname { get { return Config.Providers[key]["certname"]; } }
+            public static string Timeout { get { return Config.Providers[key]["timeout"]; } }
+            public static string Codepage { get { return Config.Providers[key]["code-page"]; } }
+            public static string ContentType { get { return Config.Providers[key]["content-type"]; } }
+            public static string Pointid { get { return Config.Providers[key]["point-id"]; } }
+        }
+        #endregion Boriska
 
         #region Mts
         public static class Mts
@@ -620,10 +619,25 @@ namespace Oldi.Utility
 			public static string Timeout { get { return ProvidersSettings.Ekt.Timeout; } }
 		}
 
-		/// <summary>
-		/// CyberPlat
-		/// </summary>
-		public static class Cyber
+        /// <summary>
+        /// Boriska
+        /// </summary>
+        public static class Boriska
+        {
+            public static string Name { get { return ProvidersSettings.Boriska.Name; } }
+            public static string Host { get { return ProvidersSettings.Boriska.Host; } }
+            public static string LogFile { get { return logPath + ProvidersSettings.Boriska.Log; } }
+            public static string Certname { get { return ProvidersSettings.Boriska.Certname; } }
+            public static string Pointid { get { return ProvidersSettings.Boriska.Pointid; } }
+            public static string Codepage { get { return ProvidersSettings.Boriska.Codepage; } }
+            public static string ContentType { get { return ProvidersSettings.Boriska.ContentType; } }
+            public static string Timeout { get { return ProvidersSettings.Boriska.Timeout; } }
+        }
+
+        /// <summary>
+        /// CyberPlat
+        /// </summary>
+        public static class Cyber
 		{
 			public static string Name = "cyber";
 

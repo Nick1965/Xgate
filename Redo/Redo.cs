@@ -79,7 +79,7 @@ namespace OldiGW.Redo.Net
 			WorkerThreads = Environment.ProcessorCount * 3;
 			ThreadPool.SetMaxThreads(WorkerThreads, CompletionPortThreads);
 
-			Log("Установлено: количество потоков допроведения = {0} количество птоков ввода/вывода = {1}", WorkerThreads, CompletionPortThreads);
+			Log($"Установлено: количество потоков допроведения = {WorkerThreads} количество птоков ввода/вывода = {CompletionPortThreads}");
 			
 			RedoDict = new ConcurrentDictionary<long, DateTime>();
         }
@@ -279,7 +279,9 @@ namespace OldiGW.Redo.Net
 				//	gw = new GWMtsRequest(gw);
 				else if (gw.Provider == Settings.Ekt.Name)
 					gw = new GWEktRequest(gw);
-				else if (gw.Provider == Settings.Rtm.Name)
+                else if (gw.Provider == "boriska")
+                    gw = new ServerGate(gw);
+                else if (gw.Provider == Settings.Rtm.Name)
 					gw = new RT.RTRequest(gw);
                 else if (gw.Provider == Settings.Rapida.Name)
                     gw = new GWRapidaRequest(gw);
@@ -303,7 +305,7 @@ namespace OldiGW.Redo.Net
 			}
 			catch (Exception ex)
 				{
-				Log("{0}\r\n{1}", ex.Message, ex.StackTrace);
+				Log(ex.ToString());
 				gw.ReportRequest("REDO");
 				}
 			finally

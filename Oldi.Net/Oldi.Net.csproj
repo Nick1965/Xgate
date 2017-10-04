@@ -82,6 +82,12 @@
     <Compile Include="RequestInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SendSMS.cs" />
+    <Compile Include="ServerGate.cs" />
+    <Compile Include="ServerGateMessages.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ServerGateMessages.resx</DependentUpon>
+    </Compile>
     <Compile Include="Service References\Proxy\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -113,6 +119,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ServerGateMessages.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ServerGateMessages.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
