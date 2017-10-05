@@ -269,7 +269,7 @@ namespace Oldi.Net
 
             stResponse += $"\t<UniqID>{Session}</UniqID>\r\n";
             stResponse += $"\t<ErrCode>{ErrCode}</ErrCode>\r\n";
-            stResponse += $"\t<ErrDesc>{ErrDesc.Substring(0, 125)}</ErrDesc>\r\n";
+            stResponse += $"\t<ErrDesc>{ErrDesc}</ErrDesc>\r\n";
 
             if (!string.IsNullOrEmpty(Fam))
                 stResponse += $"\t<Fam>{Fam.ToUpper()}</Fam>\r\n";
@@ -281,7 +281,7 @@ namespace Oldi.Net
             stResponse += $"\t<GKID>{GKID}</GKID>\r\n";
             stResponse += $"\t<TID>{TemplateTid}</TID>\r\n";
             stResponse += $"\t<Balance>{Balance.AsCF()}</Balance>\r\n";
-            stResponse += $"\t<Appendix>{Bank.ToUpper().Substring(0, 125)}</Appendix>\r\n";
+            stResponse += $"\t<Appendix>{Bank}</Appendix>\r\n";
 
             stResponse += "</Response>\r\n";
 
@@ -327,7 +327,8 @@ namespace Oldi.Net
             {
                 // Баланс агента
                 Balance = XPath.GetDec(Result, "/Response/Balance").Value;
-                errDesc = XPath.GetString(Result, "/Response/Description");
+                errDesc = "Платёж проведён";
+                Bank = $"{XPath.GetString(Result, "/Response/B_Name")}; {XPath.GetString(Result, "/Response/List/par1")}; {XPath.GetString(Result, "/Response/List/par3")}; {XPath.GetString(Result, "/Response/List/par4")}";
                 errCode = 3;
                 state = 6;
             }
@@ -393,13 +394,13 @@ namespace Oldi.Net
                 // Код требования
                 TemplateTid = XPath.GetString(Result, "/Response/Tid");
                 // Банк
-                Bank = XPath.GetString(Result, "/Response/Description");
+                Bank = $"{XPath.GetString(Result, "/Response/B_Name")}; {XPath.GetString(Result, "/Response/List/par1")}; {XPath.GetString(Result, "/Response/List/par3")}; {XPath.GetString(Result, "/Response/List/par4")}";
                 // Bank = GetValueFromAnswer(Result, "/Response/B_Name");
                 // Номер платежа в системе
                 PaymNumb = XPath.GetString(Result, "/Response/PaymNumb");
                 // Баланс агента
                 Balance = XPath.GetDec(Result, "/Response/Balance").Value;
-                errDesc = XPath.GetString(Result, "/Response/Description");
+                errDesc = "Платёж проведён";
                 errCode = 0;
                 state = 0;
             }
@@ -605,7 +606,7 @@ namespace Oldi.Net
                 // Console.WriteLine(Endpoint);
                 // Log(Endpoint);
 
-                Log($"{Tid}GET: {Endpoint}");
+                Log($"{Tid} GET: {Endpoint}");
                 Log($"----------------------------------------------------------");
 
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
