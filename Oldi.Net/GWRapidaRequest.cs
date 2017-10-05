@@ -277,7 +277,7 @@ namespace Oldi.Net
                 stResponse += $"\t<Name>{Name.ToUpper()}</Name>\r\n";
             if (!string.IsNullOrEmpty(SName))
                 stResponse += $"\t<SName>{SName.ToUpper()}</SName>\r\n";
-            stResponse += $"\t<FIO>{Fio.ToUpper()}</FIO\r\n";
+            stResponse += $"\t<FIO>{Fio.ToUpper()}</FIO>\r\n";
             stResponse += $"\t<GKID>{GKID}</GKID>\r\n";
             stResponse += $"\t<TID>{TemplateTid}</TID>\r\n";
             stResponse += $"\t<Balance>{Balance.AsCF()}</Balance>\r\n";
@@ -327,8 +327,8 @@ namespace Oldi.Net
             {
                 // Баланс агента
                 Balance = XPath.GetDec(Result, "/Response/Balance").Value;
-                errDesc = "Платёж проведён";
-                Bank = $"{XPath.GetString(Result, "/Response/B_Name")}; {XPath.GetString(Result, "/Response/List/par1")}; {XPath.GetString(Result, "/Response/List/par3")}; {XPath.GetString(Result, "/Response/List/par4")}";
+                errDesc = "Payment OK";
+                Bank = $"{XPath.GetString(Result, "/Response/B_Name").ToUpper()}; {XPath.GetString(Result, "/Response/List/par1")}; {XPath.GetString(Result, "/Response/List/par3")}; {XPath.GetString(Result, "/Response/List/par4")}";
                 errCode = 3;
                 state = 6;
             }
@@ -394,13 +394,13 @@ namespace Oldi.Net
                 // Код требования
                 TemplateTid = XPath.GetString(Result, "/Response/Tid");
                 // Банк
-                Bank = $"{XPath.GetString(Result, "/Response/B_Name")}; {XPath.GetString(Result, "/Response/List/par1")}; {XPath.GetString(Result, "/Response/List/par3")}; {XPath.GetString(Result, "/Response/List/par4")}";
+                Bank = $"{XPath.GetString(Result, "/Response/B_Name").ToUpper()}; {XPath.GetString(Result, "/Response/List/par1")}; {XPath.GetString(Result, "/Response/List/par3")}; {XPath.GetString(Result, "/Response/List/par4")}";
                 // Bank = GetValueFromAnswer(Result, "/Response/B_Name");
                 // Номер платежа в системе
                 PaymNumb = XPath.GetString(Result, "/Response/PaymNumb");
                 // Баланс агента
                 Balance = XPath.GetDec(Result, "/Response/Balance").Value;
-                errDesc = "Платёж проведён";
+                errDesc = "Valid check";
                 errCode = 0;
                 state = 0;
             }
