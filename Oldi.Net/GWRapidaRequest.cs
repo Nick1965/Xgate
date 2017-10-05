@@ -269,7 +269,7 @@ namespace Oldi.Net
 
             stResponse += $"\t<UniqID>{Session}</UniqID>\r\n";
             stResponse += $"\t<ErrCode>{ErrCode}</ErrCode>\r\n";
-            stResponse += $"\t<ErrDesc>{ErrDesc}</ErrDesc>\r\n";
+            stResponse += $"\t<ErrDesc>{ErrDesc.Substring(0, 125)}</ErrDesc>\r\n";
 
             if (!string.IsNullOrEmpty(Fam))
                 stResponse += $"\t<Fam>{Fam.ToUpper()}</Fam>\r\n";
@@ -281,7 +281,7 @@ namespace Oldi.Net
             stResponse += $"\t<GKID>{GKID}</GKID>\r\n";
             stResponse += $"\t<TID>{TemplateTid}</TID>\r\n";
             stResponse += $"\t<Balance>{Balance.AsCF()}</Balance>\r\n";
-            stResponse += $"\t<Appendix>{Bank.ToUpper()}</Appendix>\r\n";
+            stResponse += $"\t<Appendix>{Bank.ToUpper().Substring(0, 125)}</Appendix>\r\n";
 
             stResponse += "</Response>\r\n";
 
