@@ -281,7 +281,7 @@ namespace OldiGW.Redo.Net
 					gw = new GWEktRequest(gw);
                 else if (gw.Provider == "boriska")
                     gw = new ServerGate(gw);
-                else if (gw.Provider == Settings.Rtm.Name)
+                else if (gw.Provider == Settings.Rt.Name)
 					gw = new RT.RTRequest(gw);
                 else if (gw.Provider == Settings.Rapida.Name)
                     gw = new GWRapidaRequest(gw);
@@ -291,7 +291,7 @@ namespace OldiGW.Redo.Net
                 if (gw != null)
 					{
 					gw.SetLock(1);
-					// gw.ReportRequest("REDO - strt");
+					gw.ReportRequest("REDO - strt");
 
 					// Синхронизация с БД Город
 					gw.Sync(false);

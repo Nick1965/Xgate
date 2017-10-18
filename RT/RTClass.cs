@@ -240,9 +240,10 @@ namespace RT
 			}
 			else // Redo
 			{
-				/* REDO выполняется в OE
+				// REDO выполняется в OE
 
-				// Log("{0} допроведение из статуса {1}", Tid, state);
+                /*
+				Log("{0} допроведение из статуса {1}", Tid, state);
 				DoPay(state, 6);
 				ParseAnswer(stResponse);
 	
@@ -260,7 +261,7 @@ namespace RT
 					errDesc = "Платёж отменён";
 				}
 				 
-				 */
+                */
 				UpdateState(Tid, locked: 0, state: State);
 			}
 
