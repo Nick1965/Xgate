@@ -219,7 +219,7 @@ namespace Oldi.Net.Repost
                 IEnumerable<Payment> Payments = db.ExecuteQuery<Payment>(
                     @"select p.DatePay, p.tid, p.template_tid, p.agent_oid, p.point_oid, d.ClientAccount, p.Card_number, p.Amount, p.Summary_Amount, p.User_id
 				            FROM [Gorod].[dbo].[payment] p (NOLOCK)
-				            inner join [Gorod].[dbo].[PD4] d (NOLOCK) on p.tid = d.tid 
+				            left join [Gorod].[dbo].[PD4] d (NOLOCK) on p.tid = d.tid 
 				            where p.tid = {0}", Tid
                     );
 
@@ -271,14 +271,14 @@ namespace Oldi.Net.Repost
                 Host = Config.AppSettings["CardEndpoint"];
                 request =
                 $"Card_number={payment.Card_number}&PIN={PIN}&template_tid={PaymentTemplate}&ls={RepostCard}"
-                + $"&SUMMARY_AMOUNT={payment.Summary_amount.AsCF()}&tid={Outtid}";
+                + $"&SUMMARY_AMOUNT={payment.Summary_amount.AsCF()}&COMMISSION=0.00&tid={Outtid}";
             }
             else
             {
                 Host = Config.AppSettings["SimpleEndpoint"];
                 request =
                     $"Agent_ID={payment.Agent_oid}&Point_ID={payment.Point_oid}&Nick={user.Login}&Password={user.Password}&template_tid={PaymentTemplate}&ls={RepostCard}"
-                    + $"&SUMMARY_AMOUNT={payment.Summary_amount.AsCF()}&tid={Outtid}";
+                    + $"&SUMMARY_AMOUNT={payment.Summary_amount.AsCF()}&COMMISSION=0.00&tid={Outtid}";
             }
 
             Log(Host + "?" + request);
@@ -319,20 +319,15 @@ namespace Oldi.Net.Repost
                 return; // Ошибка платёжного сервиса
             }
 
-
-            var sourceEncoding = Encoding.GetEncoding(1251);
-            var resultEncoding = Encoding.UTF8;
-            byte[] sourceBytes = sourceEncoding.GetBytes(response);
-            byte[] resultBytes = Encoding.Convert(sourceEncoding, resultEncoding, sourceBytes);
-            var response_log = resultEncoding.GetString(resultBytes);
-            Log($"----------------------------------------------------\r\n{response_log}");
+            Log("----------------------------------------------------");
+            Log(response);
 
 
             // Проверка статус и errCode
             Status = XPath.GetInt(response, "/request/result/Status");
             ErrCode = XPath.GetInt(response, "/request/result/errCode");
             Log($"Status={Status} errCode={ErrCode}");
-            ErrDesc = XPath.GetString(response_log, "/request/result/errDesc");
+            ErrDesc = XPath.GetString(response, "/request/result/errDesc");
             if (ErrCode != 0)
                 Log($"errDesc={ErrDesc}");
             if (Status == 0)
