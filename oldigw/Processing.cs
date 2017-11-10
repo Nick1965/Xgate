@@ -197,19 +197,22 @@ namespace Oldi.Net
 
                                     int Doubles = 0;
                                     // Если sub_inner_tid содержит 3 '-' возвращает непустую строку
-                                    string SubInnertid = Current.GetGorodSub();
+                                    // string SubInnertid = Current.GetGorodSub();
 
-                                    if (!string.IsNullOrEmpty(SubInnertid) && (Doubles = Current.GetDoubles(SubInnertid)) > 0)
+                                    // Искать задвоенные платежи по параметрам:
+                                    // Point_oid
+                                    // Template_tid
+                                    // User_id
+                                    // Account
+                                    // Amount, Commission, Summary_amount
+                                    // if (!string.IsNullOrEmpty(SubInnertid) && (Doubles = Current.GetDoubles(SubInnertid)) > 0)
+                                    if (Current.GetDoubles() > 0)
                                     {
-                                        Log($"{Current.Tid} [DOUB - step] Для sub_inner_tid={SubInnertid} найдено {Doubles} дублей");
+                                        Log($"{Current.Tid} [Check doubles] Для acc={Current.ID()} найдено {Doubles} дублей");
                                         Current.State = 12;
                                         Current.errCode = 6;
-                                        Current.errDesc = $"Найдено {Doubles} подобных платежей в пределах 10 минут. Платёж отменяется.";
+                                        Current.errDesc = $"Найдено {Doubles} подобных платежей в пределах 10 часов. Платёж отменяется.";
                                         Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
-                                    }
-                                    else
-                                    {
-                                        Log("{0} [DOUB - step] Для sub_inner_tid={1} дублей не найдено", Current.Tid, SubInnertid);
                                     }
 
                                     // if (!string.IsNullOrEmpty(SubInnertid))

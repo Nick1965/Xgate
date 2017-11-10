@@ -34,7 +34,20 @@ namespace Oldi.Net
 			}
 
 		}
-	public partial class GWRequest
+
+    public class Pay
+    {
+        public DateTime? DatePay;
+        public int? Tid;
+        public int? Point_oid;
+        public int? Template_tid;
+        public int? User_id;
+        public decimal? Amount;
+        public decimal? Commission;
+        public decimal? Summary_amount;
+    }
+
+    public partial class GWRequest
 		{
 
 		/// <summary>
@@ -68,31 +81,108 @@ namespace Oldi.Net
 				return Sub_inner_tid;
 			}
 
-		public int GetDoubles(string sub_inner_tid)
+        /// <summary>
+        /// Поиск задвоенных платежей
+        /// </summary>
+        /// <returns></returns>
+        public int GetDoubles()
 			{
 			int Doubles = 0;
 
-			try
-				{
+            // Искать задвоенные платежи по параметрам:
+            // Point_oid
+            // Template_tid
+            // User_id
+            // Account
+            // Amount, Commission, Summary_amount
+
+            /*
+            select	@Point_oid = p.Point_oid,
+                    @Template_tid = p.template_tid,
+                    @User_id = p.user_id,
+                    @Account = d.clientAccount,
+                    @datepay = p.datePay
+                from [gorod].[dbo].payment p 
+                left join [gorod].[dbo].pd4 d on p.tid = d.tid
+                where p.tid = @tid
+
+            select count(p.tid)
+                from [gorod].[dbo].payment p 
+                left join [gorod].[dbo].pd4 d on p.tid = d.tid
+                where	p.tid <> @tid and -- кроме самого себя
+                        @Point_oid = p.Point_oid and
+                        @Template_tid = p.template_tid and
+                        @User_id = p.user_id and
+                        @Account = d.clientAccount and 
+                        abs(datediff(second, p.datePay, @datePay)) <= 180 
+            */
+
+            try
+            {
 				using (OldiContext db = new OldiContext(Settings.GorodConnectionString))
 					{
-					Doubles = db.ExecuteCommand(@"
-						select count(tid)
-							from [gorod].[dbo].payment 
-							where sub_inner_tid = {0}
-						", sub_inner_tid, Pcdate);
+                    // извлечём информацию о платеже
+                    IEnumerable<Pay> Pays =  db.ExecuteQuery<Pay>(@"
+                        select	datePay, 
+                                Tid, 
+                                Point_oid,
+                                template_tid,
+                                user_id,
+                                amount,
+                                commission,
+                                summary_amount
+                            from [gorod].[dbo].payment
+                            where tid = {0}
+                    ", Tid);
+                    Pay current = Pays.First();
+
+                    RootLog($"**** {Tid} [Check doubles] acc={ID()} amount={current.Amount.AsCF()} commissiion={current.Commission.AsCF()} summary={current.Summary_amount.AsCF()} date={current.DatePay.Value.AsCF()} point={current.Point_oid} tpl={current.Template_tid} usr={current.User_id}");
+
+                    Doubles = db.ExecuteCommand(@"
+                        select count(p.tid)
+                            from [gorod].[dbo].payment p
+                            left join [gorod].[dbo].pd4 d on p.tid = d.tid
+                            where	p.tid <> {0} and -- кроме самого себя
+                                    {1} = p.Point_oid and
+                                    {2} = p.template_tid and
+                                    {3} = p.user_id and
+                                    {4} = p.amount and 
+                                    {5} = p.commission and 
+                                    {6} = p.summary_amount and 
+                                    {7} = d.clientAccount and
+                                    abs(datediff(minute, p.datePay, {8})) <= 600 -- 10 часов 
+						            ", Tid, current.Point_oid, current.Template_tid, current.User_id, current.Amount, current.Commission, current.Summary_amount, 
+                                    ID(), current.DatePay);
 					}
 					// where not sub_inner_tid like 'card-%' and tid = {0}
 				}
-			catch (Exception)
+			catch (Exception ex)
 				{
+                RootLog($"{Tid} [Check doubles] acc={ID()}\r\n{ex.ToString()}");
 				}
 
-			return Doubles;
+            RootLog($"**** {Tid} [Check doubles] acc={ID()} doubles={Doubles}");
+            return Doubles;
 			
 			}
 
-		/*
+        public string ID()
+        {
+            string x = "";
+
+            if (!string.IsNullOrEmpty(Phone))
+                x = Phone;
+            else if (!string.IsNullOrEmpty(Account) && string.IsNullOrEmpty(Number) && string.IsNullOrEmpty(Card)) // Если задан Number, то используется он
+                x = Account;
+            else if (!string.IsNullOrEmpty(Number) && string.IsNullOrEmpty(Card)) // Если только не задан Card
+                x = Number;
+            else if (!string.IsNullOrEmpty(Card))
+                x = Card;
+
+            return x;
+        }
+
+        /*
 		public int CheckDouble()
 			{
 
@@ -133,5 +223,5 @@ namespace Oldi.Net
 			}
 			*/
 
-		}
+    }
 	}
