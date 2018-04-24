@@ -113,35 +113,6 @@ namespace SchoolGateway
 
         private bool ValidateRemote(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
         {
-            // allow any certificate...
-            /*
-            Log("Серверный сертификат: CN={0} Hash={1} S/n={2}", certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
-
-            // policyErrors = SslPolicyErrors.RemoteCertificateChainErrors | SslPolicyErrors.RemoteCertificateNameMismatch | SslPolicyErrors.RemoteCertificateNotAvailable;
-
-            if ((policyErrors & SslPolicyErrors.RemoteCertificateChainErrors) != 0)
-            {
-                Log("Серверный сертификат: CN={0} Hash={1} S/n={2}: Ошибка наследования",
-                    certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
-                return false;
-            }
-            if ((policyErrors & SslPolicyErrors.RemoteCertificateNameMismatch) != 0)
-            {
-                Log("Серверный сертификат: CN={0} Hash={1} S/n={2}: Имя сертификата не совпадает с именем сервера",
-                    certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
-                return false;
-            }
-            if ((policyErrors & SslPolicyErrors.RemoteCertificateNotAvailable) != 0)
-            {
-                Log("Серверный сертификат: CN={0} Hash={1} S/n={2}: Сертификат недействителен",
-                    certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
-                return false;
-            }
-
-            Log("Серверный сертификат подтверждён: CN={0} Hash={1} S/n={2}",
-                certificate.Subject, certificate.GetCertHashString(), certificate.GetSerialNumberString());
-            */
-
             return true;
         }
 
@@ -171,6 +142,8 @@ namespace SchoolGateway
 
             return 0;
         }
+
+
 
         new void Check()
         {
@@ -207,6 +180,18 @@ namespace SchoolGateway
                 // outtid = GetValueFromAnswer(stResponse, "/response/order");
                 // outtid = stResponse.XPath("/response/order");
             }
+        }
+
+        /// <summary>
+        /// Запрос баланса
+        /// </summary>
+        public void Balance()
+        {
+            // Service "cafeteria" | "primary"
+            RootLog($"{Tid} [School] {Service}|{Account}");
+            checkHost = host + $"balance?account_id=7{Account}&service={Service}";
+            stResponse = Get(checkHost);
+            balance = stResponse.ToDecimal();
         }
 
         void Pay()
@@ -277,6 +262,14 @@ namespace SchoolGateway
         }
 
 
+        
+        
+        /// <summary>
+        /// Проверка возможности, либо проведение платежа
+        /// </summary>
+        /// <param name="old_state"></param>
+        /// <param name="try_state"></param>
+        /// <returns></returns>
         public override int DoPay(byte old_state, byte try_state)
         {
             int ret = 0;
@@ -390,6 +383,7 @@ namespace SchoolGateway
             StreamReader readStream = new StreamReader(ResponseStream, Encoding.GetEncoding(65001));
 
             string stResponse = readStream.ReadToEnd();
+            
             Log($"----------------------------------------------------------");
             Log($"Ответ: {stResponse}");
             Log($"----------------------------------------------------------");
