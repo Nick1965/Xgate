@@ -385,13 +385,25 @@ namespace SchoolGateway
             string stResponse = readStream.ReadToEnd();
             
             Log($"----------------------------------------------------------");
-            Log($"Ответ: {stResponse}");
+            Log($"Code: {Response.StatusCode} {Response.StatusDescription} Ответ: {stResponse}");
             Log($"----------------------------------------------------------");
 
             Response.Close();
             readStream.Close();
 
-            errCode = 0;
+            // Если статус равен 200, вернём код
+            if (Response.StatusCode == HttpStatusCode.OK)
+            {
+                if (stResponse.ToInt() == 0)
+                    errCode = 0;
+                else
+                    errCode = 6;
+            }
+            else
+            {
+                errCode = 6;
+                errDesc = $"Code: {Response.StatusCode} {Response.StatusDescription}";
+            }
 
             return stResponse;
 
