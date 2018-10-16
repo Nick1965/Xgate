@@ -15,6 +15,8 @@ namespace SchoolGateway
     public class SchoolGatewayClass: Oldi.Net.GWRequest
     {
 
+        string balanceHost = "";
+
         public SchoolGatewayClass(): base()
             {
             Init();
@@ -103,12 +105,14 @@ namespace SchoolGateway
         public void Init()
         {
             stRequest = "";
+            balance = null;
             host = Oldi.Utility.Config.Providers["school"]["host"];
             string srv = Service == "1" ? "cafeteria" : "primary";
+            balanceHost = host + $"balance?account_id=7{Account}&service={Service}";
             checkHost = host + $"check?account_id=7{Account}&service={srv}";
             payHost = host + $"new?payment_id={Tid}&account_id=7{Account}&sum={Amount.AsCF()}&time={Oldi.Net.Utility.timeStamp()}&service={srv}";
-            Log("CheckHost" + checkHost);
-            Log("PayHost" + payHost);
+            // Log("CheckHost" + checkHost);
+            // Log("PayHost" + payHost);
         }
 
         private bool ValidateRemote(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
@@ -125,6 +129,7 @@ namespace SchoolGateway
             return Oldi.Utility.Settings.Root + "log\\" + Oldi.Utility.Config.Providers["school"]["log"];
         }
 
+        /*
         new int MakeRequest(int state)
         {
             int date = Oldi.Net.Utility.timeStamp();
@@ -142,100 +147,36 @@ namespace SchoolGateway
 
             return 0;
         }
+        */
 
 
-
+        /// <summary>
+        /// Проверка счёта и получение ID поставщика услуг питания и ФИО плательщика
+        /// </summary>
         new void Check()
         {
-            // MakeRequest(0);
-            Log($"{Tid} Check {checkHost}");
             if (!string.IsNullOrEmpty(checkHost))
-            {
-                stResponse = Get(checkHost);
-                errCode = stResponse.ToInt();
-                switch(errCode)
-                {
-                    case -1:
-                        errCode = 6;
-                        errDesc = "неверный идентификатор счета";
-                        state = 12;
-                        break;
-                    case -2:
-                        errCode = 6;
-                        errDesc = "некорректные или отсутствующие значения параметров";
-                        state = 12;
-                        break;
-                    case 0:
-                        errCode = 0;
-                        errDesc = "проверка успешно прошла";
-                        state = 3;
-                        break;
-                }
-                // errCode = GetValueFromAnswer(stResponse, "/response/result").ToInt();
-                // errCode = stResponse.XPath("/response/result").ToInt();
-                // errDesc = GetValueFromAnswer(stResponse, "/response/comment");
-                // errDesc = stResponse.XPath("/response/comment");
-                // addinfo = GetValueFromAnswer(stResponse, "/response/projectName/ru");
-                // addinfo = stResponse.XPath("/response/projectName/ru");
-                // outtid = GetValueFromAnswer(stResponse, "/response/order");
-                // outtid = stResponse.XPath("/response/order");
-            }
+                Get(checkHost);
         }
 
         /// <summary>
         /// Запрос баланса
         /// </summary>
-        public void Balance()
+        new void Balance()
         {
-            // Service "cafeteria" | "primary"
-            RootLog($"{Tid} [School] {Service}|{Account}");
-            checkHost = host + $"balance?account_id=7{Account}&service={Service}";
-            stResponse = Get(checkHost);
-            balance = stResponse.ToDecimal();
+            Get(checkHost);
+            if (ErrCode == 3)
+                balance = stResponse.ToDecimal();
         }
 
+        /// <summary>
+        /// Проведение платежа
+        /// </summary>
         void Pay()
         {
             // MakeRequest(3);
             if (!string.IsNullOrEmpty(payHost))
-            {
-                stResponse = Get(payHost);
-                errCode = stResponse.ToInt();
-                Log($"{Tid} Pay {payHost}");
-                switch (errCode)
-                {
-                    case -1:
-                        errCode = 6;
-                        errDesc = "неверный идентификатор счета";
-                        state = 12;
-                        break;
-                    case -2:
-                        errCode = 6;
-                        errDesc = "некорректные или отсутствующие значения параметров";
-                        state = 12;
-                        break;
-                    case -3:
-                        errCode = 1;
-                        errDesc = "нефатальная ошибка сервера, возможна повторная попытка передать платеж";
-                        state = 3;
-                        break;
-                    case 0:
-                        errCode = 0;
-                        errDesc = "операция успешна";
-                        state = 6;
-                        break;
-                    case 1:
-                        errCode = 0;
-                        errDesc = "платеж с таким идентификатором уже был совершен";
-                        state = 6;
-                        break;
-                }
-
-                // errCode = XPath.GetInt(stResponse, "/response/result").Value;
-                // errDesc = XPath.GetString(stResponse, "/response/comment");
-                // addinfo = (string.IsNullOrEmpty(addinfo)) ? XPath.GetString(stResponse, "/response/projectName/ru") : addinfo;
-                // outtid = (string.IsNullOrEmpty(Outtid)) ? XPath.GetString(stResponse, "/response/order") : Outtid;
-            }
+                Get(payHost);
         }
 
         /// <summary>
@@ -244,20 +185,13 @@ namespace SchoolGateway
         void MakeAnswer()
         {
 
-            StringBuilder sb = new StringBuilder();
+            stResponse = $@"<Response>
+                            <ErrCode>{ErrCode}<ErrCode>
+                            <ErrDesc>{ErrDesc}<ErrDesc>
+                            <Balance>{balance.AsCF()}</Balance>
+                            </Response>";
 
-            sb.Append("<Response>\r\n");
-
-            sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "ErrCode", ErrCode);
-            sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "ErrDesc", ErrDesc);
-            // if (!string.IsNullOrEmpty(Outtid)) sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "Outtid", Outtid);
-            // if (!string.IsNullOrEmpty(AddInfo)) sb.AppendFormat("\t<{0}>{1}</{0}>\r\n", "AddInfo", AddInfo);
-
-            sb.Append("</Response>\r\n");
-
-            stResponse = sb.ToString();
-
-            Log("Подготовлен ответ:\r\n{0}", Answer);
+            Log($"Подготовлен ответ:\r\n{stResponse}");
 
         }
 
@@ -278,50 +212,33 @@ namespace SchoolGateway
             {
                 if (old_state == 0)
                 {
-                    RootLog($"{Tid} [DoPay] {Service} Запрос {Account} {Amount.AsCF()}");
+                    RootLog($"{Tid} [DoPay] Acnt={Account} Usl={Service} Amount={Amount.AsCF()}");
 
-                    state = 12;
-                    errCode = 6;
                     ret = 1;
                     Check();
-                    if (ErrCode == 0)
-                    {
+                    if (ErrCode == 3)
+                        Balance();
+                    if (ErrCode == 3)
                         Pay();
-                        if (ErrCode == 0)
-                        {
-                            state = 6;
-                            errCode = 3;
-                            ret = 0;
-                        }
-                       else if (ErrCode == 1)
-                        {
-                            state = 3;
-                            errCode = 1;
-                            ret = 0;
-                        }
-                    }
                 }
-
-                errCode = state == 6 ? 3 : 6;
-                MakeAnswer();
-
             }
             catch (WebException we)
             {
                 // RootLog("{0} - {1} {2}\r\n{3}", Tid, we.Status, we.Message, we.StackTrace);
-                RootLog($"{Tid} {we.Status} - {we.Message}\r\n{we.StackTrace}", Tid, we.Status, we.Message, we.StackTrace);
-                errCode = (int)we.Status;
-                errDesc = we.Message;
-                errCode = 2;
-                state = 11;
-                ret = -1;
+                // RootLog($"{Tid} {we.Status} - {we.Message}\r\n{we.StackTrace}", Tid, we.Status, we.Message, we.StackTrace);
+
+                // Сообщение об ошибке не логируем
+                errCode = 6;
+                state = 12;
+                errDesc = $"Code: {((HttpWebResponse)we.Response).StatusCode} {((HttpWebResponse)we.Response).StatusDescription}";
             }
             catch (Exception ex)
             {
                 // RootLog("{0} - {1}\r\n{2}", Tid, ex.Message, ex.StackTrace);
                 RootLog($"{Tid} - {ex.Message}\r\n{ex.StackTrace}");
-                errCode = 2;
-                state = 11;
+                errCode = 6;
+                errDesc = ex.Message;
+                state = 12;
                 ret = -1;
             }
             finally
@@ -329,19 +246,25 @@ namespace SchoolGateway
                 UpdateState(tid, state: state, errCode: errCode, errDesc: errDesc, outtid: Outtid, locked: state == 6 ? (byte)0 : (byte)1); // Разблокировать если проведён
             }
 
+            MakeAnswer();
             return ret;
         }
 
-        string Get(string Endpoint)
+
+        /// <summary>
+        /// Get - get-запрос к серверу
+        /// </summary>
+        /// <param name="Endpoint"></param>
+        /// <returns></returns>
+        void Get(string Endpoint)
         {
 
             // IPHostEntry Entry = Dns.GetHostEntry(Host);
             // string Endpoint = string.Format("{0}://{1}:{2}/api.php/payment", Proto, Entry.AddressList[0].ToString(), Port);
             // string Endpoint = string.Format("{0}://{1}:{2}/api.php/payment/?{3}", Proto, Host, Port, Query);
             // Console.WriteLine(Endpoint);
-            // Log(Endpoint);
-
-            Log("GET: {0}", Endpoint);
+            
+            Log($"Tid={Tid} Phone={Phone} {Endpoint}");
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             ServicePointManager.CheckCertificateRevocationList = false;
@@ -385,6 +308,7 @@ namespace SchoolGateway
             string stResponse = readStream.ReadToEnd();
             
             Log($"----------------------------------------------------------");
+            Log($"Ответ сервера:");
             Log($"Code: {Response.StatusCode} {Response.StatusDescription} Ответ: {stResponse}");
             Log($"----------------------------------------------------------");
 
@@ -394,18 +318,42 @@ namespace SchoolGateway
             // Если статус равен 200, вернём код
             if (Response.StatusCode == HttpStatusCode.OK)
             {
-                if (stResponse.ToInt() == 0)
-                    errCode = 0;
-                else
-                    errCode = 6;
+                errCode = stResponse.ToInt();
+                switch(errCode)
+                {
+                    case 0:
+                        errCode = 3;
+                        errDesc = "OK";
+                        state = 6;
+                        break;
+                    case 1:
+                        errCode = 3;
+                        errDesc = "Платёж с таким идентификатором уже совершён";
+                        state = 6;
+                        break;
+                    case -1:
+                        errCode = 6;
+                        errDesc = "Неверный идентификатор счёта";
+                        state = 12;
+                        break;
+                    case -2:
+                        errCode = 6;
+                        errDesc = "Некорркетные или отсутствующие значения параметров";
+                        state = 12;
+                        break;
+                    case -3:
+                        errCode = 1;
+                        errDesc = "Нефатальная ошибка сервера";
+                        state = 3;
+                        break;
+                }
             }
             else
             {
                 errCode = 6;
                 errDesc = $"Code: {Response.StatusCode} {Response.StatusDescription}";
+                state = 12;
             }
-
-            return stResponse;
 
         }
 
