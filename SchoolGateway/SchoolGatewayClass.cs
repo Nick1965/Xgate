@@ -186,9 +186,12 @@ namespace SchoolGateway
         {
 
             stResponse = $@"<Response>
-                            <ErrCode>{ErrCode}<ErrCode>
-                            <ErrDesc>{ErrDesc}<ErrDesc>
-                            <Balance>{balance.AsCF()}</Balance>
+                            <code>{ErrCode}<code>
+                            <desc>{ErrDesc}<desc>
+                            <fio>{Fio}</fio>
+                            <School>{AddInfo}</School>
+                            <food-provider>{Ben}</food-provider>
+                            <balance>{balance.AsCF()}</balance>
                             </Response>";
 
             Log($"Подготовлен ответ:\r\n{stResponse}");
@@ -216,8 +219,8 @@ namespace SchoolGateway
 
                     ret = 1;
                     Check();
-                    if (ErrCode == 3)
-                        Balance();
+                    // if (ErrCode == 3)
+                    //    Balance();
                     if (ErrCode == 3)
                         Pay();
                 }
@@ -264,7 +267,7 @@ namespace SchoolGateway
             // string Endpoint = string.Format("{0}://{1}:{2}/api.php/payment/?{3}", Proto, Host, Port, Query);
             // Console.WriteLine(Endpoint);
             
-            Log($"Tid={Tid} Phone={Phone} {Endpoint}");
+            Log($"Tid={Tid} Ph={Phone} Acnt={Account} Card={Card} Num={Number} {Endpoint}");
 
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             ServicePointManager.CheckCertificateRevocationList = false;
