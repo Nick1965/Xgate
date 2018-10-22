@@ -9,6 +9,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Dapper;
 
 namespace SchoolGateway
 {
@@ -151,12 +152,28 @@ namespace SchoolGateway
 
 
         /// <summary>
+        /// Запрос школы и поставщика питания
+        /// </summary>
+        void GetAddInfo()
+        {
+            var school = 
+        }
+            
+        /// <summary>
         /// Проверка счёта и получение ID поставщика услуг питания и ФИО плательщика
         /// </summary>
         new void Check()
         {
             if (!string.IsNullOrEmpty(checkHost))
+            {
                 Get(checkHost);
+                // Запросим в БД школу и поставщика питания
+                if (errCode == 3)
+                {
+                    GetAddInfo();
+                }
+            }
+                
         }
 
         /// <summary>
