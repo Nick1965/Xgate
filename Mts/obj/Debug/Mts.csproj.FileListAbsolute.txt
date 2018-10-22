@@ -64,10 +64,10 @@ D:\Projects\XGate\Mts\bin\Debug\SMPP.dll
 D:\Projects\XGate\Mts\bin\Debug\Oldi.Net.pdb
 D:\Projects\XGate\Mts\bin\Debug\Utility.pdb
 D:\Projects\XGate\Mts\bin\Debug\SMPP.pdb
-D:\Projects\XGate\Mts\obj\Debug\Mts.csprojResolveAssemblyReference.cache
 D:\Projects\XGate\Mts\obj\Debug\Oldi.Mts.Properties.Resources.resources
 D:\Projects\XGate\Mts\obj\Debug\Mts.csproj.GenerateResource.Cache
 D:\Projects\XGate\Mts\obj\Debug\Mts.dll
 D:\Projects\XGate\Mts\obj\Debug\Mts.pdb
 D:\Projects\XGate\Mts\bin\Debug\Oldi.Net.dll.config
 D:\Projects\XGate\Mts\obj\Debug\Mts.csproj.CoreCompileInputs.cache
+D:\Projects\XGate\Mts\obj\Debug\Mts.csproj.CopyComplete

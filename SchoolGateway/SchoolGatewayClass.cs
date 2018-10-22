@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using Dapper;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace SchoolGateway
 {
@@ -17,6 +19,7 @@ namespace SchoolGateway
     {
 
         string balanceHost = "";
+        int? benId = null;
 
         public SchoolGatewayClass(): base()
             {
@@ -109,7 +112,7 @@ namespace SchoolGateway
             balance = null;
             host = Oldi.Utility.Config.Providers["school"]["host"];
             string srv = Service == "1" ? "cafeteria" : "primary";
-            balanceHost = host + $"balance?account_id=7{Account}&service={Service}";
+            balanceHost = host + $"balance?account_id=7{Account}&service={srv}";
             checkHost = host + $"check?account_id=7{Account}&service={srv}";
             payHost = host + $"new?payment_id={Tid}&account_id=7{Account}&sum={Amount.AsCF()}&time={Oldi.Net.Utility.timeStamp()}&service={srv}";
             // Log("CheckHost" + checkHost);
@@ -152,31 +155,6 @@ namespace SchoolGateway
 
 
         /// <summary>
-        /// Запрос школы и поставщика питания
-        /// </summary>
-        void GetAddInfo()
-        {
-            var school = 
-        }
-            
-        /// <summary>
-        /// Проверка счёта и получение ID поставщика услуг питания и ФИО плательщика
-        /// </summary>
-        new void Check()
-        {
-            if (!string.IsNullOrEmpty(checkHost))
-            {
-                Get(checkHost);
-                // Запросим в БД школу и поставщика питания
-                if (errCode == 3)
-                {
-                    GetAddInfo();
-                }
-            }
-                
-        }
-
-        /// <summary>
         /// Запрос баланса
         /// </summary>
         new void Balance()
@@ -208,6 +186,7 @@ namespace SchoolGateway
                             <fio>{Fio}</fio>
                             <School>{AddInfo}</School>
                             <food-provider>{Ben}</food-provider>
+                            <food-provider-id>{benId}<food-provider-id>
                             <balance>{balance.AsCF()}</balance>
                             </Response>";
 
@@ -238,7 +217,7 @@ namespace SchoolGateway
                     Check();
                     // if (ErrCode == 3)
                     //    Balance();
-                    if (ErrCode == 3)
+                    if (ErrCode == 1)
                         Pay();
                 }
             }
@@ -270,6 +249,71 @@ namespace SchoolGateway
             return ret;
         }
 
+        public class Rec
+        {
+            public string SchoolNumber;
+            public string FIO;
+            // public string Ben;
+        }
+
+        public class Rec2
+        {
+            public string Name;
+            public int Id;
+        }
+
+        // <summary>
+        /// Выполнить запрос Check
+        /// </summary>
+        public override void DoCheck(bool session = false)
+        {
+            // Log(stRequest);
+
+            // Создать запрос
+            // MakeRequest(0);
+
+            Log($"Поиск ПУ для {account}");
+
+            IDbConnection cnn = new SqlConnection(Settings.ConnectionString);
+            var answer = cnn.Query<Rec>("Select SchoolNumber, Name From PU.Studentt where Phone = @p or Phone1 = @p or Phone2 = @p", new { p = Account } );
+            if (answer.Count() >= 1)
+            {
+                fio = answer.First().FIO;
+                addinfo = answer.First().SchoolNumber;
+                errCode = 1;
+                state = 1;
+                errDesc = "Абонент найден";
+
+                if (Service == "2") // Cafeteria`
+                {
+                    var provider = cnn.Query<Rec2>("Select Name, Id From PU.Provider Where School = @School", new { School = addinfo });
+                    if (provider.Count() >= 1)
+                    {
+                        ben = provider.First().Name;
+                        benId = provider.First().Id;
+                        Log($"Абонент {fio} школа {addinfo} поставщик {Ben} ( {benId} )");
+                    }
+                    else
+                    {
+                        errCode = 6;
+                        state = 12;
+                        errDesc = "Не найден поставщик услуг";
+                        Log(errDesc);
+                    }
+                }
+            }
+            else
+            {
+                errCode = 6;
+                state = 12;
+                errDesc = "Абонент не найден";
+                Log(errDesc);
+            }
+
+            // Создать ответ
+            MakeAnswer();
+
+        }
 
         /// <summary>
         /// Get - get-запрос к серверу

@@ -149,7 +149,6 @@ D:\Projects\XGate\oldigw\bin\Debug\Utility.pdb
 D:\Projects\XGate\oldigw\bin\Debug\Redo.pdb
 D:\Projects\XGate\oldigw\bin\Debug\SMPP.pdb
 D:\Projects\XGate\oldigw\bin\Debug\SocialExplorer.FastDbf.pdb
-D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.csprojResolveAssemblyReference.cache
 D:\Projects\XGate\oldigw\obj\x86\Debug\Oldi.Net.Answer.resources
 D:\Projects\XGate\oldigw\obj\x86\Debug\Oldi.Net.Messages.resources
 D:\Projects\XGate\oldigw\obj\x86\Debug\Oldi.Net.Properties.Resources.resources
@@ -163,3 +162,7 @@ D:\Projects\XGate\oldigw\bin\Debug\Oldi.Net.dll.config
 D:\Projects\XGate\oldigw\bin\Debug\Smtp.dll.config
 D:\Projects\XGate\oldigw\bin\Debug\Redo.dll.config
 D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.csproj.CoreCompileInputs.cache
+D:\Projects\XGate\oldigw\bin\Debug\Dapper.dll
+D:\Projects\XGate\oldigw\bin\Debug\Dapper.xml
+D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.csprojAssemblyReference.cache
+D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.csproj.CopyComplete

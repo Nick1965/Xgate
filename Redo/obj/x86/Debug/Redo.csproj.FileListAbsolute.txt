@@ -115,7 +115,6 @@ D:\Projects\XGate\Redo\bin\Debug\Oldi.Net.pdb
 D:\Projects\XGate\Redo\bin\Debug\RT.pdb
 D:\Projects\XGate\Redo\bin\Debug\Utility.pdb
 D:\Projects\XGate\Redo\bin\Debug\SMPP.pdb
-D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csprojResolveAssemblyReference.cache
 D:\Projects\XGate\Redo\obj\x86\Debug\OldiGW.Redo.Net.Properties.Resources.resources
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csproj.GenerateResource.Cache
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.dll
@@ -123,3 +122,5 @@ D:\Projects\XGate\Redo\obj\x86\Debug\Redo.pdb
 D:\Projects\XGate\Redo\bin\Debug\Mts.dll.config
 D:\Projects\XGate\Redo\bin\Debug\Oldi.Net.dll.config
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csproj.CoreCompileInputs.cache
+D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csprojAssemblyReference.cache
+D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csproj.CopyComplete

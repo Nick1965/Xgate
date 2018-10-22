@@ -101,7 +101,6 @@ D:\Projects\XGate\Test\bin\Debug\Ekt.pdb
 D:\Projects\XGate\Test\bin\Debug\Oldi.Net.pdb
 D:\Projects\XGate\Test\bin\Debug\Utility.pdb
 D:\Projects\XGate\Test\bin\Debug\SMPP.pdb
-D:\Projects\XGate\Test\obj\x86\Debug\Test.csprojResolveAssemblyReference.cache
 D:\Projects\XGate\Test\obj\x86\Debug\Test.Properties.Resources.resources
 D:\Projects\XGate\Test\obj\x86\Debug\Test.csproj.GenerateResource.Cache
 D:\Projects\XGate\Test\obj\x86\Debug\Test.TrustInfo.xml
@@ -111,3 +110,5 @@ D:\Projects\XGate\Test\obj\x86\Debug\Test.exe
 D:\Projects\XGate\Test\obj\x86\Debug\Test.pdb
 D:\Projects\XGate\Test\bin\Debug\Oldi.Net.dll.config
 D:\Projects\XGate\Test\obj\x86\Debug\Test.csproj.CoreCompileInputs.cache
+D:\Projects\XGate\Test\obj\x86\Debug\Test.csprojAssemblyReference.cache
+D:\Projects\XGate\Test\obj\x86\Debug\Test.csproj.CopyComplete
