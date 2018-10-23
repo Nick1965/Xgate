@@ -115,8 +115,9 @@ namespace SchoolGateway
             balanceHost = host + $"balance?account_id=7{Account}&service={srv}";
             checkHost = host + $"check?account_id=7{Account}&service={srv}";
             payHost = host + $"new?payment_id={Tid}&account_id=7{Account}&sum={Amount.AsCF()}&time={Oldi.Net.Utility.timeStamp()}&service={srv}";
-            // Log("CheckHost" + checkHost);
-            // Log("PayHost" + payHost);
+            Log("Init:");
+            Log("CheckHost" + checkHost);
+            Log("PayHost" + payHost);
         }
 
         private bool ValidateRemote(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
@@ -180,17 +181,19 @@ namespace SchoolGateway
         void MakeAnswer()
         {
 
-            stResponse = $@"<Response>
-                            <code>{ErrCode}<code>
-                            <desc>{ErrDesc}<desc>
+            string sn = Service == "1" ? "cafeteria": "primary";
+            stResponse = $@"<response>
+                            <errcode>{ErrCode}</errcode>
+                            <errdesc>{ErrDesc}</errdesc>
                             <fio>{Fio}</fio>
                             <School>{AddInfo}</School>
                             <food-provider>{Ben}</food-provider>
-                            <food-provider-id>{benId}<food-provider-id>
+                            <food-provider-id>{benId}</food-provider-id>
                             <balance>{balance.AsCF()}</balance>
-                            </Response>";
+                            <service-name>{sn}</service-name>
+                            </response>";
 
-            Log($"Подготовлен ответ:\r\n{stResponse}");
+            Log($"{Tid} Ph={Account} Подготовлен ответ:\r\n{stResponse}");
 
         }
 
@@ -206,6 +209,7 @@ namespace SchoolGateway
         public override int DoPay(byte old_state, byte try_state)
         {
             int ret = 0;
+            Log($"{Tid} [DoPay] Acnt={Account} Usl={Service} Amount={Amount.AsCF()}");
 
             try
             {
@@ -252,7 +256,7 @@ namespace SchoolGateway
         public class Rec
         {
             public string SchoolNumber;
-            public string FIO;
+            public string Name;
             // public string Ben;
         }
 
@@ -272,32 +276,35 @@ namespace SchoolGateway
             // Создать запрос
             // MakeRequest(0);
 
-            Log($"Поиск ПУ для {account}");
+            Log($"{Tid} Поиск ПУ для {account}");
 
-            IDbConnection cnn = new SqlConnection(Settings.ConnectionString);
-            var answer = cnn.Query<Rec>("Select SchoolNumber, Name From PU.Studentt where Phone = @p or Phone1 = @p or Phone2 = @p", new { p = Account } );
+            IDbConnection cnn = new SqlConnection(Settings.GorodConnectionString);
+            var answer = cnn.Query<Rec>("Select SchoolNumber, Name From [PU].[dbo].Student where Phone = @p or Phone1 = @p or Phone2 = @p", new { p = Account } );
             if (answer.Count() >= 1)
             {
-                fio = answer.First().FIO;
+
+                fio = answer.First().Name;
                 addinfo = answer.First().SchoolNumber;
                 errCode = 1;
                 state = 1;
                 errDesc = "Абонент найден";
 
-                if (Service == "2") // Cafeteria`
+                Log($"{Tid} [DoCheck] Phone={Account} School={addinfo} fio={fio}");
+
+                if (Service == "1") // Cafeteria`
                 {
-                    var provider = cnn.Query<Rec2>("Select Name, Id From PU.Provider Where School = @School", new { School = addinfo });
+                    var provider = cnn.Query<Rec2>("Select FoodProviderName as Name, FoodProviderId as Id From [PU].[dbo].FoodProvider Where School = @School", new { School = addinfo });
                     if (provider.Count() >= 1)
                     {
                         ben = provider.First().Name;
                         benId = provider.First().Id;
-                        Log($"Абонент {fio} школа {addinfo} поставщик {Ben} ( {benId} )");
+                        Log($"{Tid} {Account} Абонент {fio} школа {addinfo} поставщик {Ben} ( {benId} )");
                     }
                     else
                     {
                         errCode = 6;
                         state = 12;
-                        errDesc = "Не найден поставщик услуг";
+                        errDesc = $"{Tid} {Account} Не найден поставщик услуг";
                         Log(errDesc);
                     }
                 }
@@ -306,7 +313,7 @@ namespace SchoolGateway
             {
                 errCode = 6;
                 state = 12;
-                errDesc = "Абонент не найден";
+                errDesc = $"{Tid} {Account} Абонент не найден";
                 Log(errDesc);
             }
 
@@ -372,9 +379,8 @@ namespace SchoolGateway
             string stResponse = readStream.ReadToEnd();
             
             Log($"----------------------------------------------------------");
-            Log($"Ответ сервера:");
+            Log($"{Tid} {Account} Ответ сервера:");
             Log($"Code: {Response.StatusCode} {Response.StatusDescription} Ответ: {stResponse}");
-            Log($"----------------------------------------------------------");
 
             Response.Close();
             readStream.Close();
@@ -418,6 +424,9 @@ namespace SchoolGateway
                 errDesc = $"Code: {Response.StatusCode} {Response.StatusDescription}";
                 state = 12;
             }
+
+            Log($"{ErrDesc}");
+            Log($"----------------------------------------------------------");
 
         }
 

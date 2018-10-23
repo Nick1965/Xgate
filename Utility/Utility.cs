@@ -208,7 +208,8 @@ namespace Oldi.Net
         {
 			if (log.Substring(0, 1) == "{")
 				throw new ApplicationException("Не задан файл журнала");
-			
+
+            /*
             string text = string.Format(fmt, _params.Length > 0 ? _params[0] : "",
                 _params.Length > 1 ? _params[1] : "",
                 _params.Length > 2 ? _params[2] : "",
@@ -225,6 +226,17 @@ namespace Oldi.Net
                 _params.Length > 13 ? _params[13] : "",
                 _params.Length > 14 ? _params[14] : "",
                 _params.Length > 15 ? _params[15] : "");
+            */
+            string text = "";
+            try
+            {
+                text = string.Format(fmt, _params);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(fmt);
+                Console.WriteLine(ex.ToString());
+            }
             StreamWriter sw = null;
                 
 			try

@@ -292,9 +292,9 @@ namespace Oldi.Net
 			string stResponse = r.Answer;
 			string errDesc = !string.IsNullOrEmpty(r.ErrDesc)? HttpUtility.HtmlEncode(r.ErrDesc): "";
 
-			try
+            try
             {
-				if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rtm.Name && r.Provider != Settings.Rapida.Name) // уже заполненнвй Answer
+                if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rtm.Name && r.Provider != Settings.Rapida.Name && r.Gateway != "lyapko") // уже заполненнвй Answer
 				{
 					if (r.State == 6 || r.State == 0 && r.Provider == "rapida")
 					{
@@ -337,8 +337,12 @@ namespace Oldi.Net
 					{
 						stResponse = string.Format(Properties.Settings.Default.FailResponse, 2, errDesc);
 					}
-					else
-					{
+                    else if (r.State == 1) // 
+                    {
+                        stResponse = string.Format(Properties.Settings.Default.FailResponse, 2, errDesc);
+                    }
+                    else
+                    {
 						stResponse = string.Format(Properties.Settings.Default.FailResponse, 1,
 							r.Price > 0M ? string.Format("{0} \"{1} {2}\"", errDesc, Messages.SumWait, XConvert.AsAmount(r.Price)): errDesc);
 					}
@@ -349,6 +353,9 @@ namespace Oldi.Net
                     stResponse = string.Format("<Response><ErrCode>{0}</ErrCode><ErrDesc>{1}</ErrDesc></Response>", r.ErrCode, r.ErrDesc);
                     Log("{0} не получен ответ st={1} err={2} desc={3}", r.Tid, r.State, r.ErrDesc, r.ErrCode);
                 }
+
+                if (r.Gateway == "lyapko")
+                    Log(stResponse);
                 
                 // Создаем ответ
 				string answer = string.Format("<?xml version=\"1.0\" encoding=\"{0}\"?>\r\n{1}",

@@ -71,3 +71,4 @@ D:\Projects\XGate\Mts\obj\Debug\Mts.pdb
 D:\Projects\XGate\Mts\bin\Debug\Oldi.Net.dll.config
 D:\Projects\XGate\Mts\obj\Debug\Mts.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\Mts\obj\Debug\Mts.csproj.CopyComplete
+D:\Projects\XGate\Mts\obj\Debug\Mts.csprojAssemblyReference.cache
