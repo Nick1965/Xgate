@@ -167,7 +167,8 @@ namespace Oldi.Net
                                 Current.GetPaymentInfo();
                                 Current.ReportRequest("UNDO - strt");
                                 step = "UNDO - stop";
-                                if (Current.Provider == "rt" || Current.Provider == "rtm")
+                                // Добавим в Undo запрос в иноват
+                                if (Current.Provider == "rt" || Current.Provider == "rtm" || Current.Provider == "school")
                                     Current.Undo();
                                 else
                                 {

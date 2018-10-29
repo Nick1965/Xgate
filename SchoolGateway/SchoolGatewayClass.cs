@@ -20,6 +20,7 @@ namespace SchoolGateway
 
         string balanceHost = "";
         int? benId = null;
+        string undoHost = "";
 
         public SchoolGatewayClass(): base()
             {
@@ -115,9 +116,10 @@ namespace SchoolGateway
             balanceHost = host + $"balance?account_id=7{Account}&service={srv}";
             checkHost = host + $"check?account_id=7{Account}&service={srv}";
             payHost = host + $"new?payment_id={Tid}&account_id=7{Account}&sum={Amount.AsCF()}&time={Oldi.Net.Utility.timeStamp()}&service={srv}";
+            undoHost = host + $"cancel?payment_id={Tid}&reason=canceled_by_operator";
             Log("Init:");
-            Log("CheckHost" + checkHost);
-            Log("PayHost" + payHost);
+            Log("CheckHost: " + checkHost);
+            Log("PayHost: " + payHost);
         }
 
         private bool ValidateRemote(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
@@ -198,8 +200,40 @@ namespace SchoolGateway
         }
 
 
-        
-        
+        /// <summary>
+        /// Отмена платежа
+        /// </summary>
+        /// <returns></returns>
+        public override int Undo()
+        {
+            byte old_state = state;
+            int OK = 1;
+
+            // Log("{0} Попытка отмены платежа", Tid);
+            RootLog($"{Tid} [UNDO - начало] Acnt={Account} State = {State}");
+            Log($"{Tid} [UNDO - начало] Acnt={Account} State = {State}");
+            Get(undoHost);
+            if (errCode == 3)
+            {
+                ParseAnswer(stResponse);
+                Log($"{Tid} [UNDO - конец] errCode = {errCode}");
+
+                // Log("{0} err={1} desc={2} st={3}", Tid, ErrCode, ErrDesc, State);
+
+                OK = 0;
+            }
+            else
+            {
+                errCode = 2;
+                state = 11;
+                Log($"{Tid} [UNDO - конец] errCode = {errCode} {ErrDesc}");
+            }
+
+            UpdateState(Tid, errCode: ErrCode, errDesc: ErrDesc, locked: 0, state: state);
+            MakeAnswer();
+            return OK;
+        }
+
         /// <summary>
         /// Проверка возможности, либо проведение платежа
         /// </summary>
@@ -330,98 +364,108 @@ namespace SchoolGateway
         void Get(string Endpoint)
         {
 
-            // IPHostEntry Entry = Dns.GetHostEntry(Host);
-            // string Endpoint = string.Format("{0}://{1}:{2}/api.php/payment", Proto, Entry.AddressList[0].ToString(), Port);
-            // string Endpoint = string.Format("{0}://{1}:{2}/api.php/payment/?{3}", Proto, Host, Port, Query);
-            // Console.WriteLine(Endpoint);
-            
-            Log($"Tid={Tid} Ph={Phone} Acnt={Account} Card={Card} Num={Number} {Endpoint}");
-
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-            ServicePointManager.CheckCertificateRevocationList = false;
-            ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(ValidateRemote);
-            ServicePointManager.DefaultConnectionLimit = 10;
-            ServicePointManager.UseNagleAlgorithm = true;
-            
-            // ServicePointManager.CertificatePolicy = new MyCertPolicy();
-
-
-            HttpWebRequest Request = (HttpWebRequest)WebRequest.Create(Endpoint);
-
-            // InitSecurityProtocol(Request);
-            // Request.PreAuthenticate = true;
-            // Request.Timeout = 300000;
-            Request.ProtocolVersion = new Version(1, 1);
-            // Request.Credentials = CredentialCache.DefaultNetworkCredentials;
-            Request.Method = "GET";
-            Request.ContentType = "application/x-www-form-urlencoded";
-            Request.Accept = "text/html";
-            Request.Headers.Add(HttpRequestHeader.AcceptCharset, "UTF-8");
-            Request.KeepAlive = true;
-            Request.Timeout = 40000;
-            Request.Headers.Add(HttpRequestHeader.ContentEncoding, "identity");
-            Request.Headers.Add(HttpRequestHeader.AcceptEncoding, "identity");
-            Request.UserAgent = "X-Net Test Client v0.1";
-
-            CredentialCache cc = new CredentialCache();
-            cc.Add(new Uri(Host), "Basic", new NetworkCredential( Config.Providers["school"]["login"], Config.Providers["school"]["password"] ));
-            Request.Credentials = cc;
-
-            // Request.UseDefaultCredentials = false;
-            Request.ContentLength = 0;
-
-            // Log("Получен ответ от сервиса.");
-
-            HttpWebResponse Response = (HttpWebResponse)Request.GetResponse();
-            Stream ResponseStream = Response.GetResponseStream();
-            StreamReader readStream = new StreamReader(ResponseStream, Encoding.GetEncoding(65001));
-
-            string stResponse = readStream.ReadToEnd();
-            
-            Log($"----------------------------------------------------------");
-            Log($"{Tid} {Account} Ответ сервера:");
-            Log($"Code: {Response.StatusCode} {Response.StatusDescription} Ответ: {stResponse}");
-
-            Response.Close();
-            readStream.Close();
-
-            // Если статус равен 200, вернём код
-            if (Response.StatusCode == HttpStatusCode.OK)
+            try
             {
-                errCode = stResponse.ToInt();
-                switch(errCode)
+                // IPHostEntry Entry = Dns.GetHostEntry(Host);
+                // string Endpoint = string.Format("{0}://{1}:{2}/api.php/payment", Proto, Entry.AddressList[0].ToString(), Port);
+                // string Endpoint = string.Format("{0}://{1}:{2}/api.php/payment/?{3}", Proto, Host, Port, Query);
+                // Console.WriteLine(Endpoint);
+
+                Log($"Tid={Tid} Ph={Phone} Acnt={Account} Card={Card} Num={Number} {Endpoint}");
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                ServicePointManager.CheckCertificateRevocationList = false;
+                ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(ValidateRemote);
+                ServicePointManager.DefaultConnectionLimit = 10;
+                ServicePointManager.UseNagleAlgorithm = true;
+
+                // ServicePointManager.CertificatePolicy = new MyCertPolicy();
+
+
+                HttpWebRequest Request = (HttpWebRequest)WebRequest.Create(Endpoint);
+
+                // InitSecurityProtocol(Request);
+                // Request.PreAuthenticate = true;
+                // Request.Timeout = 300000;
+                Request.ProtocolVersion = new Version(1, 1);
+                // Request.Credentials = CredentialCache.DefaultNetworkCredentials;
+                Request.Method = "GET";
+                Request.ContentType = "application/x-www-form-urlencoded";
+                Request.Accept = "text/html";
+                Request.Headers.Add(HttpRequestHeader.AcceptCharset, "UTF-8");
+                Request.KeepAlive = true;
+                Request.Timeout = 40000;
+                Request.Headers.Add(HttpRequestHeader.ContentEncoding, "identity");
+                Request.Headers.Add(HttpRequestHeader.AcceptEncoding, "identity");
+                Request.UserAgent = "X-Net Test Client v0.1";
+
+                CredentialCache cc = new CredentialCache();
+                cc.Add(new Uri(Host), "Basic", new NetworkCredential(Config.Providers["school"]["login"], Config.Providers["school"]["password"]));
+                Request.Credentials = cc;
+
+                // Request.UseDefaultCredentials = false;
+                Request.ContentLength = 0;
+
+                // Log("Получен ответ от сервиса.");
+
+                HttpWebResponse Response = (HttpWebResponse)Request.GetResponse();
+                Stream ResponseStream = Response.GetResponseStream();
+                StreamReader readStream = new StreamReader(ResponseStream, Encoding.GetEncoding(65001));
+
+                string stResponse = readStream.ReadToEnd();
+
+                Log($"----------------------------------------------------------");
+                Log($"{Tid} {Account} Ответ сервера:");
+                Log($"Code: {Response.StatusCode} {Response.StatusDescription} Ответ: {stResponse}");
+
+                Response.Close();
+                readStream.Close();
+
+                // Если статус равен 200, вернём код
+                if (Response.StatusCode == HttpStatusCode.OK)
                 {
-                    case 0:
-                        errCode = 3;
-                        errDesc = "OK";
-                        state = 6;
-                        break;
-                    case 1:
-                        errCode = 3;
-                        errDesc = "Платёж с таким идентификатором уже совершён";
-                        state = 6;
-                        break;
-                    case -1:
-                        errCode = 6;
-                        errDesc = "Неверный идентификатор счёта";
-                        state = 12;
-                        break;
-                    case -2:
-                        errCode = 6;
-                        errDesc = "Некорркетные или отсутствующие значения параметров";
-                        state = 12;
-                        break;
-                    case -3:
-                        errCode = 1;
-                        errDesc = "Нефатальная ошибка сервера";
-                        state = 3;
-                        break;
+                    errCode = stResponse.ToInt();
+                    switch (errCode)
+                    {
+                        case 0:
+                            errCode = 3;
+                            errDesc = "OK";
+                            state = 6;
+                            break;
+                        case 1:
+                            errCode = 3;
+                            errDesc = "Платёж с таким идентификатором уже совершён";
+                            state = 6;
+                            break;
+                        case -1:
+                            errCode = 6;
+                            errDesc = "Неверный идентификатор счёта";
+                            state = 12;
+                            break;
+                        case -2:
+                            errCode = 6;
+                            errDesc = "Некорркетные или отсутствующие значения параметров";
+                            state = 12;
+                            break;
+                        case -3:
+                            errCode = 1;
+                            errDesc = "Нефатальная ошибка сервера";
+                            state = 3;
+                            break;
+                    }
                 }
+                else
+                {
+                    errCode = 6;
+                    errDesc = $"Code: {Response.StatusCode} {Response.StatusDescription}";
+                    state = 12;
+                }
+
             }
-            else
+            catch (WebException we)
             {
                 errCode = 6;
-                errDesc = $"Code: {Response.StatusCode} {Response.StatusDescription}";
+                errDesc = we.Message;
                 state = 12;
             }
 
