@@ -69,7 +69,7 @@ namespace Oldi.Ekt
                     else
                     {
                         RootLog($"{Tid} [CHNG AmountAll] {Service}/{Gateway} корретировка");
-                        RootLog($"{Tid} [CHNG]  A={Amount.AsCurrency()} Old={oldAmount.AsCurrency()} New={AmountAll.AsCurrency()} Perc={((1m - Amount / AmountAll) * 100m).AsCurrency()} TType={TerminalType}");
+                        RootLog($"{Tid} [CHNG]  A={Amount.AsCurrency()} Old={oldAmount.AsCurrency()} New={AmountAll.AsCurrency()} Perc={Math.Round(1 - Amount / AmountAll, 2)} TType={TerminalType}");
                     }
                 }
 
