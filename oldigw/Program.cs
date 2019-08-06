@@ -158,7 +158,8 @@ namespace Oldi.Net
 
 			Task task;
             Redo redo = new Redo("Redo");
-			GWMtsRegister regs = new GWMtsRegister();
+			// Не отправляем реестры в МТС
+            // GWMtsRegister regs = new GWMtsRegister();
 			TaskState stateInfo;
 			if (!noredo)
 			{
@@ -169,11 +170,13 @@ namespace Oldi.Net
 				task.Start();
 				Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс допроведения платежей");
 
-				CancelTaskEvents[1] = new ManualResetEvent(false);
+                /* Реестры МТС
+                CancelTaskEvents[1] = new ManualResetEvent(false);
 				stateInfo = new TaskState(CancelTaskEvents[1]);
 				task = new System.Threading.Tasks.Task(regs.ProcessingRegisters, stateInfo, TaskCreationOptions.LongRunning);
 				task.Start();
 				Oldi.Net.Utility.Log(Settings.OldiGW.LogFile, "Запущен процесс отправки реестров МТС");
+                */
 
 				// Запуск процесса отправки СМС
 				// task = new Task(GWRequest.SendSmsProcess, TaskCreationOptions.LongRunning | TaskCreationOptions.AttachedToParent);
