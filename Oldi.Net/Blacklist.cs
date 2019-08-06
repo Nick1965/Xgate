@@ -187,7 +187,7 @@ namespace Oldi.Net.Repost
             while (true)
             {
                 // Ожидаем 10 сек.
-                Thread.Sleep(1000);
+                Thread.Sleep(10000);
 
                 // Проверяем состояние платежа
                 GetGorodState();
