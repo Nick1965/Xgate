@@ -37,7 +37,9 @@ namespace Oldi.Ekt
 		public override void Processing(bool New)
 		{
 
-			if (New)  // Новый платёж
+            int oldstate = State;
+
+            if (New)  // Новый платёж
 			{
                 // QIWI:
                 // Скорретируем AmountAll: + 2.%
@@ -82,14 +84,14 @@ namespace Oldi.Ekt
 
                     // Проверка дневного лимита для нового плательщика если это не QIWI.
                     if (!Gateway.Equals(qiwiGateway))
+                    {
                         if (DayLimitExceeded(true)) return;
-
-                    // Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-                    RootLog($"{Tid} [EktProcessing.Processing - NEW start] {Provider} {Service}/{Gateway} {AmountAll.AsCF()}");
-				    if (FinancialCheck(New)) return;
+                        // Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
+                        if (FinancialCheck(New)) return;
+                    }
 				    DoPay(0, 3);
 				}
-                TechInfo = $"state={result.state} substate={result.substate} code={result.code}";
+                RootLog($"{Tid} [EktProcessing - NEW start] {Provider} {Service}/{Gateway} {AmountAll.AsCF()} state={State}");
 				// TraceRequest("End");
 			}
 			else // Redo
@@ -99,14 +101,15 @@ namespace Oldi.Ekt
                 {
                     // Проверка дневного лимита для нового плательщика если это не QIWI.
                     if (!Gateway.Equals(qiwiGateway))
+                    {
                         if (DayLimitExceeded(false)) return;
-
-                    RootLog($"{Tid} [EktProcessing.Processing - REDO start] {Provider} {Service}/{Gateway} {AmountAll.AsCF()}");
-                    if (FinancialCheck(false)) return;
+                        if (FinancialCheck(false)) return;
+                    }
                 }
 				DoPay(state, 6);
-			}
-		}
+                RootLog($"{Tid} oldstate={oldstate} [EktProcessing - REDO start] {Provider} {Service}/{Gateway} {AmountAll.AsCF()} state={State}");
+            }
+        }
 
 
         /// <summary>
