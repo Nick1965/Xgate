@@ -30,7 +30,7 @@ namespace Oldi.Ekt
 		new Result result;
 		string Signature;
 		protected Encoding Enc;
-        string qiwiGateway = "1418";
+        readonly string qiwiGateway = "1418";
 
 		public GWEktRequest()
 			: base()

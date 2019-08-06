@@ -41,12 +41,14 @@ namespace Oldi.Ekt
 			{
                 // QIWI:
                 // Скорретируем AmountAll: + 2.%
+                // Корректировать QIWI больше не будем
+                /*
                 if (Gateway == qiwiGateway && AmountAll > Amount)
                 {
                     RootLog($"{Tid} [CHNG AmountAll] {Service}/{Gateway} корретировка");
 
                     decimal oldAmount = AmountAll;
-                    /*
+                    /\*
                     if (TerminalType == 1)
                     {
                         amountAll = Amount / (1m - 0.025m);
@@ -56,7 +58,7 @@ namespace Oldi.Ekt
                     }
                     else
                         amountAll = Math.Round(Amount / (1m - 0.035m), 2);
-                    */
+                    *\/
 
                     if ((1m - Amount / AmountAll) * 100m > 4.4m)
                         amountAll = Math.Round(Amount / (1m - 4.4m / 100m), 0);
@@ -72,6 +74,7 @@ namespace Oldi.Ekt
                         RootLog($"{Tid} [CHNG]  A={Amount.AsCurrency()} Old={oldAmount.AsCurrency()} New={AmountAll.AsCurrency()} Perc={Math.Round(1 - Amount / AmountAll, 2)} TType={TerminalType}");
                     }
                 }
+                */
 
                 if (MakePayment() == 0)
 				{
