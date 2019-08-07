@@ -67,3 +67,4 @@ D:\Projects\XGate\RT\obj\Debug\RT.pdb
 D:\Projects\XGate\RT\bin\Debug\Oldi.Net.dll.config
 D:\Projects\XGate\RT\obj\Debug\RT.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\RT\obj\Debug\RT.csproj.CopyComplete
+D:\Projects\XGate\RT\obj\Debug\RT.csprojAssemblyReference.cache

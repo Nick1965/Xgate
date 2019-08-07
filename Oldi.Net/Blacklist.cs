@@ -342,7 +342,7 @@ namespace Oldi.Net.Repost
             if (result.CheckId > 0)
             {
                 db.SetStatePayment( payment.Tid, 10, 0, $"[BLACK] Платёж перепроведён. Новый платёж {result.CheckId}" );
-                db.ExecuteCommand("Update OldiGW.[Queue] [State] = 10 Where Tid = {0}", payment.Tid);
+                db.ExecuteCommand("Update [OldiGW].[OldiGW].[Queue] [State] = 10 Where Tid = {0}", payment.Tid);
                 RootLog("{Tid} [BLACK] Платёж перепроведён. Новый платёж {result.CheckId}");
                 // Вписать новый result_text в новый tid
                 string ResultText = $"[BLACK] Платёж перепроведён: Tid={payment.Tid} Acc={payment.ClientAccount} Pnt={payment.Point_oid} Agn={payment.Agent_oid} "+ 
