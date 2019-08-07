@@ -140,5 +140,11 @@
     <Setting Name="MsgWaitPrice" Type="System.String" Scope="User">
       <Value Profile="(Default)">Ожидается платеж на сумму {0}</Value>
     </Setting>
+    <Setting Name="CardEndpoint" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://oxmls1:100/server-card.mdl/payment.xml?</Value>
+    </Setting>
+    <Setting Name="SimpleEndpoint" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://oxmls1:100/server-simple.mdl/payment.xml?</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

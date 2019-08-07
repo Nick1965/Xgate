@@ -169,7 +169,8 @@ old: https://dealer.telepayural.ru:8181/external/process
       <add key="SslPort" value="301" />
       <add key="SMPPEndpoint" value="http://192.168.1.11:302/sms/send"/>
       <!-- Перепроведение платежей из блэклиста -->
-      <add key="SimpleEndpoint" value="http://192.168.1.1:100/server-redo.mdl/pay.xml"/>
+      <add key="SimpleEndpoint" value="http://192.168.1.1:100/server-redo.mdl/pay.xml?"/>
+      <add key="CardEndpoint" value="http://192.168.1.1:100/server-redo.mdl/pay.xml?"/>
 
       <add key="ConnectionString" value="Data Source=(local); Initial Catalog=OldiGW; User ID=sa; Password=Fastbreak17;" />
       <add key="GorodConnectionString" value="Data Source=192.168.1.5; Initial Catalog=Gorod;User ID=sa; Password=4;" />

@@ -251,7 +251,7 @@ namespace Oldi.Net.Repost
                 user.Login = u.Login;
                 user.Password = u.Password;
 
-                Log($"Tid={Tid} S={payment.Summary_amount.AsCF()} {payment.Amount.AsCF()} Account={payment.ClientAccount} AgentCard={payment.Card_number} PIN={Pin} " +
+                Log($"{Tid} [BLACK/readpayment] S={payment.Summary_amount.AsCF()} {payment.Amount.AsCF()} Account={payment.ClientAccount} AgentCard={payment.Card_number} PIN={Pin} " +
                     $"Point={payment.Point_oid} Agent={payment.Agent_oid} User={payment.User_id} Nick={user.Login} Password={user.Password}");
 
                 DoRepost(Pin);
@@ -281,7 +281,7 @@ namespace Oldi.Net.Repost
                     + $"&SUMMARY_AMOUNT={payment.Summary_amount.AsCF()}&COMMISSION=0.00&tid={Outtid}";
             }
 
-            Log(Host + "?" + request);
+            Log(Host + request);
 
             HttpClient httpClient = new HttpClient();
             // httpClient.DefaultRequestHeaders.Add("IDHTTPSESSIONID", Guid.NewGuid().ToString("N", CultureInfo.InvariantCulture));
@@ -295,7 +295,7 @@ namespace Oldi.Net.Repost
             }
 
             string response = "";
-            Task t = httpClient.GetStringAsync(Host + "?" + request).ContinueWith(
+            Task t = httpClient.GetStringAsync(Host + request).ContinueWith(
                 getTask =>
                 {
                     if (getTask.IsCanceled)
@@ -342,6 +342,8 @@ namespace Oldi.Net.Repost
             if (result.CheckId > 0)
             {
                 db.SetStatePayment( payment.Tid, 10, 0, $"[BLACK] Платёж перепроведён. Новый платёж {result.CheckId}" );
+                db.ExecuteCommand("Update OldiGW.[Queue] [State] = 10 Where Tid = {0}", payment.Tid);
+                RootLog("{Tid} [BLACK] Платёж перепроведён. Новый платёж {result.CheckId}");
                 // Вписать новый result_text в новый tid
                 string ResultText = $"[BLACK] Платёж перепроведён: Tid={payment.Tid} Acc={payment.ClientAccount} Pnt={payment.Point_oid} Agn={payment.Agent_oid} "+ 
                     $"SA={payment.Summary_amount.AsCF()} S={payment.Amount.AsCF()} Tpl={payment.Template_tid}";
@@ -419,9 +421,8 @@ namespace Oldi.Net.Repost
         void Log(string fmt, params object[] prms)
         {
             if (string.IsNullOrEmpty(Logfile))
-                Console.WriteLine(fmt, prms);
-            else
-                Utility.Log(Logfile, fmt, prms);
+                Logfile = "blacklist.log";
+            Utility.Log(Logfile, fmt, prms);
         }
 
         /// <summary>
