@@ -91,7 +91,7 @@ namespace Oldi.Ekt
                     }
 				    DoPay(0, 3);
 				}
-                RootLog($"{Tid} [EktProcessing - NEW start] {Provider} {Service}/{Gateway} {AmountAll.AsCF()} state={State}");
+                RootLog($"{Tid} [EktProcessing.NEW - start] {Provider} {Service}/{Gateway} {AmountAll.AsCF()} state={State}");
 				// TraceRequest("End");
 			}
 			else // Redo
@@ -107,7 +107,7 @@ namespace Oldi.Ekt
                     }
                 }
 				DoPay(state, 6);
-                RootLog($"{Tid} oldstate={oldstate} [EktProcessing - REDO start] {Provider} {Service}/{Gateway} {AmountAll.AsCF()} state={State}");
+                RootLog($"{Tid} [EktProcessing.REDO - start] oldstate={oldstate} {Provider} {Service}/{Gateway} {AmountAll.AsCF()} state={State}");
             }
         }
 
