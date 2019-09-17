@@ -169,6 +169,10 @@ namespace RT
                 case "check":
                     jreq.reqType = "checkPaymentParams";
                     break;
+                case "find":
+                    jreq.reqType = "queryPayeeInfo";
+                    break;
+                    
                 default:
                     jreq.reqType = RequestType;
                     break;
@@ -335,15 +339,19 @@ namespace RT
             try
             {
 
-                // выполнить проверку возможности платежа и вернуть баланс счёта
                 if (old_state == 0)
                 {
                     // checkParam
-                    jreq.payAmount = 100M; // 1 RUB
-                    jreq.payComment = $"Проверка параметров для {Phone}{Account}";
-
-                    // CheckUser
-                    jreq.queryFlags = 13;
+                    if (jreq.reqType == "checkPaymentParams")
+                    {
+                        jreq.payAmount = 100M; // 1 RUB
+                        jreq.payComment = $"Проверка параметров для {Phone}{Account}";
+                    }
+                    else
+                    {
+                        // выполнить проверку возможности платежа и вернуть баланс счёта
+                        jreq.queryFlags = 13;
+                    }
                 }
                 // Создать запрос Pay
                 else if (old_state == 1)
