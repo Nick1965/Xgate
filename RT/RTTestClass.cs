@@ -1,15 +1,22 @@
 ﻿using Dapper;
 using Dapper.Contrib.Extensions;
+using Newtonsoft.Json;
 using Oldi.Net;
 using Oldi.Utility;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Security;
 using System.Resources;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace RT
 {
@@ -29,11 +36,34 @@ namespace RT
         public string svcSubNum;
         public string payCurId = "RUB";
         public decimal payAmount = 100M;
+        public DateTime? payTime;
         public int payPurpose = 0;
         public string payComment;
         public PayDetails[] payDetails;
         public string agentId = "65423";
         public string agentAccount = "CASH_CMSN"; // Счёт учёта поставщика услуг
+        public int? queryFlags;
+        public string srcPayId;
+        public DateTime? reqTime;
+    }
+
+    class JasonReponse
+    {
+        public DateTime? reqType;
+        public int? reqStatus;
+        public DateTime? reqTime;
+        public string reqNote;
+        public string errUsrMsg;
+        public string clientType;
+        public string clientInn;
+        public string clientOrgName;
+        public string esppPayId;
+        public string reqUserMsg;
+        public int? dupFlag;
+        public int? payStatus;
+        public string dstDepCode;
+        public decimal? payeeRecPay;
+        public decimal? payeeRemain;
     }
 
     [Table("OLDIGW.filial")]
@@ -67,6 +97,8 @@ namespace RT
 
         new decimal? Balance = null;
         decimal? Recpay = null;
+        JasonRequest jreq = new JasonRequest();
+        JasonReponse resp = new JasonReponse();
 
         string ProviderName = "rt-test";
 
@@ -93,7 +125,7 @@ namespace RT
 
             commonName = "ESPP-TEST";
             host = "https://test-rt.rt.ru:8443/uni_new";
-            Log("****CHECK: Service={0} Filial={1}", Service, Filial);
+            Log($"****CHECK: Service={Service} Filial={Filial}");
             if (Service.ToLower() == "rtk-acc")
             {
                 // Выберем филиал из таблицы
@@ -107,18 +139,18 @@ namespace RT
 
             if (string.IsNullOrEmpty(Phone))
             {
-                SvcNum = Account;
+                jreq.svcNum = Account;
                 if (!string.IsNullOrEmpty(AccountParam))
-                    SvcSubNum = AccountParam;
+                    jreq.svcSubNum = AccountParam;
             }
             else
             {
-                SvcNum = Phone;
+                jreq.svcNum = "7" + Phone;
                 if (!string.IsNullOrEmpty(PhoneParam))
-                    SvcSubNum = PhoneParam;
+                    jreq.svcSubNum = PhoneParam;
             }
             if (!string.IsNullOrEmpty(Comment))
-                SvcComment = Comment;
+                jreq.payComment = Comment;
 
             if (pcdate == DateTime.MinValue)
                 pcdate = DateTime.Now;
@@ -126,24 +158,27 @@ namespace RT
             switch (RequestType.ToLower())
             {
                 case "status":
-                    ReqType = "getPaymentStatus";
+                    jreq.reqType = "getPaymentStatus";
                     break;
                 case "payment":
-                    ReqType = "createPayment";
+                    jreq.reqType = "createPayment";
                     break;
                 case "undo":
-                    ReqType = "abandonPayment";
+                    jreq.reqType = "abandonPayment";
                     break;
                 case "check":
-                    ReqType = "checkPaymentParams";
+                    jreq.reqType = "checkPaymentParams";
                     break;
                 default:
-                    ReqType = RequestType;
+                    jreq.reqType = RequestType;
                     break;
             }
 
             if (!string.IsNullOrEmpty(Number))
-                queryFlag = Number;
+                jreq.queryFlags = Number.ToInt();
+
+            if (Tid != long.MinValue)
+                jreq.srcPayId = Tid.ToString();
 
         }
 
@@ -154,19 +189,6 @@ namespace RT
         protected override string GetLogName()
         {
             return Provider == ProviderName ? Properties.Settings.Default.LogFileName : Settings.Rtm.LogFile;
-        }
-
-        /// <summary>
-        /// Добавление HTTP-заголовков при отправке запроса
-        /// </summary>
-        /// <param name="request"></param>
-        public override void AddHeaders(System.Net.HttpWebRequest request)
-        {
-            // request.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
-            // request.Accept = "application/x-www-form-urlencoded";
-            request.ContentType = "application/jason; charset=UTF-8";
-            request.Accept = "application/json";
-            request.Headers.Add("Accept-Charset", "UTF-8");
         }
 
         /// <summary>
@@ -258,17 +280,19 @@ namespace RT
 
             // Log("{0} Попытка отмены платежа", Tid);
             Log("{0} [UNDO - начало] Num = {1} State = {2}", Tid, State != 255 ? State.ToString() : "<None>", x);
-            if (MakeRequest(8) == 0 && SendRequest(Host) == 0 && ParseAnswer(stResponse) == 0)
+
+            stRequest = JsonConvert.SerializeObject(jreq);
+
+            if (MakeRequest(8) == 0 && PostJson(Host, stRequest) == 0 && ParseAnswer(stResponse) == 0)
             {
-                ParseAnswer(stResponse);
                 Log("{0} [UNDO - конец] reqStatus = {1} payStatus = {2}", Tid, ReqStatus, PayStatus);
-                if (PayStatus == 3)
+                if (resp.payStatus == 3)
                 {
                     errCode = 6;
                     errDesc = "Платёж отменён оператором";
                     state = 10;
                 }
-                else if (PayStatus == 103)
+                else if (resp.payStatus == 103)
                 {
                     errCode = 1;
                     state = 3;
@@ -308,113 +332,39 @@ namespace RT
         public override int MakeRequest(int old_state)
         {
 
-            StringBuilder p = new StringBuilder();
-
             try
             {
-
-                JasonRequest jreq = new JasonRequest();
 
                 // выполнить проверку возможности платежа и вернуть баланс счёта
                 if (old_state == 0)
                 {
-                    jreq.reqType = "checkPaymentParams";
-                    jreq.svcTypeId = SvcTypeID;
-                    jreq.svcNum = SvcNum;
+                    // checkParam
                     jreq.payAmount = 100M; // 1 RUB
                     jreq.payComment = $"Проверка параметров для {Phone}{Account}";
-                    jreq.agentId = AgentId.ToString();
 
-                    ReqType = "queryPayeeInfo";
-                    p.AppendFormat("reqType={0}", ReqType);
-                    if (!string.IsNullOrEmpty(SvcTypeID))
-                        p.AppendFormat("&svcTypeId={0}", HttpUtility.UrlEncode(SvcTypeID));
-
-                    p.AppendFormat("&svcNum={0}", SvcNum);
-                    if (!string.IsNullOrEmpty(Phone) && Provider == "rt")
-                        p.AppendFormat("&svcNum=7{0}", SvcNum);
-
-                    if (!string.IsNullOrEmpty(SvcSubNum))
-                        p.AppendFormat("&svcSubNum={0}", SvcSubNum);
-                    p.Append("&queryFlags=13"); // Остаток на счёте
-                    p.AppendFormat("&agentAccount={0}", agentAccount);  // Остаток на счёте
+                    // CheckUser
+                    jreq.queryFlags = 13;
                 }
                 // Создать запрос Pay
                 else if (old_state == 1)
                 {
-                    ReqType = "createPayment";
-                    p.AppendFormat("reqType={0}", ReqType);
-                    p.AppendFormat("&srcPayId={0}", Tid);
-                    if (!string.IsNullOrEmpty(SvcTypeID))
-                        p.AppendFormat("&svcTypeId={0}", HttpUtility.UrlEncode(SvcTypeID));
-
-                    // p.AppendFormat("&svcNum={0}", SvcNum);
-                    if (!string.IsNullOrEmpty(Phone) && Provider == "rt")
-                        p.AppendFormat("&svcNum=7{0}", SvcNum);
-                    else
-                        p.AppendFormat("&svcNum={0}", SvcNum);
-
-                    if (!string.IsNullOrEmpty(SvcSubNum))
-                        p.AppendFormat("&svcSubNum={0}", SvcSubNum);
-
-                    // Непустой для РТ-Мобайл
-                    // if (!string.IsNullOrEmpty(agentAccount))
-                    // p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
-                    p.AppendFormat("&payTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Operdate, Settings.Tz)));
-                    p.AppendFormat("&reqTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
-                    p.AppendFormat("&payAmount={0}", (int)(Amount * 100m));
-                    p.AppendFormat("&agentAccount={0}", agentAccount);
-                    // PayDetails = string.Format("{0}|{1}|{3}", SvcSubNum, PayAmount, PayPurpose);
-
-                    p.Append("&payCurrId=RUB");
-                    p.Append("&payPurpose=0");
-                    p.AppendFormat("&payComment={0}", HttpUtility.UrlEncode(Comment));
-
+                    jreq.payTime = Operdate;
+                    jreq.reqTime = Pcdate;
+                    jreq.payAmount = Amount * 100m;
+                    jreq.payComment = $"Оплата {jreq.payAmount} {jreq.srcPayId} {jreq.svcNum}";
                 }
                 // Создать запрос Status
                 else if (old_state == 3)
                 {
-                    if (queryFlag != "")
-                    {
-                        p.Append("reqType=getPaymentStatus");
-                        if (!string.IsNullOrEmpty(Account))
-                            p.AppendFormat("&svcNum={0}", Account);
-                        if (!string.IsNullOrEmpty(AccountParam))
-                            p.AppendFormat("&svcSubNum={0}", AccountParam);
-                        if (SvcTypeID != "")
-                            p.AppendFormat("&svcTypeId={0}", HttpUtility.UrlEncode(SvcTypeID));
-                        p.AppendFormat("&queryFlags={0}", queryFlag);
-                    }
-                    else if (Tid != 0 && Tid != int.MinValue)
-                        p.Append("reqType=getPaymentStatus");
-                    else
-                        p.Append("reqType=getPaymentsStatus");
-                    if (Tid != 0 && Tid != int.MinValue)
-                        p.AppendFormat("&srcPayId={0}", Tid);
-                    if (StatusType != null)
-                        p.AppendFormat("&statusType={0}", StatusType);
-                    if (StartDate != null)
-                        p.AppendFormat("&startDate={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(StartDate, Settings.Tz)));
-                    if (EndDate != null)
-                        p.AppendFormat("&endDate={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(EndDate, Settings.Tz)));
-
-                    // Непустой для РТ-Мобайл
-                    // if (!string.IsNullOrEmpty(agentAccount))
-                    p.AppendFormat("&agentAccount={0}", agentAccount);
-
+                    jreq.srcPayId = Tid.ToString();
                 }
                 // Запрос на отмену платежа
                 else if (old_state == 8)
                 {
-                    ReqType = "abandonPayment";
-                    p.AppendFormat("reqType={0}", ReqType);
-                    p.AppendFormat("&srcPayId={0}", Tid);
-                    p.AppendFormat("&reqTime={0}", HttpUtility.UrlEncode(XConvert.AsDateTZ(Pcdate, Settings.Tz)));
-
-                    // Непустой для РТ-Мобайл
-                    // if (!string.IsNullOrEmpty(agentAccount))
-                    p.AppendFormat("&agentAccount={0}", agentAccount);
-
+                    jreq.srcPayId = !string.IsNullOrEmpty(Phone) ? Phone : Account;
+                    jreq.reqType = XConvert.AsDateTZ(Pcdate, 7);
+                    jreq.srcPayId = Tid.ToString();
+                    jreq.reqTime = Pcdate;
                 }
                 else
                 {
@@ -430,16 +380,9 @@ namespace RT
             {
                 RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
             }
-            // p.AppendFormat("&reqTime={0}", UrlEncode(XConvert.AsDateTZ(Pcdate)));
-            // stRequest = HttpUtility.UrlEncode(p.ToString()).Replace(HttpUtility.UrlEncode("&"), "&").Replace(HttpUtility.UrlEncode("="), "=");
-            stRequest = p.ToString();
 
-            Log("\r\nComment: {0}", SvcComment);
-
-            // Log("Запрос к {0}\r\n=======================================\r\n{1}", Host, stRequest.Replace("&", "\r\n"));
-            // Log(stRequest);
-            // stRequest = HttpUtility.UrlEncode(stRequest);
-            // Log(" \r\n--------------------------------------\r\n{0}", stRequest.Replace("%26", "\r\n"));
+            stRequest = JsonConvert.SerializeObject(jreq);
+            Log($"Создан запрос\r\n{stResponse}");
 
             return 0;
         }
@@ -453,26 +396,16 @@ namespace RT
             // Создать запрос
             MakeRequest(3);
 
-            // Log(stRequest);
-
+            stResponse = JsonConvert.SerializeObject(jreq);
+            Log(stRequest);
             // Отправить запрос
-            if (SendRequest(Host) == 0)
+            if (PostJson(Host, stResponse) == 0)
             {
-                Log(" \r\n\t\t\t{0}", HttpUtility.UrlDecode(stRequest));
-                Log("------------------------------------------\r\n\t\t\t{0}", /*HttpUtility.UrlDecode*/(stResponse));
-
                 ParseAnswer(stResponse);
 
-                // Log("Количество строк: {0}", states.Length);
-                // Log("------------------------------------------\r\n\t\t\tReqStatus={0}", ReqStatus);
-
-                // int i = 0;
-                // foreach (string item in states)
-                //	Log("Строка {0}\t{1}", ++i, item);
-
-                if (ReqStatus == 0)
+                if (resp.reqStatus == 0)
                 {
-                    switch (PayStatus)
+                    switch (resp.payStatus)
                     {
                         case 2:
                             errCode = 3;
@@ -499,7 +432,7 @@ namespace RT
                             break;
                     }
                 }
-                else if (ReqStatus == -12)
+                else if (resp.reqStatus == -12)
                 {
                     errCode = 6;
                     errDesc = string.Format("Платёж не возможен или л/с не существует. reqStatus = {0}", ReqStatus);
@@ -538,12 +471,12 @@ namespace RT
 
             // Создать запрос
             MakeRequest(0);
-
+            stRequest = JsonConvert.SerializeObject(jreq);
             // Отправить запрос
-            if (SendRequest(Host) == 0)
+            if (PostJson(Host, stRequest) == 0)
             {
                 ParseAnswer(stResponse);
-                if (ReqStatus == 0)
+                if (resp.reqStatus == 0)
                 {
                     errCode = 1;
                     state = 1;
@@ -553,8 +486,8 @@ namespace RT
                 {
                     errCode = 6;
                     state = 12;
-                    errDesc = string.Format("{0}: {1}", ReqStatus, ReqNote != "" ? ReqNote : "Абонент не найден");
-                    fio = ReqNote != "" ? ReqNote : "Абонент не найден";
+                    errDesc = string.Format("{0}: {1}", resp.reqStatus, resp.reqNote != "" ? resp.reqNote : "Абонент не найден");
+                    fio = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
                 }
 
             }
@@ -564,46 +497,6 @@ namespace RT
 
         }
 
-        void TraceRequest()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (Tid > 0)
-                sb.AppendFormat("srcPayId = {0} ", Tid);
-            sb.AppendFormat("reqType = {0} svcTypeId = {1} svcNum = {2} svcSubNum = {3} svcPurpose = 0 amount = {4}\r\n\t\t\tsvcComment = {5}\r\n",
-                ReqType, SvcTypeID, SvcNum, SvcSubNum, XConvert.AsAmount(Amount), SvcComment);
-
-            // Непустой для РТ-Мобайл
-            if (!string.IsNullOrEmpty(agentAccount))
-                sb.AppendFormat("\t\t\tagentAccount = {0}\r\n", agentAccount);
-
-            if (ReqTime != null)
-                sb.AppendFormat("\t\t\treqTime = {0}\r\n", XConvert.AsDateTZ(ReqTime.Value));
-            if (Acceptdate != DateTime.MinValue)
-                sb.AppendFormat("\t\t\tacceptedTme/abandonedTime = {0}\r\n", XConvert.AsDateTZ(Acceptdate));
-            if (!string.IsNullOrEmpty(Outtid))
-                sb.AppendFormat("\t\t\tesppPayId = {0}\r\n", Outtid);
-            if (ReqStatus != null)
-                sb.AppendFormat("\t\t\treqStatus = {0}\r\n", ReqStatus);
-            if (PayStatus != null)
-                sb.AppendFormat("\t\t\tpayStatus = {0}\r\n", PayStatus);
-            if (DupFlag != null)
-                sb.AppendFormat("\t\t\tdupFlag = {0}\r\n", DupFlag);
-            if (!string.IsNullOrEmpty(ReqNote))
-                sb.AppendFormat("\t\t\treqNote = {0}\r\n", ReqNote);
-            if (!string.IsNullOrEmpty(AddInfo))
-                sb.AppendFormat("\t\t\treqUsrMsg = {0}\r\n", AddInfo);
-            if (!string.IsNullOrEmpty(Opname))
-                sb.AppendFormat("dstDepCode = {0}\r\n", Opname);
-            if (!string.IsNullOrEmpty(Fio))
-                sb.AppendFormat("\t\t\tpayeeName = {0}\r\n", Fio);
-            if (Price != decimal.MinusOne)
-                sb.AppendFormat("\t\t\tpayeeRemain = {0}\r\n", XConvert.AsAmount(Price));
-
-            if (sb.ToString().Length > 0)
-                Log(sb.ToString());
-        }
-
         /// <summary>
         /// Разбор ответ
         /// </summary>
@@ -611,100 +504,8 @@ namespace RT
         /// <returns></returns>
         public override int ParseAnswer(string stResponse)
         {
-            string[] keys = stResponse.Split(new char[] { '&', '\r', '\n' }, MaxStrings, StringSplitOptions.RemoveEmptyEntries);
-            int val;
 
-            Log("********************");
-            Log(stResponse);
-            Log("********************");
-
-            states = new string[0]; // Строки состояний
-            int statep = 0;
-            decimal decValue;
-            ReqStatus = null;
-            PayStatus = null;
-
-            foreach (string key in keys)
-            {
-                // Log("Pare: {0}", HttpUtility.UrlDecode(key));
-                string[] pare = key.Split(new Char[] { '=' });
-                string name;
-                string value;
-                if (pare != null && pare.Length == 2)
-                {
-                    name = pare[0];
-                    value = pare[1];
-                    switch (name)
-                    {
-                        case "esppPayId":
-                            outtid = value;
-                            break;
-                        case "reqTime":
-                            DateTime dt;
-                            if (DateTime.TryParse(HttpUtility.UrlDecode(value.Replace('T', ' ')), out dt))
-                                ReqTime = dt;
-                            break;
-                        case "reqStatus":
-                            if (int.TryParse(value, out val))
-                                ReqStatus = val;
-                            else
-                                ReqStatus = null;
-                            break;
-                        case "payStatus":
-                            if (int.TryParse(value, out val))
-                                PayStatus = val;
-                            else
-                                PayStatus = null;
-                            break;
-                        case "reqNote":         // Сообщение об ошибке
-                            ReqNote = HttpUtility.UrlDecode(value).Replace("{", "\\[").Replace("}", "\\]");
-                            break;
-                        case "reqUsrMsg":       // Сообщение для клиента
-                            addinfo = HttpUtility.UrlDecode(value);
-                            break;
-                        case "dupFlag":
-                            if (int.TryParse(value, out val))
-                            {
-                                DupFlag = val;
-                                addinfo = "Дублирование платежа!";
-                            }
-                            else
-                                DupFlag = null;
-                            break;
-                        case "dstDepcode":
-                            opname = value;
-                            break;
-                        case "accceptedTime":
-                        case "abandonedTime":
-                            acceptdate = DateTime.MinValue;
-                            DateTime.TryParse(HttpUtility.UrlDecode(value.Replace('T', ' ')), out acceptdate);
-                            break;
-                        case "reqType":
-                            ReqType = value;
-                            break;
-                        case "payeeRemain":     // Остаток средств на л/с
-                            decValue = 0;
-                            decimal.TryParse(value, out decValue);
-                            Balance = decValue / 100M;
-                            break;
-                        case "payeeRecPay":     // Рекомендуемый платёж
-                            decValue = 0m;
-                            decimal.TryParse(value, out decValue);
-                            Recpay = decValue / 100M;
-                            break;
-                        case "payeeName":
-                            fio = HttpUtility.UrlDecode(value);     // Инициалы абонента
-                            break;
-                    }
-                }
-                else if (pare != null && pare.Length == 1) // Строка массива
-                {
-                    Array.Resize<string>(ref states, statep + 1);
-                    states.SetValue(pare[0], statep++);
-                }
-            }
-
-            // Log("Количество строк: {0}, ответ:\r\n{1}", statep, stResponse);
+            resp = JsonConvert.DeserializeObject<JasonReponse>(stResponse);
 
             SetCurrentState();
 
@@ -716,9 +517,9 @@ namespace RT
         /// </summary>
         void SetCurrentState()
         {
-            if (ReqStatus == 0)
+            if (resp.reqStatus == 0)
             {
-                switch (PayStatus)
+                switch (resp.payStatus)
                 {
                     case 2:     // Платёж выполнен
                         state = 6;
@@ -743,7 +544,7 @@ namespace RT
                         break;
                 }
             }
-            else if (ReqStatus == 1 || ReqStatus == -1) // Платёж может быть допроведён
+            else if (resp.reqStatus == 1 || resp.reqStatus == -1) // Платёж может быть допроведён
             {
                 if (State == 1)
                 {
@@ -774,6 +575,7 @@ namespace RT
         /// </summary>
         public void MakeAnswer()
         {
+
             StringBuilder sb = new StringBuilder();
             StringBuilder sb1 = new StringBuilder();
 
@@ -789,22 +591,171 @@ namespace RT
             if (!string.IsNullOrEmpty(Account))
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "account", Account);
             if (!string.IsNullOrEmpty(AddInfo))
-                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "info", AddInfo.Length <= 250 ? HttpUtility.HtmlEncode(AddInfo) : HttpUtility.HtmlEncode(AddInfo.Substring(0, 250)));
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "info", resp.errUsrMsg.Length <= 250 ? HttpUtility.HtmlEncode(resp.errUsrMsg) : HttpUtility.HtmlEncode(resp.errUsrMsg.Substring(0, 250)));
 
-            if (Recpay != null)
-                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "recpay", XConvert.AsAmount(Recpay.Value));
-            if (Balance != null)
-                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "balance", XConvert.AsAmount(Balance.Value));
+            if (resp.payeeRecPay != null)
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "recpay", XConvert.AsAmount(resp.payeeRecPay.Value));
+            if (resp.payeeRemain != null)
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "balance", XConvert.AsAmount(resp.payeeRemain.Value));
 
             sb.AppendFormat("<{0}>\r\n{1}\r\n</{0}>\r\n", "response", sb1.ToString());
+
+            stResponse = JsonConvert.SerializeObject(resp);
+            Log($"Получен ответ от ЕСПП\r\n{stResponse}");
 
             stResponse = sb.ToString();
 
             if (tid > 0)
                 UpdateState(Tid, state: State, locked: 1);
 
-            // Log("Подготовлен ответ:\r\n{0}", stResponse);
+
+            Log("Подготовлен ответ:\r\n{0}", stResponse);
         }
 
+            /// <summary>
+            /// Обработчик входного запроса
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="certificate"></param>
+            /// <param name="chain"></param>
+            /// <param name="policyErrors"></param>
+            /// <returns></returns>
+            private bool ValidateRemote(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
+            {
+                // allow any certificate...
+                // Log("[SendRequest]: Получен сертификат выданый {0}", certificate.Issuer);
+
+                return true;
+            }
+
+            /// <summary>
+            /// Добавление клиентского сертификата
+            /// </summary>
+            /// <param name="request"></param>
+            public int FindCertificate(HttpWebRequest request)
+            {
+                errCode = 0;
+
+                // Добавление сертификата
+                if (!string.IsNullOrEmpty(commonName))
+                {
+                    using (Crypto cert = new Crypto(CommonName))
+                    {
+                        if (cert != null)
+                            if (cert.HasPrivateKey)
+                                request.ClientCertificates.Add(cert.Certificate);
+                            else
+                            {
+                                errDesc = Properties.Resources.MsgCHNPK;
+                                errCode = -1;
+                            }
+                        else
+                        {
+                            errDesc = $"{Properties.Resources.MsgCNF} {CommonName}";
+                            errCode = -1;
+                        }
+                    }
+                }
+
+                return errCode;
+
+            }
+
+        /// <summary>
+        /// Отправка Json
+        /// </summary>
+        /// <param name="Host"></param>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public int PostJson(string Host, string json)
+            {
+                HttpWebRequest request = null;
+                HttpWebResponse response = null;
+                // StreamReader reader = null;
+                byte[] buf;
+                Encoding enc = Encoding.UTF8;
+
+                try
+                {
+
+                    // Использем только протоколы семейства TLS
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                    ServicePointManager.CheckCertificateRevocationList = true;
+                    ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(ValidateRemote);
+                    ServicePointManager.DefaultConnectionLimit = 10;
+
+                    request = (HttpWebRequest)WebRequest.Create(Host);
+                    request.ProtocolVersion = HttpVersion.Version11;
+                    request.Credentials = CredentialCache.DefaultCredentials;
+                    request.KeepAlive = true;
+                    request.Timeout = 30 * 1000;
+                    request.Method = "POST";
+                    request.Headers.Set("Accept-Encoding", "identity");
+                    request.AllowAutoRedirect = false;
+                    request.UserAgent = Settings.Title;
+
+                    request.ContentType = "application/jason; charset=UTF-8";
+                    request.Accept = "application/json";
+                    request.Headers.Add("Accept-Charset", "UTF-8");
+
+                    // Добавление сертификата
+                    if (AddCertificate(request) != 0)
+                        return errCode;
+
+                    // ServicePoint sp = request.ServicePoint;
+                    // Всё устанавливаем по-умолчанию
+                    // sp.ConnectionLeaseTimeout = 900000; //Timeout.Infinite; // 15 мин максимум держится соединение
+                    // sp.MaxIdleTime = Timeout.Infinite;
+
+
+                    request.UserAgent = Settings.ClientName;
+
+                    if (request.Method == WebRequestMethods.Http.Post)
+                    {
+                    buf = enc.GetBytes(json);
+                    request.ContentLength = buf.Length;
+                    using (Stream requestStream = request.GetRequestStream())
+                        requestStream.Write(buf, 0, buf.Length);
+                    }
+
+                    // Получим дескриптор ответа
+                    using (response = (HttpWebResponse)request.GetResponse())
+                        if (request.HaveResponse)
+                        {
+                        // Перехватим поток от сервера
+                        using (Stream dataStream = response.GetResponseStream())
+                        using (StreamReader reader = new StreamReader(dataStream, enc))
+                            stResponse = reader.ReadToEnd();
+                        return (int)response.StatusCode;
+                        }
+                        else
+                        {
+                        return (int)response.StatusCode;
+                        }
+                }
+                catch (WebException we)
+                {
+                errCode = (int)we.Status;
+                errDesc = we.Message;
+                }
+                catch (Exception ex)
+                {
+                errCode = -1;
+                errDesc = ex.Message;
+            }
+            finally
+            {
+                ServicePointManager.ServerCertificateValidationCallback -= new RemoteCertificateValidationCallback(ValidateRemote);
+                if (request != null && request.ClientCertificates != null)
+                    request.ClientCertificates.Clear();
+                if (response != null) response.Close();
+            }
+
+            return errCode;
+
+            } // PostJson
+
+        }
     }
-}
+
+
