@@ -134,7 +134,7 @@ namespace Oldi.Net
                                 // Прочитать из БД информацию о запросе
                                 // Request.ReportRequest("STATUS - начало");
                                 // step = "STAT - stop";
-                                if (Request.Provider == "rt" || Request.Provider == "rtm")
+                                if (Request.Provider == "rt" || Request.Provider == "rt-test")
                                 {
                                     Current.GetPaymentStatus();
                                     Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
@@ -168,7 +168,8 @@ namespace Oldi.Net
                                 Current.ReportRequest("UNDO - strt");
                                 step = "UNDO - stop";
                                 // Добавим в Undo запрос в иноват
-                                if (Current.Provider == "rt" || Current.Provider == "rtm" || Current.Provider == "school")
+                                // Добавим запрос в Ростелеком-Test
+                                if (Current.Provider == "rt" || Current.Provider == "rt-test" || Current.Provider == "school")
                                     Current.Undo();
                                 else
                                 {
