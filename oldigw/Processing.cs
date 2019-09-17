@@ -130,6 +130,12 @@ namespace Oldi.Net
                                 Current.Check();
                                 break;
 
+                            case "find":
+                                Current.ReportRequest("CHCK - strt");
+                                step = "CHCK - stop";
+                                Current.Check();
+                                break;
+
                             case "status":
                                 // Прочитать из БД информацию о запросе
                                 // Request.ReportRequest("STATUS - начало");
@@ -226,7 +232,7 @@ namespace Oldi.Net
                                         Current.Processing(true);
                                 }
                                 // Платёж существует - вернём его статус
-                                else if (Current.Provider == "rt" || Current.Provider == "rtm")
+                                else if (Current.Provider == "rt" || Current.Provider == "rt-test")
                                 {
                                     Current.GetPaymentStatus();
                                     Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
