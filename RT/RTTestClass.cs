@@ -84,23 +84,13 @@ namespace RT
         int? DupFlag = null;        // Флаг повторного проведения платежа
         DateTime? ReqTime = null;   // Время запроса
         string ReqNote = "";        // Сообщение об ошибке
-        string ReqType = "";
         string SvcTypeID = "0";     // 0 или "" - федеральный номер телефона
-        string SvcNum = "";             // Номер телефона / лицевого счёта
-        string SvcSubNum = "";      // Субсчёт контрагента, V1 - Ростелеком
-        string SvcComment = "";
-        string[] states;
-        string queryFlag = "";
 
         // int AgentId = 65423; // Id агента
         // string agentAccount = "CASH_CMSN"; // Счёт учёта поставщика услуг
 
-        new decimal? Balance = null;
-        decimal? Recpay = null;
         JasonRequest jreq = new JasonRequest();
         JasonReponse resp = new JasonReponse();
-
-        string ProviderName = "rt-test";
 
         public RTTest()
             : base()
@@ -120,8 +110,6 @@ namespace RT
         {
             base.InitializeComponents();
             CodePage = "utf-8";
-            // tz = Settings.Tz;
-            tz = 7;
 
             commonName = "ESPP-TEST";
             host = "https://test-rt.rt.ru:8443/uni_new";
@@ -192,7 +180,7 @@ namespace RT
         /// <returns></returns>
         protected override string GetLogName()
         {
-            return Provider == ProviderName ? Properties.Settings.Default.LogFileName : Settings.Rtm.LogFile;
+            return Properties.Settings.Default.LogFileName;
         }
 
         /// <summary>
@@ -598,8 +586,8 @@ namespace RT
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "opname", Opname);
             if (!string.IsNullOrEmpty(Account))
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "account", Account);
-            if (!string.IsNullOrEmpty(AddInfo))
-                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "info", resp.errUsrMsg.Length <= 250 ? HttpUtility.HtmlEncode(resp.errUsrMsg) : HttpUtility.HtmlEncode(resp.errUsrMsg.Substring(0, 250)));
+            if (!string.IsNullOrEmpty(resp.errUsrMsg))
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "addinfo", resp.errUsrMsg.Length <= 250 ? HttpUtility.HtmlEncode(resp.errUsrMsg) : HttpUtility.HtmlEncode(resp.errUsrMsg.Substring(0, 250)));
 
             if (resp.payeeRecPay != null)
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "recpay", XConvert.AsAmount(resp.payeeRecPay.Value));

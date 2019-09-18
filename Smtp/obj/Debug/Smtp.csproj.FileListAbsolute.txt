@@ -64,12 +64,12 @@ D:\Projects\XGate\Smtp\bin\Debug\SocialExplorer.FastDbf.dll
 D:\Projects\XGate\Smtp\bin\Debug\Utility.dll
 D:\Projects\XGate\Smtp\bin\Debug\SMPP.dll
 D:\Projects\XGate\Smtp\bin\Debug\Oldi.Net.pdb
+D:\Projects\XGate\Smtp\bin\Debug\Oldi.Net.dll.config
 D:\Projects\XGate\Smtp\bin\Debug\SocialExplorer.FastDbf.pdb
 D:\Projects\XGate\Smtp\bin\Debug\Utility.pdb
 D:\Projects\XGate\Smtp\bin\Debug\SMPP.pdb
+D:\Projects\XGate\Smtp\obj\Debug\Smtp.csprojAssemblyReference.cache
+D:\Projects\XGate\Smtp\obj\Debug\Smtp.csproj.CoreCompileInputs.cache
+D:\Projects\XGate\Smtp\obj\Debug\Smtp.csproj.CopyComplete
 D:\Projects\XGate\Smtp\obj\Debug\Smtp.dll
 D:\Projects\XGate\Smtp\obj\Debug\Smtp.pdb
-D:\Projects\XGate\Smtp\bin\Debug\Oldi.Net.dll.config
-D:\Projects\XGate\Smtp\obj\Debug\Smtp.csproj.CoreCompileInputs.cache
-D:\Projects\XGate\Smtp\obj\Debug\Smtp.csprojAssemblyReference.cache
-D:\Projects\XGate\Smtp\obj\Debug\Smtp.csproj.CopyComplete

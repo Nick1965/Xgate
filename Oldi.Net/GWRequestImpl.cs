@@ -131,6 +131,7 @@ namespace Oldi.Net
 		/// <returns></returns>
 		public virtual void InitializeComponents()
 		{
+            tz = Settings.Tz;
 		}
 
 		public void Dispose()

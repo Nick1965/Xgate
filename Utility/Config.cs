@@ -719,14 +719,15 @@ namespace Oldi.Utility
 			CyberRoot = Config.AppSettings["Cyber"];
 			Attachments = Config.AppSettings["Attachments"];
 			
-			if (string.IsNullOrEmpty(Config.AppSettings["Port"]))
-				port = 300;
-			else
+//			if (string.IsNullOrEmpty(Config.AppSettings["Port"]))
+//				port = 300;
+//			else
+            //Порт должен быть задан!
 				int.TryParse(Config.AppSettings["Port"], out port);
 			
-			if (string.IsNullOrEmpty(Config.AppSettings["SslPort"]))
-				sslPort = 301;
-			else
+//			if (string.IsNullOrEmpty(Config.AppSettings["SslPort"]))
+//				sslPort = 301;
+//			else
 				int.TryParse(Config.AppSettings["SslPort"], out sslPort);
 
 			ConnectionString = Config.AppSettings["ConnectionString"];
