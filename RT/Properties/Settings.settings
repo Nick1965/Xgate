@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="LogFileName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">rt-test.log</Value>
+      <Value Profile="(Default)">log\rt-test.log</Value>
     </Setting>
   </Settings>
 </SettingsFile>

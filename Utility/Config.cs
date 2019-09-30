@@ -215,29 +215,29 @@ namespace Oldi.Utility
         /// <summary>
         /// RT-Mobile
         /// </summary>
-        public static class Rtm
+        public static class RtTest
 			{
-			public static string Name { get { return Config.Providers["rtm"]["name"]; } }
-			public static string Host { get { return Config.Providers["rtm"]["host"]; } }
+			public static string Name { get { return Config.Providers["rttest"]["name"]; } }
+			public static string Host { get { return Config.Providers["rttest"]["host"]; } }
 			public static string Log
 				{
 				get
 					{
-					return Config.Providers["rtm"]["log"];
+					return Config.Providers["rttest"]["log"];
 					}
 				}
 			public static string CN
 				{
 				get
 					{
-					return Config.Providers["rtm"]["cn"];
+					return Config.Providers["rttest"]["cn"];
 					}
 				}
 			public static string Hash
 				{
 				get
 					{
-					return Config.Providers["rtm"]["hash"];
+					return Config.Providers["rttest"]["hash"];
 					}
 				}
 			}
@@ -596,12 +596,12 @@ namespace Oldi.Utility
 		/// <summary>
 		/// Rt-mobile
 		/// </summary>
-		public static class Rtm {
-            public static string Name { get { return ProvidersSettings.Rtm.Name; } }
-			public static string Host { get { return ProvidersSettings.Rtm.Host; } }
-			public static string LogFile { get { return logPath + ProvidersSettings.Rtm.Log; } }
-			public static string CN { get { return ProvidersSettings.Rtm.CN; } }
-			public static string Hash{get{return ProvidersSettings.Rtm.Hash.Replace(" ", "");}}
+		public static class RtTest {
+            public static string Name { get { return ProvidersSettings.RtTest.Name; } }
+			public static string Host { get { return ProvidersSettings.RtTest.Host; } }
+			public static string LogFile { get { return logPath + ProvidersSettings.RtTest.Log; } }
+			public static string CN { get { return ProvidersSettings.RtTest.CN; } }
+			public static string Hash{get{return ProvidersSettings.RtTest.Hash.Replace(" ", "");}}
 			}
 
 		/// <summary>

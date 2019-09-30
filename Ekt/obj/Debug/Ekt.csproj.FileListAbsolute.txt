@@ -70,4 +70,3 @@ D:\Projects\XGate\Ekt\obj\Debug\Ekt.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.csproj.CopyComplete
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.dll
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.pdb
-D:\Projects\XGate\Ekt\obj\Debug\Ekt.csprojAssemblyReference.cache

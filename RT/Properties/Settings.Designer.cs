@@ -25,7 +25,7 @@ namespace RT.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("rt-test.log")]
+        [global::System.Configuration.DefaultSettingValueAttribute("log\\rt-test.log")]
         public string LogFileName {
             get {
                 return ((string)(this["LogFileName"]));

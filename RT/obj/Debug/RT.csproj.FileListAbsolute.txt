@@ -170,3 +170,4 @@ D:\Projects\XGate\RT\obj\Debug\RT.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\RT\obj\Debug\RT.csproj.CopyComplete
 D:\Projects\XGate\RT\obj\Debug\RT.dll
 D:\Projects\XGate\RT\obj\Debug\RT.pdb
+D:\Projects\XGate\RT\obj\Debug\RT.csprojAssemblyReference.cache

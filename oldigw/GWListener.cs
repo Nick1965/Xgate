@@ -291,11 +291,17 @@ namespace Oldi.Net
 			HttpListenerContext listenerContext = null;
 			try
 				{
-				// Получим контекст
-				if (m_HttpListener != null && asyncResult != null)
-					listenerContext = m_HttpListener.EndGetContext(asyncResult);
-				else
-					return;
+                // Получим контекст
+                if (m_HttpListener != null && asyncResult != null)
+                {
+                    listenerContext = m_HttpListener.EndGetContext(asyncResult);
+                    Log($"[LISTENER] Получен контекст:\\r\\n{listenerContext.Request}");
+                }
+                else
+                {
+                    Log($"[LISTENER] Не получен входящий контекст");
+                    return;
+                }
 
 
 				// Пусть слушатель слушает следующий запрос. Он вернется в другом потоке
@@ -328,7 +334,7 @@ namespace Oldi.Net
 		void RequestProcessing(Object objectState)
 		{
 			TaskInfo ti = (TaskInfo)objectState;
-			// Log("Процесс {0} запущен", Thread.CurrentThread.ManagedThreadId);
+			Log($"Процесс {Thread.CurrentThread.ManagedThreadId} запущен");
 
 			InternalContext cntx;
 

@@ -159,7 +159,7 @@ namespace Oldi.Net
         public static void Log(string log, string text)
 		{
             if (log.Substring(0, 1) == "{")
-				throw new ApplicationException("Не задан файл журнала");
+				throw new ApplicationException($"Не задан файл журнала {log}");
 
 			lock (LockObj)
 			{

@@ -31,12 +31,12 @@ namespace RT
     class JasonRequest
     {
         public string reqType;
-        public string svcTypeId;
+        public string svcTypeId="0";
         public string svcNum;
         public string svcSubNum;
         public string payCurId = "RUB";
         public decimal payAmount = 100M;
-        public DateTime? payTime;
+        public string payTime;
         public int payPurpose = 0;
         public string payComment;
         public PayDetails[] payDetails;
@@ -44,7 +44,25 @@ namespace RT
         public string agentAccount = "CASH_CMSN"; // Счёт учёта поставщика услуг
         public int? queryFlags;
         public string srcPayId;
-        public DateTime? reqTime;
+        public string reqTime;
+
+        public override string ToString()
+        {
+            return $@"reqType={reqType}
+                    svcTypeId={svcTypeId}
+                    svcNum={svcNum}
+                    svcSubNum={svcSubNum}
+                    payCurId={payCurId}
+                    payAmount={payAmount}
+                    payTime={payTime}
+                    payPurpose={payPurpose}
+                    payComment={payComment}
+                    agentId={agentId}
+                    agentAccount={agentAccount}
+                    queryFlags={queryFlags}
+                    srcPayId={srcPayId}
+                    reqTime={reqTime}";
+        }
     }
 
     class JasonReponse
@@ -111,9 +129,9 @@ namespace RT
             base.InitializeComponents();
             CodePage = "utf-8";
 
-            commonName = "ESPP-TEST";
-            host = "https://test-rt.rt.ru:8443/uni_new";
-            Log($"****CHECK: Service={Service} Filial={Filial}");
+            commonName = Settings.RtTest.CN;
+            host = Settings.RtTest.Host;
+            Log($"****CHECK: Provider={Provider} Service={Service} Gateway={Gateway} Filial={Filial}");
             if (Service.ToLower() == "rtk-acc")
             {
                 // Выберем филиал из таблицы
@@ -329,6 +347,7 @@ namespace RT
 
                 if (old_state == 0)
                 {
+                    jreq.reqTime = Pcdate.AsCF();
                     // checkParam
                     if (jreq.reqType == "checkPaymentParams")
                     {
@@ -340,12 +359,14 @@ namespace RT
                         // выполнить проверку возможности платежа и вернуть баланс счёта
                         jreq.queryFlags = 13;
                     }
+
+                    Log($"MakeRequest for {jreq.ToString()}");
                 }
                 // Создать запрос Pay
                 else if (old_state == 1)
                 {
-                    jreq.payTime = Operdate;
-                    jreq.reqTime = Pcdate;
+                    jreq.payTime = Operdate.AsCF();
+                    jreq.reqTime = Pcdate.AsCF();
                     jreq.payAmount = Amount * 100m;
                     jreq.payComment = $"Оплата {jreq.payAmount} {jreq.srcPayId} {jreq.svcNum}";
                 }
@@ -360,7 +381,7 @@ namespace RT
                     jreq.srcPayId = !string.IsNullOrEmpty(Phone) ? Phone : Account;
                     jreq.reqType = XConvert.AsDateTZ(Pcdate, 7);
                     jreq.srcPayId = Tid.ToString();
-                    jreq.reqTime = Pcdate;
+                    jreq.reqTime = Pcdate.AsCF();
                 }
                 else
                 {
@@ -378,7 +399,7 @@ namespace RT
             }
 
             stRequest = JsonConvert.SerializeObject(jreq);
-            Log($"Создан запрос\r\n{stResponse}");
+            Log($"Создан запрос\r\n{stRequest}");
 
             return 0;
         }
@@ -463,16 +484,18 @@ namespace RT
         /// </summary>
         public override void DoCheck(bool session = false)
         {
-            Log(stRequest);
+            // Log(stRequest);
 
             // Создать запрос
+            jreq.reqType = "queryPayeeInfo";
             MakeRequest(0);
             stRequest = JsonConvert.SerializeObject(jreq);
             // Отправить запрос
+            Log($"[DoCheck] host={Host}\r\nstRequest={stRequest}");
             if (PostJson(Host, stRequest) == 0)
             {
                 ParseAnswer(stResponse);
-                if (resp.reqStatus == 0)
+                if (resp.reqStatus != 0)
                 {
                     errCode = 1;
                     state = 1;
@@ -487,6 +510,7 @@ namespace RT
                 }
 
             }
+
 
             // Создать ответ
             MakeAnswer();
@@ -596,8 +620,8 @@ namespace RT
 
             sb.AppendFormat("<{0}>\r\n{1}\r\n</{0}>\r\n", "response", sb1.ToString());
 
-            stResponse = JsonConvert.SerializeObject(resp);
-            Log($"Получен ответ от ЕСПП\r\n{stResponse}");
+            // stResponse = JsonConvert.SerializeObject(resp);
+            // Log($"Получен ответ от ЕСПП\r\n{stResponse}");
 
             stResponse = sb.ToString();
 
@@ -674,11 +698,15 @@ namespace RT
                 try
                 {
 
-                    // Использем только протоколы семейства TLS
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+                // Использем только протоколы семейства TLS
+                /*
+                Надеюсь, что уже хватит устанавливать это значение
+
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
                     ServicePointManager.CheckCertificateRevocationList = true;
                     ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(ValidateRemote);
                     ServicePointManager.DefaultConnectionLimit = 10;
+                */
 
                     request = (HttpWebRequest)WebRequest.Create(Host);
                     request.ProtocolVersion = HttpVersion.Version11;
@@ -690,7 +718,7 @@ namespace RT
                     request.AllowAutoRedirect = false;
                     request.UserAgent = Settings.Title;
 
-                    request.ContentType = "application/jason; charset=UTF-8";
+                    request.ContentType = "application/json; charset=UTF-8";
                     request.Accept = "application/json";
                     request.Headers.Add("Accept-Charset", "UTF-8");
 
@@ -722,6 +750,7 @@ namespace RT
                         using (Stream dataStream = response.GetResponseStream())
                         using (StreamReader reader = new StreamReader(dataStream, enc))
                             stResponse = reader.ReadToEnd();
+                        Log($"[PostJason]: Response\r\n{stResponse}");
                         return (int)response.StatusCode;
                         }
                         else
@@ -741,17 +770,18 @@ namespace RT
             }
             finally
             {
-                ServicePointManager.ServerCertificateValidationCallback -= new RemoteCertificateValidationCallback(ValidateRemote);
+                // ServicePointManager.ServerCertificateValidationCallback -= new RemoteCertificateValidationCallback(ValidateRemote);
                 if (request != null && request.ClientCertificates != null)
                     request.ClientCertificates.Clear();
                 if (response != null) response.Close();
             }
 
+
             return errCode;
 
             } // PostJson
 
-        }
     }
+}
 
 

@@ -79,8 +79,10 @@ namespace Oldi.Net
                     switch (Request.Provider)
                     {
                         case "rt":
-                        case "rtm":
                             Current = new RTRequest(Request);
+                            break;
+                        case "rt-test":
+                            Current = new RTTest(Request);
                             break;
                         case "ekt":
                             Current = new GWEktRequest(Request);
@@ -302,7 +304,7 @@ namespace Oldi.Net
 
             try
             {
-                if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rtm.Name && r.Provider != Settings.Rapida.Name && r.Gateway != "lyapko") // уже заполненнвй Answer
+                if (r.Provider != Settings.Rt.Name && r.Provider != Settings.RtTest.Name && r.Provider != Settings.Rapida.Name && r.Gateway != "lyapko") // уже заполненнвй Answer
 				{
 					if (r.State == 6 || r.State == 0 && r.Provider == "rapida")
 					{

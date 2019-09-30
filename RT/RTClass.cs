@@ -68,14 +68,6 @@ namespace RT
 			CodePage = "utf-8";
 			tz = Settings.Tz;
 
-			if (Provider == "rtm")
-				{
-				commonName = Settings.Rtm.CN;
-				host = Settings.Rtm.Host;
-				agentAccount = Gateway;
-				}
-			else
-				{
 				agentAccount = "2839";
 				commonName = Settings.Rt.CN;
 				host = Settings.Rt.Host;
@@ -125,10 +117,6 @@ namespace RT
 					RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
 					}
 
-					// }
-				// else
-					// SvcTypeID = Gateway;
-				}
 			
 			if (string.IsNullOrEmpty(Phone))
 			{
@@ -178,7 +166,7 @@ namespace RT
 		/// <returns></returns>
 		protected override string GetLogName()
 		{
-			return Provider == "rt"? Settings.Rt.LogFile: Settings.Rtm.LogFile;
+			return Settings.Rt.LogFile;
 		}
 
 		/// <summary>
