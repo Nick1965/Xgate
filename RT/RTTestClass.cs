@@ -229,14 +229,17 @@ namespace RT
             ResourceManager res = null;
             res = Properties.Resources.ResourceManager;
 
-            if (ReqStatus > 0)
-                r = ReqStatus.Value + 100;
-            else if (ReqStatus < 0)
-                r = -ReqStatus.Value;
-            if (ReqStatus != 0)
-                ErrDesc = $"{res.GetString("ERR_" + r.ToString())}: {ReqNote}";
-            else
-                ErrDesc = $"{PayStatus}: {res.GetString("STS_" + PayStatus.ToString())}";
+            if (freq.reqType != "queryPayeeInfo")
+            {
+                if (resp.reqStatus > 0)
+                    r = resp.reqStatus.Value + 100;
+                else if (resp.reqStatus < 0)
+                    r = -resp.reqStatus.Value;
+                if (resp.reqStatus != 0)
+                    ErrDesc = $"{res.GetString("ERR_" + r.ToString())}: {resp.reqNote}";
+                else
+                    ErrDesc = $"{resp.reqStatus}: {res.GetString("STS_" + resp.payStatus.ToString())}";
+            }
 
         }
 
@@ -515,6 +518,13 @@ namespace RT
                     state = 1;
                     errDesc = "Абонент найден";
                 }
+                else if (resp.reqStatus == -12)
+                {
+                    errCode = 6;
+                    state = 12;
+                    errDesc = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
+                    fio = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
+                }
                 else
                 {
                     errCode = 6;
@@ -524,7 +534,6 @@ namespace RT
                 }
 
             }
-
 
             // Создать ответ
             MakeAnswer();
@@ -625,6 +634,8 @@ namespace RT
         public void MakeAnswer()
         {
 
+            Log($"[MakeAnser] errCode={errCode} errDesc={errDesc}");
+
             StringBuilder sb = new StringBuilder();
             StringBuilder sb1 = new StringBuilder();
 
@@ -656,7 +667,7 @@ namespace RT
                 UpdateState(Tid, state: State, locked: 1);
 
 
-            Log("Подготовлен ответ:\r\n{0}", stResponse);
+            Log("[MakeAnser] Подготовлен ответ:\r\n{0}", stResponse);
         }
 
 
