@@ -302,9 +302,11 @@ namespace Oldi.Net
 			string stResponse = r.Answer;
 			string errDesc = !string.IsNullOrEmpty(r.ErrDesc)? HttpUtility.HtmlEncode(r.ErrDesc): "";
 
+            // Log($"[SendAnswer] Provider={r.Provider} stResponse={stResponse}");
+
             try
             {
-                if (r.Provider != Settings.Rt.Name && r.Provider != Settings.RtTest.Name && r.Provider != Settings.Rapida.Name && r.Gateway != "lyapko") // уже заполненнвй Answer
+                if (r.Provider != Settings.Rt.Name && r.Provider.ToLower() != "rt-test" && r.Provider != Settings.Rapida.Name && r.Gateway != "lyapko") // уже заполненнвй Answer
 				{
 					if (r.State == 6 || r.State == 0 && r.Provider == "rapida")
 					{
@@ -371,7 +373,7 @@ namespace Oldi.Net
 				string answer = string.Format("<?xml version=\"1.0\" encoding=\"{0}\"?>\r\n{1}",
 					dataHolder.ClientEncoding.WebName, stResponse);
 
-				byte[] buffer = dataHolder.ClientEncoding.GetBytes(answer);
+                byte[] buffer = dataHolder.ClientEncoding.GetBytes(answer);
                 dataHolder.Context.Response.ContentLength64 = buffer.Length;
 
 				if (Settings.LogLevel.IndexOf("OEREQ") != -1)

@@ -65,6 +65,22 @@ namespace RT
         }
     }
 
+    class FindRequest
+    {
+        public string reqType = "queryPayeeInfo";
+        public string svcTypeId = "0";
+        public string svcNum;
+        public string svcSubNum = "";
+        public int? queryFlags = 13;
+        public string agentId = "65423";
+
+        public override string ToString()
+        {
+            return $"reqType={reqType} svcTypeId={svcTypeId} svcNum={svcNum}svcSubNum={svcSubNum} queryFlags={queryFlags} agentId={agentId}";
+        }
+    }
+
+
     class JasonReponse
     {
         public DateTime? reqType;
@@ -72,6 +88,7 @@ namespace RT
         public DateTime? reqTime;
         public string reqNote;
         public string errUsrMsg;
+        public string payeeName;
         public string clientType;
         public string clientInn;
         public string clientOrgName;
@@ -109,6 +126,8 @@ namespace RT
 
         JasonRequest jreq = new JasonRequest();
         JasonReponse resp = new JasonReponse();
+
+        FindRequest freq = new FindRequest();
 
         public RTTest()
             : base()
@@ -176,8 +195,8 @@ namespace RT
                     jreq.reqType = "checkPaymentParams";
                     break;
                 case "find":
-                    jreq.reqType = "queryPayeeInfo";
-                    break;
+                    DoCheck();
+                    return;
                     
                 default:
                     jreq.reqType = RequestType;
@@ -347,17 +366,10 @@ namespace RT
 
                 if (old_state == 0)
                 {
-                    jreq.reqTime = Pcdate.AsCF();
+                    // jreq.reqTime = Pcdate.AsCF();
                     // checkParam
-                    if (jreq.reqType == "checkPaymentParams")
+                    if (freq.reqType == "queryPayeeInfo")
                     {
-                        jreq.payAmount = 100M; // 1 RUB
-                        jreq.payComment = $"Проверка параметров для {Phone}{Account}";
-                    }
-                    else
-                    {
-                        // выполнить проверку возможности платежа и вернуть баланс счёта
-                        jreq.queryFlags = 13;
                     }
 
                     Log($"MakeRequest for {jreq.ToString()}");
@@ -487,17 +499,19 @@ namespace RT
             // Log(stRequest);
 
             // Создать запрос
-            jreq.reqType = "queryPayeeInfo";
+            freq.svcNum = Phone;
+            freq.svcSubNum = "";
+            freq.queryFlags = 13;
             MakeRequest(0);
-            stRequest = JsonConvert.SerializeObject(jreq);
+            stRequest = JsonConvert.SerializeObject(freq);
             // Отправить запрос
             Log($"[DoCheck] host={Host}\r\nstRequest={stRequest}");
             if (PostJson(Host, stRequest) == 0)
             {
                 ParseAnswer(stResponse);
-                if (resp.reqStatus != 0)
+                if (resp.reqStatus == 0)
                 {
-                    errCode = 1;
+                    errCode = 0;
                     state = 1;
                     errDesc = "Абонент найден";
                 }
@@ -505,7 +519,7 @@ namespace RT
                 {
                     errCode = 6;
                     state = 12;
-                    errDesc = string.Format("{0}: {1}", resp.reqStatus, resp.reqNote != "" ? resp.reqNote : "Абонент не найден");
+                    errDesc = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
                     fio = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
                 }
 
@@ -539,6 +553,15 @@ namespace RT
         {
             if (resp.reqStatus == 0)
             {
+                fio = resp.payeeName;
+                transaction = resp.esppPayId;
+                balance = (resp.payeeRemain != null)? resp.payeeRemain / 100m: null;
+                resp.payeeRecPay = resp.payeeRecPay != null ? resp.payeeRecPay.Value / 100m : resp.payeeRecPay = -1; ;
+                errCode = 0;
+                errDesc = "Абонент найден";
+
+                Log($"fio = {fio}");
+
                 switch (resp.payStatus)
                 {
                     case 2:     // Платёж выполнен
@@ -564,26 +587,32 @@ namespace RT
                         break;
                 }
             }
+            else if (resp.reqStatus == -12)
+            {
+                errCode = 6;
+                state = 12;
+                errDesc = "Абонент не найден";
+            }
             else if (resp.reqStatus == 1 || resp.reqStatus == -1) // Платёж может быть допроведён
             {
                 if (State == 1)
                 {
                     errCode = 6;
-                    errDesc = "";
+                    errDesc = resp.reqNote;
                     state = 12;
                 }
                 else
                 {
                     errCode = 1;
                     state = 1;
-                    errDesc = "";
+                    errDesc = "Абонент найден";
                 }
             }
             else
             {
                 errCode = 6;
                 state = 12;
-                errDesc = "";
+                errDesc = "Абонент не найден";
             }
 
             GetErrorDescription();
@@ -606,17 +635,15 @@ namespace RT
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "accept-date", XConvert.AsDate(Acceptdate).Replace('T', ' '));
             if (!string.IsNullOrEmpty(Fio))
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "fio", Fio);
-            if (!string.IsNullOrEmpty(Opname))
-                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "opname", Opname);
             if (!string.IsNullOrEmpty(Account))
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "account", Account);
             if (!string.IsNullOrEmpty(resp.errUsrMsg))
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "addinfo", resp.errUsrMsg.Length <= 250 ? HttpUtility.HtmlEncode(resp.errUsrMsg) : HttpUtility.HtmlEncode(resp.errUsrMsg.Substring(0, 250)));
 
             if (resp.payeeRecPay != null)
-                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "recpay", XConvert.AsAmount(resp.payeeRecPay.Value));
-            if (resp.payeeRemain != null)
-                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "balance", XConvert.AsAmount(resp.payeeRemain.Value));
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "recpay", XConvert.AsAmount(resp.payeeRecPay));
+            if (Balance != null)
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "balance", XConvert.AsAmount(balance));
 
             sb.AppendFormat("<{0}>\r\n{1}\r\n</{0}>\r\n", "response", sb1.ToString());
 
@@ -632,15 +659,17 @@ namespace RT
             Log("Подготовлен ответ:\r\n{0}", stResponse);
         }
 
-            /// <summary>
-            /// Обработчик входного запроса
-            /// </summary>
-            /// <param name="sender"></param>
-            /// <param name="certificate"></param>
-            /// <param name="chain"></param>
-            /// <param name="policyErrors"></param>
-            /// <returns></returns>
-            private bool ValidateRemote(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
+
+
+        /// <summary>
+        /// Обработчик входного запроса
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="certificate"></param>
+        /// <param name="chain"></param>
+        /// <param name="policyErrors"></param>
+        /// <returns></returns>
+        private bool ValidateRemote(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
             {
                 // allow any certificate...
                 // Log("[SendRequest]: Получен сертификат выданый {0}", certificate.Issuer);
@@ -751,7 +780,7 @@ namespace RT
                         using (StreamReader reader = new StreamReader(dataStream, enc))
                             stResponse = reader.ReadToEnd();
                         Log($"[PostJason]: Response\r\n{stResponse}");
-                        return (int)response.StatusCode;
+                        return 0;
                         }
                         else
                         {
