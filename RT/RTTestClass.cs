@@ -124,6 +124,11 @@ namespace RT
         public string dstDepCode;
         public decimal? payeeRecPay;
         public decimal? payeeRemain;
+        public DateTime? acceptTime;
+        public DateTime? acceptedTime;
+        public DateTime? abandonTime;
+        public DateTime? abandonedTime;
+        public string reqType;
     }
 
     [Table("OLDIGW.filial")]
@@ -459,12 +464,13 @@ namespace RT
             // Создать запрос
             MakeRequest(3);
 
-            stResponse = JsonConvert.SerializeObject(jreq);
+            stRequest = JsonConvert.SerializeObject(sreq);
             Log(stRequest);
             // Отправить запрос
-            if (PostJson(Host, stResponse) == 0)
+            if (PostJson(Host, stRequest) == 0)
             {
                 ParseAnswer(stResponse);
+                outtid = resp.esppPayId;
 
                 if (resp.reqStatus == 0)
                 {
@@ -474,12 +480,14 @@ namespace RT
                             errCode = 3;
                             state = 6;
                             errDesc = "Платёж проведён";
+                            acceptdate = resp.acceptedTime.Value;
                             break;
                         case 3:
                         case 4:
                             errCode = 6;
                             state = 12;
                             errDesc = "Платёж отменён";
+                            acceptdate = resp.abandonedTime.Value;
                             break;
                         case 102:
                         case 103:
@@ -500,12 +508,14 @@ namespace RT
                     errCode = 6;
                     errDesc = string.Format("Платёж не возможен или л/с не существует. reqStatus = {0}", ReqStatus);
                     state = 12;
+                    acceptdate = resp.abandonedTime.Value;
                 }
                 else
                 {
                     errCode = 6;
                     errDesc = string.Format("Ошибка обработки запроса. reqStatus = {0}", ReqStatus);
                     state = 12;
+                    acceptdate = resp.abandonedTime.Value;
                 }
 
             }
@@ -555,15 +565,15 @@ namespace RT
                     errCode = 6;
                     state = 12;
                     // errDesc = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
-                    errDesc = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg + " " + resp.reqStatus;
-                    fio = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg;
+                    errDesc = "Абонент не существует";
+                    // fio =  "Абонент не существует";
                 }
                 else
                 {
                     errCode = 6;
                     state = 12;
-                    errDesc = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg + " " + resp.reqStatus;
-                    fio = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg;
+                    errDesc =  "Абонент не существует";
+                    // fio =  "Абонент не существует";
                 }
 
             }
@@ -732,6 +742,8 @@ namespace RT
                 outtid = resp.esppPayId;
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "transaction", resp.esppPayId);
             }
+            if (resp.payStatus != null)
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "payStatus", XConvert.AsAmount(resp.payStatus));
             if (Acceptdate != DateTime.MinValue && (State == 6 || State == 10))
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "accept-date", XConvert.AsDate(Acceptdate).Replace('T', ' '));
             if (!string.IsNullOrEmpty(Fio))
