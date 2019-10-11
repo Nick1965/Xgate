@@ -106,6 +106,27 @@ namespace RT
         public string agentId = "65423";
     }
 
+    class UndoRequest
+    {
+        public string reqType = "abandonPayment";
+        public string srcPayId;
+        public string reqTime;
+        public string agentId = "65423";
+    }
+
+    class CheckRequest
+    {
+        public string reqType = "checkPaymentParams";
+        public string svcTypeId = "0";
+        public string svcNum;
+        public string svcSubNum;
+        public string payCurrId = "RUB";
+        public int? payAmount = 100;
+        public int payPurpose = 0;
+        public string payComment = "test";
+        public string agentId = "65423";
+        public string agentAccount = "CASH_NCMSN";
+    }
 
     class JasonReponse
     {
@@ -160,6 +181,7 @@ namespace RT
         FindRequest freq = new FindRequest();
         PayRequest preq = new PayRequest();
         StatusRequest sreq = new StatusRequest();
+        UndoRequest ureq = new UndoRequest();
 
         public RTTest()
             : base()
@@ -221,7 +243,7 @@ namespace RT
                     DoPay();
                     break;
                 case "undo":
-                    jreq.reqType = "abandonPayment";
+                    ureq.reqType = "abandonPayment";
                     break;
                 case "check":
                     jreq.reqType = "checkPaymentParams";
@@ -346,11 +368,13 @@ namespace RT
             // Log("{0} Попытка отмены платежа", Tid);
             Log("{0} [UNDO - начало] Num = {1} State = {2}", Tid, State != 255 ? State.ToString() : "<None>", x);
 
-            stRequest = JsonConvert.SerializeObject(jreq);
+            ureq.srcPayId = Tid.ToString();
+            ureq.reqTime = XConvert.AsDateTZ(Pcdate, Settings.Tz);
+            stRequest = JsonConvert.SerializeObject(ureq);
 
             if (MakeRequest(8) == 0 && PostJson(Host, stRequest) == 0 && ParseAnswer(stResponse) == 0)
             {
-                Log("{0} [UNDO - конец] reqStatus = {1} payStatus = {2}", Tid, ReqStatus, PayStatus);
+                Log($"{Tid} [UNDO - конец] reqStatus = {resp.reqStatus} payStatus = {resp.payStatus}");
                 if (resp.payStatus == 3)
                 {
                     errCode = 6;
@@ -417,7 +441,7 @@ namespace RT
                     preq.srcPayId = Tid.ToString();
                     preq.payerContact = Contact;
                     stRequest = JsonConvert.SerializeObject(preq);
-                    // Log($"Создан запрос\r\n{stRequest}");
+                    Log($"Создан запрос\r\n{stRequest}");
 
                     return 0;
                 }
@@ -425,14 +449,14 @@ namespace RT
                 else if (old_state == 3)
                 {
                     sreq.srcPayId = Tid.ToString();
+                    stRequest = JsonConvert.SerializeObject(sreq);
+                    Log($"Создан запрос\r\n{stRequest}");
                 }
                 // Запрос на отмену платежа
                 else if (old_state == 8)
                 {
-                    jreq.srcPayId = !string.IsNullOrEmpty(Phone) ? Phone : Account;
-                    jreq.reqType = XConvert.AsDateTZ(Pcdate, 7);
-                    jreq.srcPayId = Tid.ToString();
-                    jreq.reqTime = Pcdate.AsCF();
+                    stRequest = JsonConvert.SerializeObject(ureq);
+                    Log($"Создан запрос\r\n{stRequest}");
                 }
                 else
                 {
@@ -449,8 +473,8 @@ namespace RT
                 RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
             }
 
-            stRequest = JsonConvert.SerializeObject(jreq);
-            Log($"Создан запрос\r\n{stRequest}");
+            // stRequest = JsonConvert.SerializeObject(jreq);
+            // Log($"Создан запрос\r\n{stRequest}");
 
             return 0;
         }
@@ -542,9 +566,12 @@ namespace RT
         {
             // Log(stRequest);
 
+            if (CheckParams() != 0)
+                return;
+            
             // Создать запрос
             freq.reqType = "queryPayeeInfo";
-            freq.svcNum = Phone;
+            freq.svcNum = '7' + Phone;
             freq.svcSubNum = "";
             freq.queryFlags = 13;
             // MakeRequest(0);
@@ -583,13 +610,36 @@ namespace RT
 
         }
 
-        public void DoPay()
+        int CheckParams()
+        {
+            CheckRequest req = new CheckRequest();
+            req.svcNum = '7' + Phone;
+            req.svcSubNum = "";
+            stRequest = JsonConvert.SerializeObject(req);
+            Log($"[CheckParams] host={Host}\r\nstRequest={stRequest}");
+            if (PostJson(Host, stRequest) == 0)
+            {
+                Log($"[CheckParams] stResponse={stResponse}");
+                ParseAnswer(stResponse);
+                if (resp.reqStatus == 0)
+                    return 0;
+            }
+            errCode = 6;
+            state = 12;
+            errDesc = "Bad params";
+
+            MakeAnswer();
+            
+            return 1;
+        }
+
+            public void DoPay()
         {
             // Log(stRequest);
-
             // Создать запрос
-            preq.svcNum = Phone;
+            preq.svcNum = '7' + Phone;
             preq.svcSubNum = "";
+            preq.payerContact = Contact;
             MakeRequest(1);
             // stRequest = JsonConvert.SerializeObject(preq);
             // Отправить запрос
@@ -860,7 +910,7 @@ namespace RT
                     request.ProtocolVersion = HttpVersion.Version11;
                     request.Credentials = CredentialCache.DefaultCredentials;
                     request.KeepAlive = true;
-                    request.Timeout = 30 * 1000;
+                    request.Timeout = 120 * 1000;
                     request.Method = "POST";
                     request.Headers.Set("Accept-Encoding", "identity");
                     request.AllowAutoRedirect = false;
@@ -908,9 +958,17 @@ namespace RT
                 }
                 catch (WebException we)
                 {
+                /*
+                if (we.Status == WebExceptionStatus.Timeout)
+                {
+                    Log("PostJson: Wait 60 sec");
+                    Wait(60);
+                    return PostJson(Host, json);
+                }
+                */
                 errCode = (int)we.Status;
                 errDesc = we.Message;
-                Log($"PostJson: {we.ToString()}");
+                Log($"PostJson: {we.Status} {we.ToString()}");
                 }
                 catch (Exception ex)
                 {
