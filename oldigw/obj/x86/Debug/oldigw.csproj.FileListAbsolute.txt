@@ -168,7 +168,6 @@ D:\Projects\XGate\oldigw\obj\x86\Debug\Oldi.Net.Answer.resources
 D:\Projects\XGate\oldigw\obj\x86\Debug\Oldi.Net.Messages.resources
 D:\Projects\XGate\oldigw\obj\x86\Debug\Oldi.Net.Properties.Resources.resources
 D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.csproj.GenerateResource.cache
-D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.csproj.CopyComplete
 D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.exe
 D:\Projects\XGate\oldigw\obj\x86\Debug\oldigw.pdb

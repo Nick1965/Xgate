@@ -166,7 +166,6 @@ D:\Projects\XGate\RT\bin\Debug\Newtonsoft.Json.xml
 D:\Projects\XGate\RT\bin\Debug\SMPP.pdb
 D:\Projects\XGate\RT\obj\Debug\RT.Properties.Resources.resources
 D:\Projects\XGate\RT\obj\Debug\RT.csproj.GenerateResource.cache
-D:\Projects\XGate\RT\obj\Debug\RT.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\RT\obj\Debug\RT.csproj.CopyComplete
 D:\Projects\XGate\RT\obj\Debug\RT.dll
 D:\Projects\XGate\RT\obj\Debug\RT.pdb

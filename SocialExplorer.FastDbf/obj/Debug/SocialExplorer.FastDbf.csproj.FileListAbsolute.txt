@@ -18,6 +18,6 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\SocialExplorer.FastDbf\obj\Debug\So
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.pdb
 D:\Projects\XGate\SocialExplorer.FastDbf\bin\Debug\SocialExplorer.FastDbf.dll
 D:\Projects\XGate\SocialExplorer.FastDbf\bin\Debug\SocialExplorer.FastDbf.pdb
-D:\Projects\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.dll
 D:\Projects\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.pdb
+D:\Projects\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.csprojAssemblyReference.cache

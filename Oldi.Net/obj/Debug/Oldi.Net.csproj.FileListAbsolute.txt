@@ -59,7 +59,6 @@ D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.csprojAssemblyReference.cache
 D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.Properties.Resources.resources
 D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.ServerGateMessages.resources
 D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.csproj.GenerateResource.cache
-D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.csproj.CopyComplete
 D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.dll
 D:\Projects\XGate\Oldi.Net\obj\Debug\Oldi.Net.pdb

@@ -80,10 +80,35 @@ namespace RT
         }
     }
 
+    class PayRequest
+    {
+        public string reqType = "createPayment";
+        public string svcTypeId = "0";
+        public string svcNum;
+        public string svcSubNum;
+        public string srcPayId;
+        public string payTime;
+        public string payCurrId = "RUB";
+        public int? payAmount;
+        public int payPurpose = 0;
+        public string payComment;
+        public string agentId = "65423";
+        public string agentAccount = "CASH_NCMSN";
+        public string reqTime;
+        public string payerContact;
+        public int registerCheck = 1;
+    }
+
+    class StatusRequest
+    {
+        public string reqType = "getPaymentStatus";
+        public string srcPayId;
+        public string agentId = "65423";
+    }
+
 
     class JasonReponse
     {
-        public DateTime? reqType;
         public int? reqStatus;
         public DateTime? reqTime;
         public string reqNote;
@@ -128,6 +153,8 @@ namespace RT
         JasonReponse resp = new JasonReponse();
 
         FindRequest freq = new FindRequest();
+        PayRequest preq = new PayRequest();
+        StatusRequest sreq = new StatusRequest();
 
         public RTTest()
             : base()
@@ -183,10 +210,10 @@ namespace RT
             switch (RequestType.ToLower())
             {
                 case "status":
-                    jreq.reqType = "getPaymentStatus";
+                    sreq.srcPayId = Tid.ToString();
                     break;
                 case "payment":
-                    jreq.reqType = "createPayment";
+                    DoPay();
                     break;
                 case "undo":
                     jreq.reqType = "abandonPayment";
@@ -256,14 +283,15 @@ namespace RT
                     errCode = 6;
                     if (string.IsNullOrEmpty(ErrDesc))
                         errDesc = "Не могу создать новый платёж";
-                    Log("{0} {1}", Tid, ErrDesc);
+                    Log($"[{Tid}] Ph={Phone} Amount={Amount.AsCF()}");
                 }
                 else
                 {
                     Sync(false);
                     if (State < 6)
                     {
-                        DoPay(1, 6);
+                        // DoPay(1, 6);
+                        DoPay();
                         UpdateState(Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, locked: 0);
                     }
                 }
@@ -371,24 +399,27 @@ namespace RT
                 {
                     // jreq.reqTime = Pcdate.AsCF();
                     // checkParam
-                    if (freq.reqType == "queryPayeeInfo")
-                    {
-                    }
-
-                    Log($"MakeRequest for {jreq.ToString()}");
+                    // freq.reqType = "queryPayeeInfo";
+                    // Log($"MakeRequest for {freq.ToString()}");
                 }
                 // Создать запрос Pay
                 else if (old_state == 1)
                 {
-                    jreq.payTime = Operdate.AsCF();
-                    jreq.reqTime = Pcdate.AsCF();
-                    jreq.payAmount = Amount * 100m;
-                    jreq.payComment = $"Оплата {jreq.payAmount} {jreq.srcPayId} {jreq.svcNum}";
+                    preq.payTime = XConvert.AsDateTZ(DateTime.Now, Settings.Tz);
+                    preq.reqTime = XConvert.AsDateTZ(Pcdate, Settings.Tz);
+                    preq.payAmount = (int?)(Amount * 100m);
+                    preq.payComment = $"Оплата {preq.payAmount} {preq.srcPayId} {preq.svcNum}";
+                    preq.srcPayId = Tid.ToString();
+                    preq.payerContact = Contact;
+                    stRequest = JsonConvert.SerializeObject(preq);
+                    // Log($"Создан запрос\r\n{stRequest}");
+
+                    return 0;
                 }
                 // Создать запрос Status
                 else if (old_state == 3)
                 {
-                    jreq.srcPayId = Tid.ToString();
+                    sreq.srcPayId = Tid.ToString();
                 }
                 // Запрос на отмену платежа
                 else if (old_state == 8)
@@ -502,10 +533,11 @@ namespace RT
             // Log(stRequest);
 
             // Создать запрос
+            freq.reqType = "queryPayeeInfo";
             freq.svcNum = Phone;
             freq.svcSubNum = "";
             freq.queryFlags = 13;
-            MakeRequest(0);
+            // MakeRequest(0);
             stRequest = JsonConvert.SerializeObject(freq);
             // Отправить запрос
             Log($"[DoCheck] host={Host}\r\nstRequest={stRequest}");
@@ -522,21 +554,70 @@ namespace RT
                 {
                     errCode = 6;
                     state = 12;
-                    errDesc = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
-                    fio = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
+                    // errDesc = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
+                    errDesc = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg + " " + resp.reqStatus;
+                    fio = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg;
                 }
                 else
                 {
                     errCode = 6;
                     state = 12;
-                    errDesc = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
-                    fio = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
+                    errDesc = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg + " " + resp.reqStatus;
+                    fio = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg;
                 }
 
             }
 
             // Создать ответ
             MakeAnswer();
+
+        }
+
+        public void DoPay()
+        {
+            // Log(stRequest);
+
+            // Создать запрос
+            preq.svcNum = Phone;
+            preq.svcSubNum = "";
+            MakeRequest(1);
+            // stRequest = JsonConvert.SerializeObject(preq);
+            // Отправить запрос
+            Log($"[DoPay] host={Host}\r\nstRequest={stRequest}");
+            if (PostJson(Host, stRequest) == 0)
+            {
+                ParseAnswer(stResponse);
+                /*
+                if (resp.reqStatus == 0)
+                {
+                    errCode = 0;
+                    state = 3;
+                    errDesc = "Абонент найден";
+                }
+                else if (resp.reqStatus == -12)
+                {
+                    errCode = 6;
+                    state = 12;
+                    // errDesc = resp.reqNote != "" ? resp.reqNote : "Абонент не найден";
+                    errDesc = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg + " " + resp.reqStatus;
+                    fio = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg;
+                }
+                else
+                {
+                    errCode = 6;
+                    state = 12;
+                    errDesc = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg + " " + resp.reqStatus;
+                    fio = resp.reqNote != "" ? resp.reqNote : resp.errUsrMsg;
+                }
+                */
+            }
+
+            // Log($"[DoPay] stResponse={stResponse}");
+            
+            UpdateState(Tid, errCode: ErrCode, errDesc: ErrDesc, locked: 0, state: state);
+
+            // Создать ответ
+            // MakeAnswer();
 
         }
 
@@ -596,6 +677,12 @@ namespace RT
                         break;
                 }
             }
+            else if (resp.reqStatus == -24)
+            {
+                errCode = 6;
+                state = 12;
+                errDesc = "Не достаточно средств для проведения платежа";
+            }
             else if (resp.reqStatus == -12)
             {
                 errCode = 6;
@@ -640,8 +727,11 @@ namespace RT
             StringBuilder sb1 = new StringBuilder();
 
             sb1.AppendFormat("\t<{0} code=\"{1}\">{2}</{0}>", "error", ErrCode, HttpUtility.HtmlEncode(ErrDesc));
-            if (!string.IsNullOrEmpty(Outtid))
-                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "transaction", Outtid);
+            if (!string.IsNullOrEmpty(resp.esppPayId))
+            {
+                outtid = resp.esppPayId;
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "transaction", resp.esppPayId);
+            }
             if (Acceptdate != DateTime.MinValue && (State == 6 || State == 10))
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "accept-date", XConvert.AsDate(Acceptdate).Replace('T', ' '));
             if (!string.IsNullOrEmpty(Fio))
@@ -655,6 +745,12 @@ namespace RT
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "recpay", XConvert.AsAmount(resp.payeeRecPay));
             if (Balance != null)
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "balance", XConvert.AsAmount(balance));
+            if (!string.IsNullOrEmpty(resp.clientInn))
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "clientInn", resp.clientInn);
+            if (!string.IsNullOrEmpty(resp.clientType))
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "clientType", resp.clientType);
+            if (!string.IsNullOrEmpty(resp.clientOrgName))
+                sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "clientOrgName", resp.clientOrgName);
 
             sb.AppendFormat("<{0}>\r\n{1}\r\n</{0}>\r\n", "response", sb1.ToString());
 
@@ -802,11 +898,13 @@ namespace RT
                 {
                 errCode = (int)we.Status;
                 errDesc = we.Message;
+                Log($"PostJson: {we.ToString()}");
                 }
                 catch (Exception ex)
                 {
                 errCode = -1;
                 errDesc = ex.Message;
+                Log($"PostJson: {ex.ToString()}");
             }
             finally
             {

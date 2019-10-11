@@ -128,7 +128,6 @@ D:\Projects\XGate\Redo\bin\Debug\Newtonsoft.Json.xml
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csprojAssemblyReference.cache
 D:\Projects\XGate\Redo\obj\x86\Debug\OldiGW.Redo.Net.Properties.Resources.resources
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csproj.GenerateResource.cache
-D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.csproj.CopyComplete
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.dll
 D:\Projects\XGate\Redo\obj\x86\Debug\Redo.pdb

@@ -64,7 +64,6 @@ D:\Projects\XGate\Cyber\bin\Debug\SMPP.pdb
 D:\Projects\XGate\Cyber\obj\Debug\Cyber.csprojAssemblyReference.cache
 D:\Projects\XGate\Cyber\obj\Debug\Oldi.Net.Cyber.Properties.Resources.resources
 D:\Projects\XGate\Cyber\obj\Debug\Cyber.csproj.GenerateResource.cache
-D:\Projects\XGate\Cyber\obj\Debug\Cyber.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\Cyber\obj\Debug\Cyber.csproj.CopyComplete
 D:\Projects\XGate\Cyber\obj\Debug\Cyber.dll
 D:\Projects\XGate\Cyber\obj\Debug\Cyber.pdb

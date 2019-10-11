@@ -66,7 +66,6 @@ D:\Projects\XGate\Ekt\bin\Debug\SMPP.pdb
 D:\Projects\XGate\Ekt\obj\Debug\Oldi.Ekt.Messages.resources
 D:\Projects\XGate\Ekt\obj\Debug\Oldi.Ekt.Properties.Resources.resources
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.csproj.GenerateResource.cache
-D:\Projects\XGate\Ekt\obj\Debug\Ekt.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.csproj.CopyComplete
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.dll
 D:\Projects\XGate\Ekt\obj\Debug\Ekt.pdb

@@ -68,7 +68,6 @@ D:\Projects\XGate\Mts\bin\Debug\SMPP.pdb
 D:\Projects\XGate\Mts\obj\Debug\Mts.csprojAssemblyReference.cache
 D:\Projects\XGate\Mts\obj\Debug\Oldi.Mts.Properties.Resources.resources
 D:\Projects\XGate\Mts\obj\Debug\Mts.csproj.GenerateResource.cache
-D:\Projects\XGate\Mts\obj\Debug\Mts.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\Mts\obj\Debug\Mts.csproj.CopyComplete
 D:\Projects\XGate\Mts\obj\Debug\Mts.dll
 D:\Projects\XGate\Mts\obj\Debug\Mts.pdb

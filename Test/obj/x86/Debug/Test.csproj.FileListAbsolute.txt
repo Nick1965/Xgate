@@ -105,7 +105,6 @@ D:\Projects\XGate\Test\bin\Debug\SMPP.pdb
 D:\Projects\XGate\Test\obj\x86\Debug\Test.csprojAssemblyReference.cache
 D:\Projects\XGate\Test\obj\x86\Debug\Test.Properties.Resources.resources
 D:\Projects\XGate\Test\obj\x86\Debug\Test.csproj.GenerateResource.cache
-D:\Projects\XGate\Test\obj\x86\Debug\Test.csproj.CoreCompileInputs.cache
 D:\Projects\XGate\Test\obj\x86\Debug\Test.TrustInfo.xml
 D:\Projects\XGate\Test\obj\x86\Debug\Test.exe.manifest
 D:\Projects\XGate\Test\obj\x86\Debug\Test.application
