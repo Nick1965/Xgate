@@ -204,20 +204,11 @@ namespace RT
 
             commonName = Settings.RtTest.CN;
             host = Settings.RtTest.Host;
-            Log($"****CHECK: Provider={Provider} Service={Service} Gateway={Gateway} Filial={Filial}");
-            if (Service.ToLower() == "rtk-acc")
-            {
-                // Выберем филиал из таблицы
-                using (IDbConnection db = new SqlConnection(Settings.ConnectionString))
-                {
-                    filial = db.Query(@"select svcTypeId from oldigw.oldigw.filial where Num={0}", Filial).FirstOrDefault();
-                    if (!string.IsNullOrEmpty(filial)) SvcTypeID = filial;
-                    RootLog("Филилал={0} Найден код филиала={1}", Filial, SvcTypeID);
-                }
-            }
+            Log("****CHECK: Service={0} Filial={1}", Service, Filial);
 
             if (string.IsNullOrEmpty(Phone))
             {
+                jreq.svcTypeId = FindFilial();
                 jreq.svcNum = Account;
                 if (!string.IsNullOrEmpty(AccountParam))
                     jreq.svcSubNum = AccountParam;
@@ -262,6 +253,25 @@ namespace RT
 
             if (Tid != long.MinValue)
                 jreq.srcPayId = Tid.ToString();
+
+        }
+
+        string FindFilial()
+        {
+            SvcTypeID = "0";
+            if (Service.ToLower() == "rtk-acc")
+            {
+                // Выберем филиал из таблицы
+                using (IDbConnection db = new SqlConnection(Settings.ConnectionString))
+                {
+                    filial = db.Query(@"select svcTypeId from oldigw.oldigw.filial where Num={0}", Filial).FirstOrDefault();
+                    if (!string.IsNullOrEmpty(filial))
+                        SvcTypeID = filial;
+                    RootLog("Филилал={0} Найден код филиала={1}", Filial, SvcTypeID);
+                }
+            }
+
+            return SvcTypeID;
 
         }
 
@@ -310,7 +320,7 @@ namespace RT
                     errCode = 6;
                     if (string.IsNullOrEmpty(ErrDesc))
                         errDesc = "Не могу создать новый платёж";
-                    Log($"[{Tid}] Ph={Phone} Amount={Amount.AsCF()}");
+                    Log($"[{Tid}] Ph={Phone} Acc={Account} Amount={Amount.AsCF()}");
                 }
                 else
                 {
@@ -434,6 +444,9 @@ namespace RT
                 // Создать запрос Pay
                 else if (old_state == 1)
                 {
+                    preq.svcTypeId = jreq.svcTypeId;
+                    preq.svcSubNum = jreq.svcSubNum;
+                    preq.svcNum = Service.ToLower() == "rt-test-acc" ? Account : Phone;
                     preq.payTime = XConvert.AsDateTZ(DateTime.Now, Settings.Tz);
                     preq.reqTime = XConvert.AsDateTZ(Pcdate, Settings.Tz);
                     preq.payAmount = (int?)(Amount * 100m);
@@ -470,7 +483,8 @@ namespace RT
             }
             catch (Exception ex)
             {
-                RootLog("{0}\r\n{1}", ex.Message, ex.StackTrace);
+                RootLog(ex.ToString());
+                return 1;
             }
 
             // stRequest = JsonConvert.SerializeObject(jreq);
@@ -568,10 +582,11 @@ namespace RT
 
             if (CheckParams() != 0)
                 return;
-            
+
             // Создать запрос
             freq.reqType = "queryPayeeInfo";
-            freq.svcNum = '7' + Phone;
+            freq.svcNum = jreq.svcNum;
+            freq.svcTypeId = jreq.svcTypeId;
             freq.svcSubNum = "";
             freq.queryFlags = 13;
             // MakeRequest(0);
@@ -613,7 +628,13 @@ namespace RT
         int CheckParams()
         {
             CheckRequest req = new CheckRequest();
-            req.svcNum = '7' + Phone;
+            
+            req.svcTypeId = FindFilial();
+            if (Service.ToLower() == "rt-test-acc")
+                req.svcNum = Account;
+            else
+                req.svcNum = '7' + Phone;
+
             req.svcSubNum = "";
             stRequest = JsonConvert.SerializeObject(req);
             Log($"[CheckParams] host={Host}\r\nstRequest={stRequest}");
@@ -637,7 +658,12 @@ namespace RT
         {
             // Log(stRequest);
             // Создать запрос
-            preq.svcNum = '7' + Phone;
+            preq.svcTypeId = FindFilial();
+            if (Service.ToLower() == "rt-test-acc")
+                preq.svcNum = Account;
+            else
+                preq.svcNum = '7' + Phone;
+
             preq.svcSubNum = "";
             preq.payerContact = Contact;
             MakeRequest(1);
