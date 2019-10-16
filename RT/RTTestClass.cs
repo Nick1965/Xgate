@@ -204,7 +204,6 @@ namespace RT
 
             commonName = Settings.RtTest.CN;
             host = Settings.RtTest.Host;
-            Log("****CHECK: Service={0} Filial={1}", Service, Filial);
 
             if (string.IsNullOrEmpty(Phone))
             {
@@ -259,17 +258,29 @@ namespace RT
         string FindFilial()
         {
             SvcTypeID = "0";
-            if (Service.ToLower() == "rtk-acc")
+            if (Service.ToLower() == "rt-test-acc")
             {
                 // Выберем филиал из таблицы
-                using (IDbConnection db = new SqlConnection(Settings.ConnectionString))
+
+                try
                 {
-                    filial = db.Query(@"select svcTypeId from oldigw.oldigw.filial where Num={0}", Filial).FirstOrDefault();
-                    if (!string.IsNullOrEmpty(filial))
-                        SvcTypeID = filial;
-                    RootLog("Филилал={0} Найден код филиала={1}", Filial, SvcTypeID);
+                    using (IDbConnection db = new SqlConnection(Settings.ConnectionString))
+                    {
+                        Log($"[FindFilial] select svcTypeId from oldigw.oldigw.filial where Num={Filial.ToInt()}");
+                        SvcTypeID = db.Query<string>($"select svcTypeId from oldigw.oldigw.filial where Num={Filial.ToInt()}").FirstOrDefault();
+                        RootLog($"Филилал={Filial} Найден код филиала={SvcTypeID}");
+                    }
                 }
+                catch(SqlException se)
+                {
+                    Log($"{se.Message}, {se.LineNumber}");
+                    Log($"[FindFilial]: {filial}");
+                    return "0";
+                }
+
             }
+
+            Log($"[FindFilial]: {SvcTypeID}");
 
             return SvcTypeID;
 
@@ -444,9 +455,16 @@ namespace RT
                 // Создать запрос Pay
                 else if (old_state == 1)
                 {
-                    preq.svcTypeId = jreq.svcTypeId;
-                    preq.svcSubNum = jreq.svcSubNum;
-                    preq.svcNum = Service.ToLower() == "rt-test-acc" ? Account : Phone;
+                    if (Service.ToLower() == "rt-test-acc")
+                    {
+                        preq.svcTypeId = FindFilial();
+                        preq.svcNum = Account;
+                    }
+                    else
+                    {
+                        preq.svcNum = '7' + Phone;
+                    }
+                    // preq.svcSubNum = jreq.svcSubNum;
                     preq.payTime = XConvert.AsDateTZ(DateTime.Now, Settings.Tz);
                     preq.reqTime = XConvert.AsDateTZ(Pcdate, Settings.Tz);
                     preq.payAmount = (int?)(Amount * 100m);
@@ -586,7 +604,7 @@ namespace RT
             // Создать запрос
             freq.reqType = "queryPayeeInfo";
             freq.svcNum = jreq.svcNum;
-            freq.svcTypeId = jreq.svcTypeId;
+            freq.svcTypeId = FindFilial();
             freq.svcSubNum = "";
             freq.queryFlags = 13;
             // MakeRequest(0);
@@ -628,10 +646,14 @@ namespace RT
         int CheckParams()
         {
             CheckRequest req = new CheckRequest();
-            
-            req.svcTypeId = FindFilial();
+
+
+            Log($"****CHECK: Req={RequestType} Ph={Phone} Acc{Account} Service={Service} Filial={Filial}");
             if (Service.ToLower() == "rt-test-acc")
+            {
+                req.svcTypeId = FindFilial();
                 req.svcNum = Account;
+            }
             else
                 req.svcNum = '7' + Phone;
 
@@ -658,12 +680,14 @@ namespace RT
         {
             // Log(stRequest);
             // Создать запрос
-            preq.svcTypeId = FindFilial();
+            
             if (Service.ToLower() == "rt-test-acc")
+            {
+                preq.svcTypeId = FindFilial();
                 preq.svcNum = Account;
+            }
             else
                 preq.svcNum = '7' + Phone;
-
             preq.svcSubNum = "";
             preq.payerContact = Contact;
             MakeRequest(1);
@@ -698,7 +722,7 @@ namespace RT
                 */
             }
 
-            // Log($"[DoPay] stResponse={stResponse}");
+            Log($"[DoPay] stResponse={stResponse}");
             
             UpdateState(Tid, errCode: ErrCode, errDesc: ErrDesc, locked: 0, state: state);
 
