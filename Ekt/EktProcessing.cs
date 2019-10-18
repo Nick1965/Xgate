@@ -85,9 +85,11 @@ namespace Oldi.Ekt
                     // Проверка дневного лимита для нового плательщика если это не QIWI.
                     if (!Gateway.Equals(qiwiGateway))
                     {
-                        if (DayLimitExceeded(true)) return;
+                        if (DayLimitExceeded(true)) 
+                            return;
                         // Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-                        if (FinancialCheck(New)) return;
+                        if (FinancialCheck(New)) 
+                            return;
                     }
 				    DoPay(0, 3);
 				}
@@ -380,7 +382,16 @@ namespace Oldi.Ekt
 						case 3:
 							msg = Messages.State80_1_2_3;
 							break;
-						default:
+                        case 4:
+                            msg = Messages.State80_4;
+                            break;
+                        case 5:
+                            msg = Messages.State80_5;
+                            break;
+                        case 6:
+                            msg = Messages.State80_6;
+                            break;
+                        default:
 							switch (result.code)
 							{
 								case 1:
