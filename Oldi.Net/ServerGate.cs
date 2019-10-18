@@ -77,11 +77,11 @@ namespace Oldi.Net
                 {
                     // TraceRequest("New");
 
+                    RootLog($"{Tid} [{Provider}.Processing - NEW start] {Service}/{Gateway} {AmountAll.AsCF()}");
                     // Проверка дневного лимита для нового плательщика
                     if (DayLimitExceeded(true)) return;
 
                     // Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-                    RootLog($"{Tid} [{Provider}.Processing - NEW start] {Service}/{Gateway} {AmountAll.AsCF()}");
                     if (FinancialCheck(New)) return;
                     DoPay(0, 3);
                 }
@@ -93,10 +93,10 @@ namespace Oldi.Net
                 // Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
                 if (State == 0)
                 {
+                    RootLog($"{Tid} [{Provider}.Processing - REDO start] {Service}/{Gateway} {AmountAll.AsCF()}");
+
                     // Проверка дневного лимита для нового плательщика
                     if (DayLimitExceeded(false)) return;
-
-                    RootLog($"{Tid} [{Provider}.Processing - REDO start] {Service}/{Gateway} {AmountAll.AsCF()}");
                     if (FinancialCheck(false)) return;
                 }
                 DoPay(state, 6);

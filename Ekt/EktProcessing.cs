@@ -83,14 +83,11 @@ namespace Oldi.Ekt
                     // TraceRequest("New");
 
                     // Проверка дневного лимита для нового плательщика если это не QIWI.
-                    if (!Gateway.Equals(qiwiGateway))
-                    {
-                        if (DayLimitExceeded(true)) 
-                            return;
-                        // Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
-                        if (FinancialCheck(New)) 
-                            return;
-                    }
+                    if (DayLimitExceeded(true)) 
+                        return;
+                    // Сумма болше лимита и прошло меньше времени задержки отложить обработку запроса
+                    if (FinancialCheck(New)) 
+                        return;
 				    DoPay(0, 3);
 				}
                 RootLog($"{Tid} [EktProcessing.NEW - start] {Provider} {Service}/{Gateway} {AmountAll.AsCF()} state={State}");
@@ -102,11 +99,10 @@ namespace Oldi.Ekt
                 if (State == 0)
                 {
                     // Проверка дневного лимита для нового плательщика если это не QIWI.
-                    if (!Gateway.Equals(qiwiGateway))
-                    {
-                        if (DayLimitExceeded(false)) return;
-                        if (FinancialCheck(false)) return;
-                    }
+                    if (DayLimitExceeded(false)) 
+                        return;
+                    if (FinancialCheck(false)) 
+                        return;
                 }
 				DoPay(state, 6);
                 RootLog($"{Tid} [EktProcessing.REDO - start] oldstate={oldstate} {Provider} {Service}/{Gateway} {AmountAll.AsCF()} state={State}");
