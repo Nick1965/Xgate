@@ -175,6 +175,7 @@ namespace OldiGW.Redo.Net
 			while (processes > 0)
 			{
 				Console.WriteLine("{1} Работающих процессов: {0}", processes, XConvert.AsDate2(DateTime.Now));
+                Log($"{XConvert.AsDate2(DateTime.Now)} Работающих процессов: {processes}");
 				// Ждем 1 секунду
 				Thread.Sleep(1000);
 			}
