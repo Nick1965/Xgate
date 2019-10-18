@@ -51,8 +51,7 @@ namespace Oldi.Net
 					switch (Request.Provider)
 						{
 						case "rt":
-						case "rtm":
-							Current = new RTRequest(Request);
+							Current = new RTClass16(Request);
 							break;
 						case "ekt":
 							Current = new GWEktRequest(Request);

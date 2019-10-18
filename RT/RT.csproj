@@ -68,7 +68,7 @@
     </Compile>
     <Compile Include="RTClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RTTestClass.cs" />
+    <Compile Include="RTClass16.cs" />
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>

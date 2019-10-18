@@ -14,7 +14,7 @@ using System.Data.Linq;
 
 namespace RT
 {
-	public partial class RTRequest : GWRequest
+	public partial class RTRequest09 : GWRequest
 	{
 		const int MaxStrings = 1500;
 
@@ -49,12 +49,12 @@ namespace RT
 			public string Comment;
 			}
 
-		public RTRequest()
+		public RTRequest09()
 			: base()
 		{
 		}
 
-		public RTRequest(GWRequest src)
+		public RTRequest09(GWRequest src)
 			: base(src)
 		{
 		}

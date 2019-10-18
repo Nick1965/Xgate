@@ -79,10 +79,7 @@ namespace Oldi.Net
                     switch (Request.Provider)
                     {
                         case "rt":
-                            Current = new RTRequest(Request);
-                            break;
-                        case "rt-test":
-                            Current = new RTTest(Request);
+                            Current = new RTClass16(Request);
                             break;
                         case "ekt":
                             Current = new GWEktRequest(Request);
@@ -142,7 +139,7 @@ namespace Oldi.Net
                                 // Прочитать из БД информацию о запросе
                                 // Request.ReportRequest("STATUS - начало");
                                 // step = "STAT - stop";
-                                if (Request.Provider == "rt" || Request.Provider == "rt-test")
+                                if (Request.Provider == "rt")
                                 {
                                     Current.GetPaymentStatus();
                                     Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
@@ -163,7 +160,7 @@ namespace Oldi.Net
                                 break;
 
                             case "getpaymentsstatus":
-                                Current = new RTRequest(Request);
+                                Current = new RTClass16(Request);
                                 Log(Messages.StatusRequest, Current.Tid);
                                 Current.GetPaymentStatus();
                                 Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
@@ -177,7 +174,7 @@ namespace Oldi.Net
                                 step = "UNDO - stop";
                                 // Добавим в Undo запрос в иноват
                                 // Добавим запрос в Ростелеком-Test
-                                if (Current.Provider == "rt" || Current.Provider == "rt-test" || Current.Provider == "school")
+                                if (Current.Provider == "rt" || Current.Provider == "school")
                                     Current.Undo();
                                 else
                                 {
@@ -306,7 +303,7 @@ namespace Oldi.Net
 
             try
             {
-                if (r.Provider != Settings.Rt.Name && r.Provider.ToLower() != "rt-test" && r.Provider != Settings.Rapida.Name && r.Gateway != "lyapko") // уже заполненнвй Answer
+                if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rapida.Name && r.Gateway != "lyapko") // уже заполненнвй Answer
 				{
 					if (r.State == 6 || r.State == 0 && r.Provider == "rapida")
 					{

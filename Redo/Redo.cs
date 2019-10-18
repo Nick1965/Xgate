@@ -283,7 +283,7 @@ namespace OldiGW.Redo.Net
                 else if (gw.Provider == "boriska")
                     gw = new ServerGate(gw);
                 else if (gw.Provider == Settings.Rt.Name)
-					gw = new RT.RTRequest(gw);
+					gw = new RT.RTClass16(gw);
                 else if (gw.Provider == Settings.Rapida.Name)
                     gw = new GWRapidaRequest(gw);
                 else if (gw.Provider == Settings.Xsolla.Name)

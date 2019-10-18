@@ -28,7 +28,7 @@ namespace RT
         public int payPurpose = 0;
     }
 
-    class JasonRequest
+    class JsonRequest
     {
         public string reqType;
         public string svcTypeId="0";
@@ -128,7 +128,7 @@ namespace RT
         public string agentAccount = "CASH_NCMSN";
     }
 
-    class JasonReponse
+    class JsonReponse
     {
         public int? reqStatus;
         public DateTime? reqTime;
@@ -161,7 +161,7 @@ namespace RT
     }
 
 
-    public partial class RTTest : GWRequest
+    public partial class RTClass16 : GWRequest
     {
         const int MaxStrings = 1500;
 
@@ -172,23 +172,24 @@ namespace RT
         string ReqNote = "";        // Сообщение об ошибке
         string SvcTypeID = "0";     // 0 или "" - федеральный номер телефона
 
+        int Attempt = 0;
         // int AgentId = 65423; // Id агента
         // string agentAccount = "CASH_CMSN"; // Счёт учёта поставщика услуг
 
-        JasonRequest jreq = new JasonRequest();
-        JasonReponse resp = new JasonReponse();
+        JsonRequest jreq = new JsonRequest();
+        JsonReponse resp = new JsonReponse();
 
         FindRequest freq = new FindRequest();
         PayRequest preq = new PayRequest();
         StatusRequest sreq = new StatusRequest();
         UndoRequest ureq = new UndoRequest();
 
-        public RTTest()
+        public RTClass16()
             : base()
         {
         }
 
-        public RTTest(GWRequest src)
+        public RTClass16(GWRequest src)
             : base(src)
         {
         }
@@ -258,7 +259,7 @@ namespace RT
         string FindFilial()
         {
             SvcTypeID = "0";
-            if (Service.ToLower() == "rt-test-acc")
+            if (Service.ToLower() == "rt-acc" && SvcTypeID == "0") // чтоб лишний раз не читать из БД
             {
                 // Выберем филиал из таблицы
 
@@ -268,13 +269,13 @@ namespace RT
                     {
                         Log($"[FindFilial] select svcTypeId from oldigw.oldigw.filial where Num={Filial.ToInt()}");
                         SvcTypeID = db.Query<string>($"select svcTypeId from oldigw.oldigw.filial where Num={Filial.ToInt()}").FirstOrDefault();
-                        RootLog($"Филилал={Filial} Найден код филиала={SvcTypeID}");
+                        Log($"Филилал={Filial} Найден код филиала={SvcTypeID}");
                     }
                 }
                 catch(SqlException se)
                 {
-                    Log($"{se.Message}, {se.LineNumber}");
-                    Log($"[FindFilial]: {filial}");
+                    RootLog($"{se.Message}, {se.LineNumber}");
+                    RootLog($"[FindFilial]: {filial}");
                     return "0";
                 }
 
@@ -387,7 +388,7 @@ namespace RT
                                 !string.IsNullOrEmpty(Number) ? Number : "";
 
             // Log("{0} Попытка отмены платежа", Tid);
-            Log("{0} [UNDO - начало] Num = {1} State = {2}", Tid, State != 255 ? State.ToString() : "<None>", x);
+            RootLog($"{Tid} [UNDO - начало] Num = {x} State = {State}");
 
             ureq.srcPayId = Tid.ToString();
             ureq.reqTime = XConvert.AsDateTZ(Pcdate, Settings.Tz);
@@ -406,7 +407,7 @@ namespace RT
                 {
                     errCode = 1;
                     state = 3;
-                    errDesc = String.Format("Платёж {0} отменяется: {1}", Tid, ReqNote);
+                    errDesc = String.Format($"Платёж {Tid} отменяется: {ReqNote}");
                 }
                 else
                 {
@@ -416,7 +417,7 @@ namespace RT
                         errCode = 6;
                     else
                         errCode = 1;
-                    errDesc = String.Format("Ошибка отмены платежа: {0}", ReqNote);
+                    errDesc = String.Format($"Ошибка отмены платежа: {ReqNote}");
                 }
 
                 // Log("{0} err={1} desc={2} st={3}", Tid, ErrCode, ErrDesc, State);
@@ -455,7 +456,7 @@ namespace RT
                 // Создать запрос Pay
                 else if (old_state == 1)
                 {
-                    if (Service.ToLower() == "rt-test-acc")
+                    if (Service.ToLower() == "rt-acc")
                     {
                         preq.svcTypeId = FindFilial();
                         preq.svcNum = Account;
@@ -649,7 +650,7 @@ namespace RT
 
 
             Log($"****CHECK: Req={RequestType} Ph={Phone} Acc{Account} Service={Service} Filial={Filial}");
-            if (Service.ToLower() == "rt-test-acc")
+            if (Service.ToLower() == "rt-acc")
             {
                 req.svcTypeId = FindFilial();
                 req.svcNum = Account;
@@ -681,7 +682,7 @@ namespace RT
             // Log(stRequest);
             // Создать запрос
             
-            if (Service.ToLower() == "rt-test-acc")
+            if (Service.ToLower() == "rt-acc")
             {
                 preq.svcTypeId = FindFilial();
                 preq.svcNum = Account;
@@ -739,7 +740,7 @@ namespace RT
         public override int ParseAnswer(string stResponse)
         {
 
-            resp = JsonConvert.DeserializeObject<JasonReponse>(stResponse);
+            resp = JsonConvert.DeserializeObject<JsonReponse>(stResponse);
 
             SetCurrentState();
 
@@ -875,7 +876,7 @@ namespace RT
                 UpdateState(Tid, state: State, locked: 1);
 
 
-            Log("[MakeAnser] Подготовлен ответ:\r\n{0}", stResponse);
+            Log($"[MakeAnser] Подготовлен ответ:\r\n{stResponse}");
         }
 
 
@@ -896,36 +897,36 @@ namespace RT
                 return true;
             }
 
-            /// <summary>
-            /// Добавление клиентского сертификата
-            /// </summary>
-            /// <param name="request"></param>
-            public int FindCertificate(HttpWebRequest request)
-            {
-                errCode = 0;
+        /// <summary>
+        /// Добавление клиентского сертификата
+        /// </summary>
+        /// <param name="request"></param>
+        public int FindCertificate(HttpWebRequest request)
+        {
+            errCode = 0;
 
-                // Добавление сертификата
-                if (!string.IsNullOrEmpty(commonName))
+            // Добавление сертификата
+            if (!string.IsNullOrEmpty(commonName))
+            {
+                using (Crypto cert = new Crypto(CommonName))
                 {
-                    using (Crypto cert = new Crypto(CommonName))
-                    {
-                        if (cert != null)
-                            if (cert.HasPrivateKey)
-                                request.ClientCertificates.Add(cert.Certificate);
-                            else
-                            {
-                                errDesc = Properties.Resources.MsgCHNPK;
-                                errCode = -1;
-                            }
+                    if (cert != null)
+                        if (cert.HasPrivateKey)
+                            request.ClientCertificates.Add(cert.Certificate);
                         else
                         {
-                            errDesc = $"{Properties.Resources.MsgCNF} {CommonName}";
+                            errDesc = Properties.Resources.MsgCHNPK;
                             errCode = -1;
                         }
+                    else
+                    {
+                        errDesc = $"{Properties.Resources.MsgCNF} {CommonName}";
+                        errCode = -1;
                     }
                 }
+            }
 
-                return errCode;
+            return errCode;
 
             }
 
@@ -937,95 +938,106 @@ namespace RT
         /// <returns></returns>
         public int PostJson(string Host, string json)
             {
-                HttpWebRequest request = null;
-                HttpWebResponse response = null;
-                // StreamReader reader = null;
-                byte[] buf;
-                Encoding enc = Encoding.UTF8;
+            HttpWebRequest request = null;
+            HttpWebResponse response = null;
+            // StreamReader reader = null;
+            byte[] buf;
+            Encoding enc = Encoding.UTF8;
 
-                try
+            try
+            {
+
+            // Использем только протоколы семейства TLS
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
+            ServicePointManager.CheckCertificateRevocationList = true;
+            ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(ValidateRemote);
+            ServicePointManager.DefaultConnectionLimit = 10;
+
+            request = (HttpWebRequest)WebRequest.Create(Host);
+            request.ProtocolVersion = HttpVersion.Version11;
+            request.Credentials = CredentialCache.DefaultCredentials;
+            request.KeepAlive = true;
+            request.Timeout = 120 * 1000;
+            request.Method = "POST";
+            request.Headers.Set("Accept-Encoding", "identity");
+            request.AllowAutoRedirect = false;
+            request.UserAgent = Settings.Title;
+
+            request.ContentType = "application/json; charset=UTF-8";
+            request.Accept = "application/json";
+            request.Headers.Add("Accept-Charset", "UTF-8");
+
+            // Добавление сертификата
+            if (AddCertificate(request) != 0)
+            return errCode;
+
+            // ServicePoint sp = request.ServicePoint;
+            // Всё устанавливаем по-умолчанию
+            // sp.ConnectionLeaseTimeout = 900000; //Timeout.Infinite; // 15 мин максимум держится соединение
+            // sp.MaxIdleTime = Timeout.Infinite;
+
+
+            request.UserAgent = Settings.ClientName;
+
+            if (request.Method == WebRequestMethods.Http.Post)
                 {
-
-                // Использем только протоколы семейства TLS
-                /*
-                Надеюсь, что уже хватит устанавливать это значение
-
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
-                    ServicePointManager.CheckCertificateRevocationList = true;
-                    ServicePointManager.ServerCertificateValidationCallback += new RemoteCertificateValidationCallback(ValidateRemote);
-                    ServicePointManager.DefaultConnectionLimit = 10;
-                */
-
-                    request = (HttpWebRequest)WebRequest.Create(Host);
-                    request.ProtocolVersion = HttpVersion.Version11;
-                    request.Credentials = CredentialCache.DefaultCredentials;
-                    request.KeepAlive = true;
-                    request.Timeout = 120 * 1000;
-                    request.Method = "POST";
-                    request.Headers.Set("Accept-Encoding", "identity");
-                    request.AllowAutoRedirect = false;
-                    request.UserAgent = Settings.Title;
-
-                    request.ContentType = "application/json; charset=UTF-8";
-                    request.Accept = "application/json";
-                    request.Headers.Add("Accept-Charset", "UTF-8");
-
-                    // Добавление сертификата
-                    if (AddCertificate(request) != 0)
-                        return errCode;
-
-                    // ServicePoint sp = request.ServicePoint;
-                    // Всё устанавливаем по-умолчанию
-                    // sp.ConnectionLeaseTimeout = 900000; //Timeout.Infinite; // 15 мин максимум держится соединение
-                    // sp.MaxIdleTime = Timeout.Infinite;
-
-
-                    request.UserAgent = Settings.ClientName;
-
-                    if (request.Method == WebRequestMethods.Http.Post)
-                    {
-                    buf = enc.GetBytes(json);
-                    request.ContentLength = buf.Length;
-                    using (Stream requestStream = request.GetRequestStream())
-                        requestStream.Write(buf, 0, buf.Length);
-                    }
-
-                    // Получим дескриптор ответа
-                    using (response = (HttpWebResponse)request.GetResponse())
-                        if (request.HaveResponse)
-                        {
-                        // Перехватим поток от сервера
-                        using (Stream dataStream = response.GetResponseStream())
-                        using (StreamReader reader = new StreamReader(dataStream, enc))
-                            stResponse = reader.ReadToEnd();
-                        Log($"[PostJason]: Response\r\n{stResponse}");
-                        return 0;
-                        }
-                        else
-                        {
-                        return (int)response.StatusCode;
-                        }
+                buf = enc.GetBytes(json);
+                request.ContentLength = buf.Length;
+                using (Stream requestStream = request.GetRequestStream())
+                requestStream.Write(buf, 0, buf.Length);
                 }
-                catch (WebException we)
+
+            // Получим дескриптор ответа
+            using (response = (HttpWebResponse)request.GetResponse())
+            if (request.HaveResponse)
+                {
+                // Перехватим поток от сервера
+                using (Stream dataStream = response.GetResponseStream())
+                using (StreamReader reader = new StreamReader(dataStream, enc))
+                stResponse = reader.ReadToEnd();
+                Log($"[PostJson]: Получен ответ\r\n{stResponse}");
+                return 0;
+                }
+            else
+                {
+                return (int)response.StatusCode;
+                }
+            }
+            catch (WebException we)
                 {
                 /*
                 if (we.Status == WebExceptionStatus.Timeout)
                 {
-                    Log("PostJson: Wait 60 sec");
-                    Wait(60);
-                    return PostJson(Host, json);
+                Log("PostJson: Wait 60 sec");
+                Wait(60);
+                return PostJson(Host, json);
                 }
                 */
-                errCode = (int)we.Status;
-                errDesc = we.Message;
-                Log($"PostJson: {we.Status} {we.ToString()}");
+                if (we.Status == WebExceptionStatus.SecureChannelFailure)
+                {
+                    if (Attempt < 3)
+                    {
+                        Attempt++;
+                        Log("{Tid} - {Attempt} / 3 Повтор после ошибки SSL", Tid, Attempt);
+                        return PostJson(Host, json);
+                    }
+                    errCode = (int)we.Status;
+                    errDesc = we.Message;
                 }
-                catch (Exception ex)
+                else
+                {
+                    errCode = (int)we.Status;
+                    errDesc = we.Message;
+                }
+                RootLog($"PostJson: {we.Status} {we.ToString()}");
+            }
+            catch (Exception ex)
                 {
                 errCode = -1;
                 errDesc = ex.Message;
-                Log($"PostJson: {ex.ToString()}");
-            }
+                RootLog($"PostJson: {ex.ToString()}");
+                }
             finally
             {
                 // ServicePointManager.ServerCertificateValidationCallback -= new RemoteCertificateValidationCallback(ValidateRemote);
