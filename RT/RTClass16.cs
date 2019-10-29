@@ -92,8 +92,8 @@ namespace RT
         public int? payAmount;
         public int payPurpose = 0;
         public string payComment;
-        public string agentId = "65423";
-        public string agentAccount = "CASH_NCMSN";
+        public string agentId = Settings.Rt.AgentId; // "65423";
+        public string agentAccount = Settings.Rt.AgentAccount; // "CASH_NCMSN";
         public string reqTime;
         public string payerContact;
         public int registerCheck = 1;
@@ -103,7 +103,7 @@ namespace RT
     {
         public string reqType = "getPaymentStatus";
         public string srcPayId;
-        public string agentId = "65423";
+        public string agentId = Settings.Rt.AgentId; // "65423";
     }
 
     class UndoRequest
@@ -111,7 +111,7 @@ namespace RT
         public string reqType = "abandonPayment";
         public string srcPayId;
         public string reqTime;
-        public string agentId = "65423";
+        public string agentId = Settings.Rt.AgentId; //"65423";
     }
 
     class CheckRequest
@@ -123,9 +123,9 @@ namespace RT
         public string payCurrId = "RUB";
         public int? payAmount = 100;
         public int payPurpose = 0;
-        public string payComment = "test";
-        public string agentId = "65423";
-        public string agentAccount = "CASH_NCMSN";
+        public string payComment = $"Check params";
+        public string agentId = Settings.Rt.AgentId; // "65423";
+        public string agentAccount = Settings.Rt.AgentAccount; // "CASH_NCMSN";
     }
 
     class JsonReponse
@@ -203,8 +203,9 @@ namespace RT
             base.InitializeComponents();
             CodePage = "utf-8";
 
-            commonName = Settings.RtTest.CN;
-            host = Settings.RtTest.Host;
+            commonName = Settings.Rt.CN;
+            host = Settings.Rt.Host;
+
 
             if (string.IsNullOrEmpty(Phone))
             {
@@ -649,7 +650,7 @@ namespace RT
             CheckRequest req = new CheckRequest();
 
 
-            Log($"****CHECK: Req={RequestType} Ph={Phone} Acc{Account} Service={Service} Filial={Filial}");
+            Log($"[CHECK] Req={RequestType} Ph={Phone} Acc{Account} Service={Service} Filial={Filial}");
             if (Service.ToLower() == "rt-acc")
             {
                 req.svcTypeId = FindFilial();
@@ -670,7 +671,7 @@ namespace RT
             }
             errCode = 6;
             state = 12;
-            errDesc = "Bad params";
+            errDesc = $"[CHECK] Bad params for: Req={RequestType} Ph={Phone} Acc{Account} Service={Service} Filial={Filial}");
 
             MakeAnswer();
             
