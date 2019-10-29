@@ -209,7 +209,9 @@ namespace Oldi.Utility
 			public static string Log { get { return Config.Providers["rt"]["log"]; } }
 			public static string CN { get { return Config.Providers["rt"]["cn"]; } }
 			public static string Hash { get { return Config.Providers["rt"]["hash"]; } }
-		}
+            public static string agentId { get { return Config.Providers["rt"]["agentId"]; } }
+            public static string agentAccount { get { return Config.Providers["rt"]["agentAccount"]; } }
+        }
 
         #region Rtm
         /// <summary>
@@ -591,12 +593,14 @@ namespace Oldi.Utility
 			public static string LogFile { get { return logPath + ProvidersSettings.Rt.Log; } }
 			public static string CN { get { return ProvidersSettings.Rt.CN; } }
 			public static string Hash { get { return ProvidersSettings.Rt.Hash.Replace(" ", ""); } }
-		}
+            public static string AgentId { get { return ProvidersSettings.Rt.agentId; } }
+            public static string AgentAccount { get { return ProvidersSettings.Rt.agentAccount; } }
+        }
 
-		/// <summary>
-		/// Rt-mobile
-		/// </summary>
-		public static class RtTest {
+        /// <summary>
+        /// Rt-mobile
+        /// </summary>
+        public static class RtTest {
             public static string Name { get { return ProvidersSettings.RtTest.Name; } }
 			public static string Host { get { return ProvidersSettings.RtTest.Host; } }
 			public static string LogFile { get { return logPath + ProvidersSettings.RtTest.Log; } }
