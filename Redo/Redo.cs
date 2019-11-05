@@ -82,6 +82,7 @@ namespace OldiGW.Redo.Net
 			Log($"Установлено: количество потоков допроведения = {WorkerThreads} количество птоков ввода/вывода = {CompletionPortThreads}");
 			
 			RedoDict = new ConcurrentDictionary<long, DateTime>();
+
         }
 
         /// <summary>
@@ -143,8 +144,9 @@ namespace OldiGW.Redo.Net
 		{
 
 			TaskState stateInfo = (TaskState)state;
-	
-			Log(Properties.Resources.MsgRedoRunning);
+            // ManualResetEvent[] manualEvents = new ManualResetEvent[64];
+
+            Log(Properties.Resources.MsgRedoRunning);
 			Console.WriteLine(Properties.Resources.MsgRedoRunning);
 
 			// Читать отложенные платежи
@@ -153,7 +155,9 @@ namespace OldiGW.Redo.Net
 			{
 				try
 				{
-					DoRedo();
+                    // Добавляем событие отмены в
+                    // manualEvents[1] = new ManualResetEvent(false);
+                    DoRedo();
 				}
 				catch (Exception ex)
 				{

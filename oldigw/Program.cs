@@ -204,8 +204,10 @@ namespace Oldi.Net
 			Log("{0} останавливается...", Settings.Title);
 
             // Остановка процессов допроведения
+            /* Пока отложим надо разбираться
             if (!noredo)
-				WaitHandle.WaitAll(CancelTaskEvents);
+				WaitHandle.WaitAll(CancelTaskEvents, new TimeSpan(0, 0, 5), false);
+            */
             
 			// Остановка службы
 			// Console.WriteLine("Служба {0} остановлена", Settings.Title);

@@ -671,7 +671,7 @@ namespace RT
             }
             errCode = 6;
             state = 12;
-            errDesc = $"[CHECK] Bad params for: Req={RequestType} Ph={Phone} Acc{Account} Service={Service} Filial={Filial}");
+            errDesc = $"[CHECK] Bad params for: Req={RequestType} Ph={Phone} Acc{Account} Service={Service} Filial={Filial}";
 
             MakeAnswer();
             
