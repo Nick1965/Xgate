@@ -305,27 +305,20 @@ namespace Oldi.Net
             {
                 if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rapida.Name && r.Gateway != "lyapko") // уже заполненнвй Answer
 				{
-					if (r.State == 6 || r.State == 0 && r.Provider == "rapida")
+					if (r.State == 6 || r.State == 0 /* && r.Provider == "rapida" */)
 					{
-						// stResponse = string.Format(Properties.Settings.Default.Response, 3, gw.ErrDesc, gw.Outtid, gw.Acceptdate, gw.AcceptCode, gw.Account, gw.AddInfo);
-						int pos = 0;
-						string addInfo = r.AddInfo ?? "";
-						if (r.Provider == Settings.Mts.Name)
+					    // stResponse = string.Format(Properties.Settings.Default.Response, 3, gw.ErrDesc, gw.Outtid, gw.Acceptdate, gw.AcceptCode, gw.Account, gw.AddInfo);
+					    int pos = 0;
+					    string addInfo = r.AddInfo ?? "";
+						if (addInfo.Length > 250)
 						{
-							// addInfo = string.Format("{0} {1} {2} Limmit={3}", r.Fio, r.Opname, r.Opcode, XConvert.AsAmount(r.Limit));
-							addInfo = string.Format("{0} {1} {2}", r.Fio, r.Opname, r.Opcode);
-						}
-						else
-						{
+							pos = addInfo.IndexOf(";");
+							if (pos > 0)
+								addInfo = addInfo.Substring(pos + 2);
 							if (addInfo.Length > 250)
-							{
-								pos = addInfo.IndexOf(";");
-								if (pos > 0)
-									addInfo = addInfo.Substring(pos + 2);
-								if (addInfo.Length > 250)
-									addInfo = addInfo.Substring(0, 250);
-							}
+								addInfo = addInfo.Substring(0, 250);
 						}
+
 						stResponse = string.Format(Properties.Settings.Default.Response, 3, errDesc,
 							r.Outtid, r.Acceptdate, r.AcceptCode, r.Account, addInfo, XConvert.AsAmount(r.Price));
 						// errDesc = r.ErrDesc;

@@ -10,7 +10,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
+// using System.Net.Http;
 using System.Net.Security;
 using System.Resources;
 using System.Security.Cryptography.X509Certificates;
@@ -166,8 +166,8 @@ namespace RT
         const int MaxStrings = 1500;
 
         int? ReqStatus = null;      // Статус операции: началась, выполняется, выполнена...
-        int? PayStatus = null;      // Статус платежа: зачислен, отклонён, отмененён...
-        int? DupFlag = null;        // Флаг повторного проведения платежа
+        // int? PayStatus = null;      // Статус платежа: зачислен, отклонён, отмененён...
+        // int? DupFlag = null;        // Флаг повторного проведения платежа
         DateTime? ReqTime = null;   // Время запроса
         string ReqNote = "";        // Сообщение об ошибке
         string SvcTypeID = "0";     // 0 или "" - федеральный номер телефона

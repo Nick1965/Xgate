@@ -46,3 +46,14 @@ D:\Projects\XGate\Utility\obj\Debug\Utility.csproj.CopyComplete
 D:\Projects\XGate\Utility\obj\Debug\Utility.dll
 D:\Projects\XGate\Utility\obj\Debug\Utility.pdb
 D:\Projects\XGate\Utility\obj\Debug\Utility.csprojAssemblyReference.cache
+C:\Users\shareuser\source\repos\XGate\Utility\bin\Debug\Utility.dll
+C:\Users\shareuser\source\repos\XGate\Utility\bin\Debug\Utility.pdb
+C:\Users\shareuser\source\repos\XGate\Utility\bin\Debug\SMPP.dll
+C:\Users\shareuser\source\repos\XGate\Utility\bin\Debug\SMPP.pdb
+C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.csproj.AssemblyReference.cache
+C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Oldi.Utility.Properties.Resources.resources
+C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.csproj.GenerateResource.cache
+C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.csproj.CoreCompileInputs.cache
+C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.csproj.CopyComplete
+C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.dll
+C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.pdb
