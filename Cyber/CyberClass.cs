@@ -463,7 +463,7 @@ namespace Oldi.Net.Cyber
 
 					// Дополнительная информация о ПУ
 					if (string.IsNullOrEmpty(addinfo))
-						addinfo = GetValue("ADDINFO").Replace("<", "&lt;").Replace(">", "&gt;");
+						addinfo = HttpUtility.UrlEncode(GetValue("ADDINFO")); // Кодиррует строку Url
 
 					// Номер счета у ПУ
 					if (string.IsNullOrEmpty(account)) 
