@@ -50,7 +50,6 @@ C:\Users\shareuser\source\repos\XGate\Utility\bin\Debug\Utility.dll
 C:\Users\shareuser\source\repos\XGate\Utility\bin\Debug\Utility.pdb
 C:\Users\shareuser\source\repos\XGate\Utility\bin\Debug\SMPP.dll
 C:\Users\shareuser\source\repos\XGate\Utility\bin\Debug\SMPP.pdb
-C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.csproj.AssemblyReference.cache
 C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Oldi.Utility.Properties.Resources.resources
 C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.csproj.GenerateResource.cache
 C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.csproj.CoreCompileInputs.cache
