@@ -56,3 +56,4 @@ C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.csproj.CoreCompi
 C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.csproj.CopyComplete
 C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.dll
 C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.pdb
+C:\Users\shareuser\source\repos\XGate\Utility\obj\Debug\Utility.csproj.AssemblyReference.cache

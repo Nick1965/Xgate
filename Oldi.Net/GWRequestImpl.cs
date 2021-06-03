@@ -19,6 +19,7 @@ using System.IO.Compression;
 using System.Collections.Specialized;
 using System.Data.Linq;
 using System.Xml.XPath;
+using System.Web;
 
 namespace Oldi.Net
 {
@@ -953,6 +954,7 @@ namespace Oldi.Net
 				dp.Read("Outtid", out outtid);
 				dp.Read("Acceptdate", out acceptdate);
 				dp.Read("Addinfo", out addinfo);
+				addinfo = addinfo?.Replace("<", "&lt:")?.Replace(">", "&gt;"); // экранирование html-тэгов
 				dp.Read("Filial", out filial);
 				dp.Read("Opname", out opname);
 				dp.Read("Opcode", out opcode);
@@ -1033,6 +1035,7 @@ namespace Oldi.Net
 						p.Read("Account", out account);
 						p.Read("fio", out fio);
 						p.Read("addinfo", out addinfo);
+						addinfo = addinfo?.Replace("<", "&lt:")?.Replace(">", "&gt;"); // экранирование html-тэгов
 						p.Read("Outtid", out outtid);
 						p.Read("Acceptdate", out acceptdate);
 						p.Read("Acceptcode", out acceptCode);
@@ -1306,7 +1309,6 @@ namespace Oldi.Net
             string answer = Get(ep, $"from={From}&phone=7{Phone}&message={Message}");
             RootLog($"ErrCode={XPath.GetString(answer, "/Response/errCode")} ID={XPath.GetString(answer, "/Response/messageId")}");
             return XPath.GetInt(answer, "/Response/errCode") == 0 ? true : false;
-
 			}
 
 

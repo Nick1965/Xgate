@@ -82,4 +82,3 @@ C:\Users\shareuser\source\repos\XGate\Cyber\obj\Debug\Cyber.csproj.CoreCompileIn
 C:\Users\shareuser\source\repos\XGate\Cyber\obj\Debug\Cyber.csproj.CopyComplete
 C:\Users\shareuser\source\repos\XGate\Cyber\obj\Debug\Cyber.dll
 C:\Users\shareuser\source\repos\XGate\Cyber\obj\Debug\Cyber.pdb
-C:\Users\shareuser\source\repos\XGate\Cyber\obj\Debug\Cyber.csproj.AssemblyReference.cache

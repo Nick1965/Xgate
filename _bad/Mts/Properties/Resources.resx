@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Error103" xml:space="preserve">
+    <value>"Домашняя" БС абонента на профилактике или недоступна. Для данного договора запрещено принимать платежи на основании данных ЦМ о номерной емкости</value>
+  </data>
+  <data name="Error106" xml:space="preserve">
+    <value>ЦМ не доступен</value>
+  </data>
+  <data name="Error200" xml:space="preserve">
+    <value>Прием платежа невозможен. Прием платежа запрещен (без детализации причины)</value>
+  </data>
+  <data name="Error2001" xml:space="preserve">
+    <value>Платеж не найден</value>
+  </data>
+  <data name="Error2002" xml:space="preserve">
+    <value>Платеж не удовлетворяет условиям отмены/возврата</value>
+  </data>
+  <data name="Error2003" xml:space="preserve">
+    <value>Техническая ошибка</value>
+  </data>
+  <data name="Error2004" xml:space="preserve">
+    <value>На данную запись уже был сформирован запрос</value>
+  </data>
+  <data name="Error2005" xml:space="preserve">
+    <value>Отказ без детализации</value>
+  </data>
+  <data name="Error201" xml:space="preserve">
+    <value>Номер телефона в БС не найден. Прием платежа запрещен (невозможен)</value>
+  </data>
+  <data name="Error20140" xml:space="preserve">
+    <value>Представитель может получить отказ с кодом ошибки 20140 «Телефон не принадлежит тестовой номерной емкости» в том случае, если он при прохождении тестов в ходе сертификации ВПС [9] отправит платеж на телефон, номер которого не соответствует указанному в сценарии теста</value>
+  </data>
+  <data name="Error202" xml:space="preserve">
+    <value>Приложение обслуживания не найдено. Прием платежа запрещен (невозможен)</value>
+  </data>
+  <data name="Error203" xml:space="preserve">
+    <value>Счет неактивен. Прием платежа запрещен (невозможен)</value>
+  </data>
+  <data name="Error204" xml:space="preserve">
+    <value>VIP счет. Прием платежа запрещен (невозможен)</value>
+  </data>
+  <data name="Error205" xml:space="preserve">
+    <value>Описание клиента не найдено. Прием платежа запрещен (невозможен)</value>
+  </data>
+  <data name="Error206" xml:space="preserve">
+    <value>Запрашиваемый номер л/с не найден</value>
+  </data>
+  <data name="Error207" xml:space="preserve">
+    <value>Абонент является юридическим лицом. Прием платежей через СПП недопустим</value>
+  </data>
+  <data name="Error210" xml:space="preserve">
+    <value>Параметры платежа не соответствуют запросу разрешения на его прием</value>
+  </data>
+  <data name="Error299" xml:space="preserve">
+    <value>Прочие ошибки. Прием платежа запрещен (невозможен)</value>
+  </data>
+  <data name="Error300" xml:space="preserve">
+    <value>Прием платежа запрещен по административным причинам (без детализации причин)</value>
+  </data>
+  <data name="Error301" xml:space="preserve">
+    <value>Текущий лимит недостаточен для приема платежа. Прием платежа запрещен</value>
+  </data>
+  <data name="Error350" xml:space="preserve">
+    <value>Не определен ПЦ Представителя (код отправителя) платежа</value>
+  </data>
+  <data name="Error351" xml:space="preserve">
+    <value>Не найден договор между Представителем  и Участником</value>
+  </data>
+  <data name="Error352" xml:space="preserve">
+    <value>Договор между Представителем и Участником не активен</value>
+  </data>
+  <data name="Error353" xml:space="preserve">
+    <value>Сервис отключен</value>
+  </data>
+  <data name="Error354" xml:space="preserve">
+    <value>Терминал не зарегистрирован</value>
+  </data>
+  <data name="Error357" xml:space="preserve">
+    <value>Платеж уже существует</value>
+  </data>
+  <data name="Error358" xml:space="preserve">
+    <value>Нет запроса на прием платежа</value>
+  </data>
+  <data name="Error359" xml:space="preserve">
+    <value>Нет разрешения приема платежа</value>
+  </data>
+  <data name="Error360" xml:space="preserve">
+    <value>Запрещенный интерфейс приема платежей</value>
+  </data>
+  <data name="Error361" xml:space="preserve">
+    <value>Период сверки закрыт</value>
+  </data>
+  <data name="Error362" xml:space="preserve">
+    <value>Дата операции будущая</value>
+  </data>
+  <data name="Error363" xml:space="preserve">
+    <value>Запрещен прием платежей с будущей датой операции вне допустимого диапазона</value>
+  </data>
+  <data name="Error366" xml:space="preserve">
+    <value>Прием платежей на терминал запрещен</value>
+  </data>
+  <data name="Error398" xml:space="preserve">
+    <value>Истекло время акцептования документа</value>
+  </data>
+  <data name="Error399" xml:space="preserve">
+    <value>БС. Для данной комбинации условий [банк, платежный инструмент, код типа терминала] прием платежа административно запрещен</value>
+  </data>
+  <data name="Error400" xml:space="preserve">
+    <value>Не определены необходимые данные</value>
+  </data>
+  <data name="Error501" xml:space="preserve">
+    <value>Превышена пропускная способность</value>
+  </data>
+  <data name="Error502" xml:space="preserve">
+    <value>Истекло время обработки</value>
+  </data>
+  <data name="Error64" xml:space="preserve">
+    <value>БС. Техническая ошибка Oracle</value>
+  </data>
+  <data name="Error65" xml:space="preserve">
+    <value>ПЦ ЕСПП. Техническая ошибка Oracle</value>
+  </data>
+  <data name="Error650" xml:space="preserve">
+    <value>Не определено состояние платежа </value>
+  </data>
+  <data name="Error651" xml:space="preserve">
+    <value>Платеж в требуемом состоянии не найден</value>
+  </data>
+  <data name="Error66" xml:space="preserve">
+    <value>ПЦ ЕСПП. Техническая ошибка сервера приложений</value>
+  </data>
+  <data name="Error71" xml:space="preserve">
+    <value>Номер телефона содержит нечисловые символы</value>
+  </data>
+  <data name="Error801" xml:space="preserve">
+    <value>Неизвестный формат реестра</value>
+  </data>
+  <data name="Error802" xml:space="preserve">
+    <value>Неизвестный алгоритм архивации реестра</value>
+  </data>
+  <data name="Error803" xml:space="preserve">
+    <value>Входной контроль файла сверки. Расшифровка в описании ошибки</value>
+  </data>
+  <data name="Error804" xml:space="preserve">
+    <value>Идентификатор реестра для проведения сверки не найден</value>
+  </data>
+  <data name="Error805" xml:space="preserve">
+    <value>По данному реестру сверка не завершена</value>
+  </data>
+  <data name="Error806" xml:space="preserve">
+    <value>Техническая ошибка</value>
+  </data>
+  <data name="Error807" xml:space="preserve">
+    <value>За данный период выполняется сверка до другому реестру. Сверка не завершена</value>
+  </data>
+  <data name="Error999" xml:space="preserve">
+    <value>Невозможно принять решение о приеме платежей в пакетном режиме</value>
+  </data>
+  <data name="MsgCLT" xml:space="preserve">
+    <value>Невозможно загрузить шаблон</value>
+  </data>
+  <data name="MsgRedoRunning" xml:space="preserve">
+    <value>MTS: Запущен процесс обработки реестров.</value>
+  </data>
+</root>

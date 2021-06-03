@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="1bd02c54-5fe0-48ce-bf7b-0c47d3bf9e42" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>true</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://apitest:1100/sms/mex" Protocol="mex" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="service.wsdl" MetadataType="Wsdl" ID="40123d47-5d5d-4ab5-b859-4517c0959764" SourceId="1" SourceUrl="http://apitest:1100/sms/mex" />
+    <MetadataFile FileName="service.xsd" MetadataType="Schema" ID="3d7a0fb0-c5fb-4ad8-9751-71268fc23687" SourceId="1" SourceUrl="http://apitest:1100/sms/mex" />
+    <MetadataFile FileName="service1.xsd" MetadataType="Schema" ID="26e9e3bd-f303-4c71-ac15-a5b07cd60a03" SourceId="1" SourceUrl="http://apitest:1100/sms/mex" />
+    <MetadataFile FileName="XSMPP.xsd" MetadataType="Schema" ID="98beeac2-a451-4e54-843c-0e53ab1cdba8" SourceId="1" SourceUrl="http://apitest:1100/sms/mex" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

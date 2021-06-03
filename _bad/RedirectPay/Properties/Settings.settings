@@ -1,0 +1,24 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="RedirectPay.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LogFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\redirect.log</Value>
+    </Setting>
+    <Setting Name="RedoLogFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Redo.log</Value>
+    </Setting>
+    <Setting Name="ConnectorLogFile" Type="System.String" Scope="User">
+      <Value Profile="(Default)">.\Connector.log</Value>
+    </Setting>
+    <Setting Name="GorodConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=ODBS1; Initial Catalog=Gorod;User ID=sa; Password=4;</Value>
+    </Setting>
+    <Setting Name="SimpleHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)">http://192.168.1.1:100/server-redo.mdl/</Value>
+    </Setting>
+    <Setting Name="Endpoint" Type="System.String" Scope="User">
+      <Value Profile="(Default)">pay.xml</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

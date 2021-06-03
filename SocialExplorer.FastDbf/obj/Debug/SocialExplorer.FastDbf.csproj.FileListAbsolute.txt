@@ -23,7 +23,7 @@ D:\Projects\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.pdb
 D:\Projects\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.csprojAssemblyReference.cache
 C:\Users\shareuser\source\repos\XGate\SocialExplorer.FastDbf\bin\Debug\SocialExplorer.FastDbf.dll
 C:\Users\shareuser\source\repos\XGate\SocialExplorer.FastDbf\bin\Debug\SocialExplorer.FastDbf.pdb
-C:\Users\shareuser\source\repos\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.csproj.AssemblyReference.cache
 C:\Users\shareuser\source\repos\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.csproj.CoreCompileInputs.cache
 C:\Users\shareuser\source\repos\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.dll
 C:\Users\shareuser\source\repos\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.pdb
+C:\Users\shareuser\source\repos\XGate\SocialExplorer.FastDbf\obj\Debug\SocialExplorer.FastDbf.csproj.AssemblyReference.cache

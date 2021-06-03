@@ -1,0 +1,467 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CacheEntryNotFound" xml:space="preserve">
+    <value>Указанная запись не была найдена в кэше.</value>
+  </data>
+  <data name="ConnectFailure" xml:space="preserve">
+    <value>С точкой удаленной службы нельзя связаться на транспортном уровне.</value>
+  </data>
+  <data name="ConnectionClosed" xml:space="preserve">
+    <value>Подключение было преждевременно закрыто.</value>
+  </data>
+  <data name="KeepAliveFailure" xml:space="preserve">
+    <value>Неожиданно закрыто подключение для запроса, задающего заголовок Keep-alive.</value>
+  </data>
+  <data name="MessageLengthLimitExceeded" xml:space="preserve">
+    <value>Принято сообщение о превышении заданного ограничения при передаче запроса или приеме ответа сервера.</value>
+  </data>
+  <data name="MsgCHNPK" xml:space="preserve">
+    <value>Сертификат не содержит закрытого ключа</value>
+    <comment>Cert has no private key</comment>
+  </data>
+  <data name="MsgCLT" xml:space="preserve">
+    <value>Невозможно загрузить шаблон</value>
+    <comment>Cannot load template</comment>
+  </data>
+  <data name="MsgCNF" xml:space="preserve">
+    <value>Сертификат не найден</value>
+    <comment>Cert not found</comment>
+  </data>
+  <data name="MsgEmptyAnswer" xml:space="preserve">
+    <value>Не получен или получен пустой ответ от провайдера</value>
+  </data>
+  <data name="MsgER" xml:space="preserve">
+    <value>Пустой запрос</value>
+    <comment>Empty request</comment>
+  </data>
+  <data name="MsgMRE" xml:space="preserve">
+    <value>Ошибка создания запрпоса</value>
+    <comment>Make Request Error</comment>
+  </data>
+  <data name="MsgNR" xml:space="preserve">
+    <value>Обработка [{0}] не реализована</value>
+  </data>
+  <data name="MsgSNA" xml:space="preserve">
+    <value>Сервер приложений не доступен</value>
+  </data>
+  <data name="MsgSUCS" xml:space="preserve">
+    <value>Запрос успешно обработан</value>
+  </data>
+  <data name="MsgUP" xml:space="preserve">
+    <value>Нераспознанный параметр</value>
+  </data>
+  <data name="MsgURP" xml:space="preserve">
+    <value>Неизвестный провайдер "{0}"</value>
+  </data>
+  <data name="MsgURT" xml:space="preserve">
+    <value>Неизвестный тип запроса "{0}"</value>
+  </data>
+  <data name="MsgVerify" xml:space="preserve">
+    <value>Ошибка проверки ЭЦП провайдера</value>
+  </data>
+  <data name="MsgWPV" xml:space="preserve">
+    <value>Неверное значение параметра</value>
+  </data>
+  <data name="NameResolutionFailure" xml:space="preserve">
+    <value>Служба разрешения имен не может разрешить имя узла.</value>
+  </data>
+  <data name="Pending" xml:space="preserve">
+    <value>Внутренний асинхронный запрос находится в очереди.</value>
+  </data>
+  <data name="PipelineFailure" xml:space="preserve">
+    <value>Запрос являлся конвейерным запросом, и подключение было закрыто до получения запроса.</value>
+  </data>
+  <data name="ProtocolError" xml:space="preserve">
+    <value>Ответ, принятый от сервера, был завершен, но указал на ошибку на уровне протокола.</value>
+  </data>
+  <data name="ProxyNameResolutionFailure" xml:space="preserve">
+    <value>Служба разрешения имен не может распознать имя узла прокси-сервера.</value>
+  </data>
+  <data name="ReceiveFailure" xml:space="preserve">
+    <value>От удаленного сервера не был получен полный ответ.</value>
+  </data>
+  <data name="RequestCanceled" xml:space="preserve">
+    <value>Запрос был отменен, был вызван метод WebRequest.Abort или возникла ошибка, не поддающаяся классификации.</value>
+  </data>
+  <data name="RequestProhibitedByCachePolicy" xml:space="preserve">
+    <value>Этот запрос не разрешен политикой кэширования</value>
+  </data>
+  <data name="RequestProhibitedByProxy" xml:space="preserve">
+    <value>Этот запрос не разрешен прокси-сервером.</value>
+  </data>
+  <data name="SecureChannelFailure" xml:space="preserve">
+    <value>При установлении подключения с использованием SSL произошла ошибка.</value>
+  </data>
+  <data name="SendFailure" xml:space="preserve">
+    <value>Полный запрос не был передан на удаленный сервер.</value>
+  </data>
+  <data name="ServerProtocolViolation" xml:space="preserve">
+    <value>Ответ сервера не являлся допустимым ответом HTTP.</value>
+  </data>
+  <data name="Success" xml:space="preserve">
+    <value>Ошибок не было.</value>
+  </data>
+  <data name="Timeout" xml:space="preserve">
+    <value>В течение времени ожидания запроса ответ получен не был.</value>
+  </data>
+  <data name="TrustFailure" xml:space="preserve">
+    <value>Сертификат сервера не может быть проверен.</value>
+  </data>
+  <data name="UnknownError" xml:space="preserve">
+    <value>Возникло исключение неизвестного типа.</value>
+  </data>
+  <data name="Error0" xml:space="preserve">
+    <value>Запрос успешно выполнен</value>
+  </data>
+  <data name="Error1" xml:space="preserve">
+    <value>Сессия с таким номером уже существует</value>
+  </data>
+  <data name="Error10" xml:space="preserve">
+    <value>Неверный формат запроса</value>
+  </data>
+  <data name="Error11" xml:space="preserve">
+    <value>Сессия с таким номером не существует</value>
+  </data>
+  <data name="Error12" xml:space="preserve">
+    <value>Запрос сделан с незарегистрированного IP</value>
+  </data>
+  <data name="Error13" xml:space="preserve">
+    <value>Точка не зарегистрирована у Получателя</value>
+  </data>
+  <data name="Error15" xml:space="preserve">
+    <value>Платежи данному Получателю не поддерживаются системой</value>
+  </data>
+  <data name="Error17" xml:space="preserve">
+    <value>Номер телефона не соответствует введенному ранее</value>
+  </data>
+  <data name="Error18" xml:space="preserve">
+    <value>Сумма к зачислению не соответствует введенной ранее</value>
+  </data>
+  <data name="Error19" xml:space="preserve">
+    <value>Номер счета (контракта) не соответствует введенному ранее</value>
+  </data>
+  <data name="Error2" xml:space="preserve">
+    <value>Неверный код контрагента</value>
+  </data>
+  <data name="Error20" xml:space="preserve">
+    <value>Платеж находится в состоянии завершения</value>
+  </data>
+  <data name="Error21" xml:space="preserve">
+    <value>Недостаточно средств для проведения платежа</value>
+  </data>
+  <data name="Error22" xml:space="preserve">
+    <value>Платеж не принят. Ошибка при переводе средств</value>
+  </data>
+  <data name="Error223" xml:space="preserve">
+    <value>Контракт клиента не позволяет производить пополнение счета</value>
+  </data>
+  <data name="Error23" xml:space="preserve">
+    <value>Неверный номер телефона/счета</value>
+  </data>
+  <data name="Error24" xml:space="preserve">
+    <value>Ошибка связи с сервером Получателя</value>
+  </data>
+  <data name="Error25" xml:space="preserve">
+    <value>Работа шлюза приостановлена</value>
+  </data>
+  <data name="Error26" xml:space="preserve">
+    <value>Платежи данного Контрагента временно блокированы</value>
+  </data>
+  <data name="Error27" xml:space="preserve">
+    <value>Операции по счету приостановлены</value>
+  </data>
+  <data name="Error3" xml:space="preserve">
+    <value>Неверный код точки приема</value>
+  </data>
+  <data name="Error30" xml:space="preserve">
+    <value>Общая ошибка системы</value>
+  </data>
+  <data name="Error31" xml:space="preserve">
+    <value>Превышено количество одновременно обрабатываемых запросов (Киберплат)</value>
+  </data>
+  <data name="Error32" xml:space="preserve">
+    <value>Платеж с этими данными уже был принят к обработке за последний час</value>
+  </data>
+  <data name="Error33" xml:space="preserve">
+    <value>Карты указанного номинала на данный момент в системе отсутствуют</value>
+  </data>
+  <data name="Error34" xml:space="preserve">
+    <value>Транзакция с таким номером не найдена</value>
+  </data>
+  <data name="Error35" xml:space="preserve">
+    <value>Ошибка при изменении состояния платежа</value>
+  </data>
+  <data name="Error36" xml:space="preserve">
+    <value>Транзакция уже завершена или находится в обработке</value>
+  </data>
+  <data name="Error37" xml:space="preserve">
+    <value>Попытка обращения в шлюз, отличный от шлюза на предыдущем шаге</value>
+  </data>
+  <data name="Error38" xml:space="preserve">
+    <value>Превышен лимит времени между проверкой номера и платежом (1 час)</value>
+  </data>
+  <data name="Error39" xml:space="preserve">
+    <value>Неверный счет учета</value>
+  </data>
+  <data name="Error4" xml:space="preserve">
+    <value>Неверный код оператора точки приема</value>
+  </data>
+  <data name="Error40" xml:space="preserve">
+    <value>Карта указанного номинала в системе не зарегистрирована</value>
+  </data>
+  <data name="Error41" xml:space="preserve">
+    <value>Ошибка добавления данных платежа в базу данных</value>
+  </data>
+  <data name="Error42" xml:space="preserve">
+    <value>Ошибка при сохранении чека в базе данных</value>
+  </data>
+  <data name="Error43" xml:space="preserve">
+    <value>Сеанс Вашей работы в системе недействителен (возможно, истек срок действия сессии), попробуйте войти заново</value>
+  </data>
+  <data name="Error44" xml:space="preserve">
+    <value>Клиент не может работать на этом торговом сервере</value>
+  </data>
+  <data name="Error45" xml:space="preserve">
+    <value>Отсутствует разрешение на прием платежей в пользу данного Получателя</value>
+  </data>
+  <data name="Error46" xml:space="preserve">
+    <value>Не удалось завершить ошибочный платеж</value>
+  </data>
+  <data name="Error47" xml:space="preserve">
+    <value>Сработало временнОе ограничение прав</value>
+  </data>
+  <data name="Error48" xml:space="preserve">
+    <value>Ошибка при сохранении в системе данных сессии</value>
+  </data>
+  <data name="Error49" xml:space="preserve">
+    <value>Ошибка при сохранении в системе данных отказа при платеже</value>
+  </data>
+  <data name="Error5" xml:space="preserve">
+    <value>Неверный формат кода сессии</value>
+  </data>
+  <data name="Error50" xml:space="preserve">
+    <value>Проведение платежей в системе временно невозможно</value>
+  </data>
+  <data name="Error51" xml:space="preserve">
+    <value>Не найдены данные в системе</value>
+  </data>
+  <data name="Error52" xml:space="preserve">
+    <value>Возможно, контрагент заблокирован.</value>
+  </data>
+  <data name="Error53" xml:space="preserve">
+    <value>Возможно, точка приема заблокирована.</value>
+  </data>
+  <data name="Error54" xml:space="preserve">
+    <value>Возможно, оператор точки приема заблокирован.</value>
+  </data>
+  <data name="Error55" xml:space="preserve">
+    <value>Ожидался контрагент другого типа</value>
+  </data>
+  <data name="Error56" xml:space="preserve">
+    <value>Ожидалась точка другого типа</value>
+  </data>
+  <data name="Error57" xml:space="preserve">
+    <value>Ожидался оператор точки приема другого типа.</value>
+  </data>
+  <data name="Error6" xml:space="preserve">
+    <value>Неверная АСП</value>
+  </data>
+  <data name="Error7" xml:space="preserve">
+    <value>Неверный формат или значение суммы к зачислению вне допустимого диапазона</value>
+  </data>
+  <data name="Error71" xml:space="preserve">
+    <value>Не указана дата завершения действия карты для данного номинала</value>
+  </data>
+  <data name="Error72" xml:space="preserve">
+    <value>Номер карты и ПИН-код должны быть уникальными в рамках одного получателя</value>
+  </data>
+  <data name="Error8" xml:space="preserve">
+    <value>Неверный формат номера телефона</value>
+  </data>
+  <data name="Error81" xml:space="preserve">
+    <value>Превышена максимальная сумма платежа по Контрагенту</value>
+  </data>
+  <data name="Error82" xml:space="preserve">
+    <value>Превышена сумма списаний за день по Контрагенту</value>
+  </data>
+  <data name="Error83" xml:space="preserve">
+    <value>Превышена максимальная сумма платежа по точке</value>
+  </data>
+  <data name="Error84" xml:space="preserve">
+    <value>Превышена сумма списаний за день по точке</value>
+  </data>
+  <data name="Error85" xml:space="preserve">
+    <value>Неверный формат или значение полной суммы вне допустимого диапазона</value>
+  </data>
+  <data name="Error86" xml:space="preserve">
+    <value>Ошибка системы (неверное значение ставки)</value>
+  </data>
+  <data name="Error9" xml:space="preserve">
+    <value>Неверный формат номера лицевого счета</value>
+  </data>
+  <data name="Error03" xml:space="preserve">
+    <value>Ожидание завершения операции</value>
+  </data>
+  <data name="MsgFNI" xml:space="preserve">
+    <value>Функция {0} не реализована</value>
+    <comment>Function Not Implemented</comment>
+  </data>
+  <data name="MsgAnswer" xml:space="preserve">
+    <value>Ответ провайдера: {0} ({1})
+=======
+{2}
+=======</value>
+    <comment>Получен ответ провайдера (не важно какой)</comment>
+  </data>
+  <data name="MsgAnswerError" xml:space="preserve">
+    <value>Ошибка получения ответа от провайдера</value>
+  </data>
+  <data name="MsgFindFail" xml:space="preserve">
+    <value>[FIND]: Id={0} ErrCode={1} ErrDesc={2}</value>
+    <comment>Ненормальное завершение FIND</comment>
+  </data>
+  <data name="MsgFindOK" xml:space="preserve">
+    <value>[FIND]: Id={0} {1}</value>
+    <comment>Нормальное завершение FIND</comment>
+  </data>
+  <data name="MsgNoAnswer" xml:space="preserve">
+    <value>Ответ от провайдера не получен</value>
+  </data>
+  <data name="MsgParsingError" xml:space="preserve">
+    <value>Ошибка разбора {0} {1}</value>
+    <comment>Ошибка разбора входящего разбора</comment>
+  </data>
+  <data name="MsgParseAnswer" xml:space="preserve">
+    <value>Ошибка разбора ответа</value>
+  </data>
+  <data name="MsgTemplateError" xml:space="preserve">
+    <value>Ошибка шаблона платежа</value>
+  </data>
+  <data name="MsgWaitPrice" xml:space="preserve">
+    <value>Ожидается сумма</value>
+    <comment>PRICE</comment>
+  </data>
+  <data name="Error100" xml:space="preserve">
+    <value>Неверный формат ответа, либо ответ не получен</value>
+  </data>
+  <data name="Error270" xml:space="preserve">
+    <value>Ограничение финансового контроля</value>
+  </data>
+</root>

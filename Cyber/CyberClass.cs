@@ -429,7 +429,7 @@ namespace Oldi.Net.Cyber
 				if (GetAnswer() == 0)
 				{
 					// Код ошибки
-					if (!Int32.TryParse(GetValue("ERROR"), out errCode))
+					if (!Int32.TryParse(GetValue("Error"), out errCode))
 					{
 						errCode = 400;
 						errDesc = "Невозможно разобрать ответ провайдера";
@@ -438,10 +438,10 @@ namespace Oldi.Net.Cyber
 					}
 					
 					// Возвращаемый номер сессии
-					session = GetValue("SESSION");
+					session = GetValue("session");
 
                     // Результат обработки
-                    if (!Int32.TryParse(GetValue("RESULT"), out result))
+                    if (!Int32.TryParse(GetValue("Result"), out result))
                     {
                         errCode = 400;
                         errDesc = "Невозможно разобрать ответ провайдера";
@@ -451,42 +451,43 @@ namespace Oldi.Net.Cyber
 
 					// Код авторизации платежа
 					if (string.IsNullOrEmpty(acceptCode)) 
-						acceptCode = GetValue("AUTHCODE");
+						acceptCode = GetValue("authcode");
 
 					// Код транзакции в Кибере
 					if (string.IsNullOrEmpty(outtid))
-						outtid = GetValue("TRANSID");
+						outtid = GetValue("transID");
 
 					// Дата проведения платежа
 					if (acceptdate == DateTime.MinValue)
-						DateTime.TryParse(GetValue("DATE"), out acceptdate);
+						DateTime.TryParse(GetValue("Date"), out acceptdate);
 
 					// Дополнительная информация о ПУ
 					if (string.IsNullOrEmpty(addinfo))
-						addinfo = HttpUtility.UrlEncode(GetValue("ADDINFO")); // Кодиррует строку Url
+						// addinfo = HttpUtility.UrlEncode(GetValue("addinfo"));
+						addinfo = GetValue("addinfo").Replace("<", "&lt:").Replace(">", "&gt;");
 
 					// Номер счета у ПУ
 					if (string.IsNullOrEmpty(account)) 
-						account = GetValue("ACCOUNT");
+						account = GetValue("account");
 
 					// Остаток на счете
 					if (limit == decimal.MinusOne)
-						if (!string.IsNullOrEmpty(s = GetValue("REST")))
+						if (!string.IsNullOrEmpty(s = GetValue("rest")))
 							decimal.TryParse(s, System.Globalization.NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out limit);
                     if (limit == decimal.MinusOne)
-                        if (!string.IsNullOrEmpty(s = GetValue("RESTLIMIT")))
+                        if (!string.IsNullOrEmpty(s = GetValue("restlimit")))
                             decimal.TryParse(s, System.Globalization.NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out limit);
 
-					// Наименование ПУ
+                    // Наименование ПУ
                     if (string.IsNullOrEmpty(opname))
-						opname = GetValue("OPNAME");
+						opname = GetValue("opname");
 
 					// Требуемая сумма
 					if (price == decimal.MinusOne)
-						if (!string.IsNullOrEmpty(s = GetValue("PRICE")))
+						if (!string.IsNullOrEmpty(s = GetValue("price")))
 							decimal.TryParse(s, System.Globalization.NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out price);
 
-					errMsg = GetValue("ERRMSG");
+					errMsg = HttpUtility.UrlEncode(GetValue("errmsg"));
 					return 0;
 				}
 			}
@@ -529,10 +530,10 @@ namespace Oldi.Net.Cyber
             try
             {
                 // Выделим тело ответа между BEGIN .. END
-                pos1 = stResponse.IndexOf("BRGIN");
+                pos1 = stResponse.ToLower().IndexOf("begin");
                 if (pos1 == -1) return -1;
                 // Найдем = после ключевого слова
-                pos2 = stResponse.IndexOf("END", pos1);
+                pos2 = stResponse.ToLower().IndexOf("end", pos1);
                 if (pos2 == -1) return -1;
                 // Добавим еще 1 <CR><LF> для последнего аргумента
 				stAnswer = stResponse.Substring(pos1 + 5, pos2 - pos1 - 6).Trim() + "\r\n";
