@@ -449,6 +449,9 @@ namespace Oldi.Net.Cyber
                         return 100;
                     }
 
+					Log($"[{Tid} error={errCode} result={result}]");
+					Console.WriteLine($"[{Tid} error={errCode} result={result}]");
+
 					// Код авторизации платежа
 					if (string.IsNullOrEmpty(acceptCode)) 
 						acceptCode = GetValue("authcode");
@@ -622,47 +625,46 @@ namespace Oldi.Net.Cyber
 					break;
 			}
 
-			Log("\r\n{0} Host: {1}", Session, host);
+			Log("\r\n{0} Host: \"{1}\" {2}", Session, host, state);
+			Console.WriteLine("\r\n{0} Host: \"{1}\" {2}", Session, host, state);
 
 			// Создание шаблона сообщения pay_check
 
 			try
 			{
-				if (MakeRequest(status: old_state == 3? true: false) == 0)
+				if (MakeRequest(status: old_state == 3 ? true : false) == 0)
 					if (SendRequest(host) == 0)
 						if (ParseAnswer(stResponse) == 0)
 							{
-							// Log("DoPay: error={0} result={1}", errCode, result);
+							RootLog($"DoPay: error={0} result={1} state={state}", errCode, result);
 							if (old_state == 0 || old_state == 1)
 								{
-									/*
-									// Сессия с таким номером существует установим статус 11
-									if (result == 1 && errCode == 1 && Session == "-OLDIGW" + tid.ToString())
-										{
-										errCode = 2;
-										state = 11;
-										errDesc = "Сессия существует. требует вмешательства oператора";
-										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
-											outtid :outtid, acceptdate :XConvert.AsDate2(acceptdate),
-											price :price, addinfo :addinfo);
-										RootLog("Tid={0} Result={1} Error={1} Session={2} {3}", Tid, Result, errCode, Session, errDesc);
-										// Log("Обработан: {0}", ToString());
-										return 0;
-										}
-									*/ 
-								if (result == 0 && errCode == 0)
-									{
+								// Сессия с таким номером существует установим статус 11
+								if (result == 1 && errCode == 1 && Session == "-OLDIGW" + tid.ToString())
+								{
+									errCode = 2;
+									state = 11;
+									errDesc = "Сессия существует. требует вмешательства oператора";
+									UpdateState(tid: Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, result: result,
+										outtid: outtid, acceptdate: XConvert.AsDate2(acceptdate),
+										price: price, addinfo: addinfo);
+									RootLog("Tid={0} Result={1} Error={1} Session={2} {3}", Tid, Result, errCode, Session, errDesc);
+									Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+									return 0;
+								}
+								else if (result == 0 && errCode == 0)
+								{
 									errCode = 0;
-									state = try_state;
+									state = 1;
 									errDesc = old_state == 0 ? "Разрешение на платеж получено" : "Платеж отправлен";
 									// PrintParams("DoPay");
-									UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
-										outtid :outtid, acceptdate :XConvert.AsDate2(acceptdate),
-										price :price, addinfo :addinfo);
-									// Log("Обработан: {0}", ToString());
+									UpdateState(tid: Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, result: result,
+										outtid: outtid, acceptdate: XConvert.AsDate2(acceptdate),
+										price: price, addinfo: addinfo);
+									Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
 									return 0;
-									}
 								}
+							}
 							else if (old_state == 3)
 								{
 								if (errCode == 0)
@@ -674,34 +676,35 @@ namespace Oldi.Net.Cyber
 										// PrintParams("DoPay");
 										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
 											acceptCode :acceptCode, acceptdate :XConvert.AsDate2(acceptdate));
-										// Log("Обработан: {0}", ToString());
-										}
-									if (result == 1) // Платеж не зарегистраирован
+										Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+									}
+									else if (result == 1) // Платеж не зарегистраирован
 										{
 										state = 0;
 										errDesc = "Платеж не зарегистрирован";
 										// PrintParams("DoPay");
 										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
-										// Log("Обработан: {0}", ToString());
-										}
+										Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+									}
 									else if (result != 7)
 										{
 										state = 3;
 										errDesc = "Платеж проводится";
 										// PrintParams("DoPay");
 										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
-										// Log("Обработан: {0}", ToString());
-										}
+										Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+									}
 									errCode = 0;
 									return 0;
 									}
 
-							ChangeState(old_state); // state 1 или 0 или 12
-							// PrintParams("DoPay");
-							UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
-							// Log("Не обработан: {0}", ToString());
-							return 1;
+								ChangeState(old_state); // state 1 или 0 или 12
+								// PrintParams("DoPay");
+								UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
+								Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+								return 1;
 							}
+							Log($"DoPay: error={0} result={1} state={state}", errCode, result);
 						}
 			}
 			catch (Exception ex)

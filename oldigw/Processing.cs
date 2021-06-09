@@ -303,13 +303,15 @@ namespace Oldi.Net
 
             try
             {
-                if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rapida.Name && r.Gateway != "lyapko") // уже заполненнвй Answer
+                //if (r.Provider != Settings.Rt.Name && r.Provider != Settings.Rapida.Name && r.Gateway != "lyapko") // уже не используются
+                if (r.Gateway != "lyapko") // уже заполненнвй Answer
                 {
-                    if (r.State == 6 || r.State == 0 && r.Provider == "rapida")
+                    if (r.State == 6 /* || r.State == 0 && r.Provider == "rapida" */)
                     {
                         // stResponse = string.Format(Properties.Settings.Default.Response, 3, gw.ErrDesc, gw.Outtid, gw.Acceptdate, gw.AcceptCode, gw.Account, gw.AddInfo);
                         int pos = 0;
                         string addInfo = r.AddInfo ?? "";
+/*
                         if (r.Provider == Settings.Mts.Name)
                         {
                             // addInfo = string.Format("{0} {1} {2} Limmit={3}", r.Fio, r.Opname, r.Opcode, XConvert.AsAmount(r.Limit));
@@ -317,15 +319,16 @@ namespace Oldi.Net
                         }
                         else
                         {
+*/
+                        if (addInfo.Length > 250)
+                        {
+                            pos = addInfo.IndexOf(";");
+                            if (pos > 0)
+                                addInfo = addInfo.Substring(pos + 2);
                             if (addInfo.Length > 250)
-                            {
-                                pos = addInfo.IndexOf(";");
-                                if (pos > 0)
-                                    addInfo = addInfo.Substring(pos + 2);
-                                if (addInfo.Length > 250)
-                                    addInfo = addInfo.Substring(0, 250);
-                            }
+                                addInfo = addInfo.Substring(0, 250);
                         }
+                        // }
                         stResponse = string.Format(Properties.Settings.Default.Response, 3, errDesc,
                             r.Outtid, r.Acceptdate, r.AcceptCode, r.Account, addInfo, XConvert.AsAmount(r.Price));
                         // errDesc = r.ErrDesc;
@@ -334,19 +337,11 @@ namespace Oldi.Net
                     {
                         stResponse = string.Format(Properties.Settings.Default.FailResponse, 6, errDesc);
                     }
-                    else if (r.State == 0 && r.ErrCode == 7) // Передача управляющих кодов 7
+                    else if (r.State == 0 && r.ErrCode == 7 || r.ErrCode == 11 || r.ErrCode == 12) // Передача управляющих кодов 7, 11, 12
                     {
                         stResponse = string.Format(Properties.Settings.Default.FailResponse, r.ErrCode, errDesc);
                     }
-                    else if (r.ErrCode == 11 || r.ErrCode == 12) // Передача управляющих кодов 11, 12
-                    {
-                        stResponse = string.Format(Properties.Settings.Default.FailResponse, r.ErrCode, errDesc);
-                    }
-                    else if (r.State == 11) // Отложен
-                    {
-                        stResponse = string.Format(Properties.Settings.Default.FailResponse, 2, errDesc);
-                    }
-                    else if (r.State == 1) // 
+                    else if (r.State == 11 || r.State == 1) // Отложен или результат не ясен
                     {
                         stResponse = string.Format(Properties.Settings.Default.FailResponse, 2, errDesc);
                     }
@@ -357,19 +352,15 @@ namespace Oldi.Net
                     }
                 }
 
+                // Не получен ответ
                 if (string.IsNullOrEmpty(stResponse))
-                {
-                    stResponse = string.Format("<Response><ErrCode>{0}</ErrCode><ErrDesc>{1}</ErrDesc></Response>", r.ErrCode, r.ErrDesc);
-                    Log("{0} не получен ответ st={1} err={2} desc={3}", r.Tid, r.State, r.ErrDesc, r.ErrCode);
-                }
+                    stResponse = $"<Response><ErrCode>{r.ErrCode}</ErrCode><ErrDesc>{r.ErrDesc}</ErrDesc></Response>";
 
-                if (r.Gateway == "lyapko")
-                    Log(stResponse);
+                // if (r.Gateway == "lyapko")
+                Log($"[{r.Tid}] st={r.State} err={r.ErrDesc} desc={r.ErrCode}\r\n{stResponse ?? ""}");
 
                 // Создаем ответ
-                string answer = string.Format("<?xml version=\"1.0\" encoding=\"{0}\"?>\r\n{1}",
-                    dataHolder.ClientEncoding.WebName, stResponse);
-
+                string answer = $"<?xml version=\"1.0\" encoding=\"{dataHolder.ClientEncoding.WebName}\"?>\r\n{stResponse}";
                 byte[] buffer = dataHolder.ClientEncoding.GetBytes(answer);
                 dataHolder.Context.Response.ContentLength64 = buffer.Length;
 
@@ -377,8 +368,7 @@ namespace Oldi.Net
                     Log(Properties.Resources.MsgResponseGW, stResponse);
 
                 // Utility.Log("tid={0}. Ответ MTS-GATE --> OE\r\n{1}", tid, stResponse);
-                System.IO.Stream output = dataHolder.Context.Response.OutputStream;
-                output.Write(buffer, 0, buffer.Length);
+                dataHolder.Context.Response.OutputStream.Write(buffer, 0, buffer.Length);
             }
             catch (WebException we)
             {

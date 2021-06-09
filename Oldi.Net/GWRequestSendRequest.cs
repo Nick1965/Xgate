@@ -254,7 +254,7 @@ namespace Oldi.Net
 				if (response != null) response.Close();
 			}
 
-			// Log(ErrDesc);
+			Console.WriteLine($"ErrCode={ErrCode} ErrDesc={ErrDesc}");
 			return errCode;
 
 		} // SendRequest
