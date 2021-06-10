@@ -75,6 +75,8 @@ namespace Oldi.Net
 
                     // Log($"REQ: Provider=\"{Request.Provider}\" Request=\"{Request.RequestType}\" Service=\"{Request.Service}\"");
 
+                    Log($"[{Request?.Tid}] Provider=\"{Request.Provider}\" Request=\"{Request.RequestType}\" Service=\"{Request.Service}\"");
+
                     // Для начала определимся с провайдером:
                     switch (Request.Provider)
                     {
@@ -111,8 +113,8 @@ namespace Oldi.Net
                             {
                                 Current.ErrCode = 6;
                                 Current.State = 12;
-                                Current.ErrDesc = string.Format(Messages.UnknownProvider, Request.Provider);
-                                Log($"Processing.Run(): Unknown provider \"{Request.Provider}\"");
+                                Current.ErrDesc = $"[{Current.Tid}] Неизвестный провайдер {Current.Provider} {Current.ErrCode} {Current.State}";
+                                Log($"{Current.errDesc}");
                                 Current.UpdateState(Current.Tid, state: Current.State, errCode: Current.ErrCode, errDesc: Current.ErrDesc);
                                 ValidProvider = false;
                             }
@@ -150,7 +152,7 @@ namespace Oldi.Net
                                     Current.GetState();
                                     if (Current.State == 255)
                                     {
-                                        // Log(string.Format(Messages.PayNotFound, Current.Tid));
+                                        Log($"[{Current.Tid}] {Messages.PayNotFound}");
                                         Current.State = 12;
                                         Current.errCode = 11;
                                         Current.errDesc = string.Format(Messages.PayNotFound, Current.Tid);
@@ -321,7 +323,7 @@ namespace Oldi.Net
                         }
                         // }
                         stResponse = string.Format(Properties.Settings.Default.Response, 3, errDesc,
-                            r.Outtid, r.Acceptdate, r.AcceptCode, r.Account, "", XConvert.AsAmount(r.Price));
+                            r.Outtid, r.Acceptdate, r.AcceptCode, r.Account, addInfo?.Replace("<", "&lt;")?.Replace(">", "&gt;"), XConvert.AsAmount(r.Price));
                         // errDesc = r.ErrDesc;
                     }
                     else if (r.State == 12)
@@ -390,6 +392,7 @@ namespace Oldi.Net
                     dataHolder.ClientEncoding.WebName, stResponse);
                 if (Settings.LogLevel.IndexOf("REQ") != -1)
                     Log("Подготовлен ответ: \r\n{0}", answer);
+                answer?.Replace("<", "&lt;")?.Replace(">", "&gt;");
                 byte[] buffer = dataHolder.ClientEncoding.GetBytes(answer);
                 dataHolder.Context.Response.ContentLength64 = buffer.Length;
                 dataHolder.Context.Response.OutputStream.Write(buffer, 0, buffer.Length);

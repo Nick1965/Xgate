@@ -422,6 +422,11 @@ namespace Oldi.Net
 			if (state == 6)
 				SendSMS();
 
+			if (addinfo != null)
+				addinfo = HttpUtility.HtmlEncode(addinfo);
+			else
+				addinfo = "";
+
 			return Exec(sp: "UpdateState", tid: tid,
 									state: state,
 									errCode: errCode,
@@ -436,7 +441,7 @@ namespace Oldi.Net
 									locked: locked,
 									acceptdate: acceptdate,
 									acceptcode: acceptCode,
-									addinfo: addinfo.Replace("<br>", ""),
+									addinfo: addinfo,
 									price: price,
 									result: result);
 		}
@@ -669,7 +674,7 @@ namespace Oldi.Net
 				cmd.AddParam("Outtid", outtid);
 				cmd.AddParam("Acceptcode", acceptcode);
 				cmd.AddParam("Acceptdate", acceptdate);
-				cmd.AddParam("Addinfo", addinfo.Replace("<br>", ""));
+				cmd.AddParam("Addinfo", addinfo?.Replace("<", "&lt;")?.Replace(">", "&gt;"));
 				cmd.AddParam("Price", price);
 				cmd.AddParam("State", state);
 				cmd.AddParam("ErrCode", errCode);
@@ -1035,7 +1040,7 @@ namespace Oldi.Net
 						p.Read("Account", out account);
 						p.Read("fio", out fio);
 						p.Read("addinfo", out addinfo);
-						addinfo = addinfo?.Replace("<br>", ""); // экранирование html-тэгов
+						addinfo = addinfo?.Replace("<", "&lt;")?.Replace(">", "&gt;"); // экранирование html-тэгов
 						p.Read("Outtid", out outtid);
 						p.Read("Acceptdate", out acceptdate);
 						p.Read("Acceptcode", out acceptCode);

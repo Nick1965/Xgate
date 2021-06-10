@@ -113,7 +113,7 @@ namespace Oldi.Net.Cyber
 			}
 			catch (Exception ex)
 			{
-                RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ex.ToString()}");
+                Log($"[{tid}] {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ex.ToString()}");
             }
 
             // base.InitializeComponents();
@@ -374,7 +374,7 @@ namespace Oldi.Net.Cyber
 				state = 11;
             }
 
-            RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ErrDesc}");
+            Log($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ErrDesc}");
 
             return 1;
 
@@ -393,8 +393,8 @@ namespace Oldi.Net.Cyber
             if (string.IsNullOrEmpty(stResponse))
             {
 				errDesc = Properties.Resources.MsgEmptyAnswer;
-				errCode = 1;
-				state = state == 1 ? (byte)0 : (byte)3;
+				errCode = 6;
+				state = 12;
 				return 1;
             }
 
@@ -431,10 +431,10 @@ namespace Oldi.Net.Cyber
 					// Код ошибки
 					if (!Int32.TryParse(GetValue("Error"), out errCode))
 					{
-						errCode = 400;
+						errCode = 6;
 						errDesc = "Невозможно разобрать ответ провайдера";
 						state = 12;
-						return 100;
+						return 1;
 					}
 					
 					// Возвращаемый номер сессии
@@ -443,10 +443,10 @@ namespace Oldi.Net.Cyber
                     // Результат обработки
                     if (!Int32.TryParse(GetValue("Result"), out result))
                     {
-                        errCode = 400;
+                        errCode = 6;
                         errDesc = "Невозможно разобрать ответ провайдера";
                         state = 12;
-                        return 100;
+                        return 1;
                     }
 
 					Log($"[{Tid} error={errCode} result={result}]");
@@ -497,27 +497,27 @@ namespace Oldi.Net.Cyber
 			catch (ApplicationException ae)
 			{
                 // Если платёж новый - отменяем и забываем. Иначе надо разбираться
-                errCode = 400;
+                errCode = 6;
                 errDesc = ae.Message;
-                state = State == 1 ? (byte)0 : (byte)3;
-                RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ErrDesc}");
+				state = 12;
+                Log($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ErrDesc}");
             }
             catch (IPrivException ie)
 			{
 				ErrCode = ie.code;
 				ErrDesc = string.Format("({0}) {1}", ie.code, ie.ToString());
-				state = state == 1 ? (byte)0 : (byte)3;
-                RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ErrDesc}");
+				state = 12;
+                Log($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ErrDesc}");
             }
             catch (Exception ex)
 			{
 				ErrCode = 6;
 				ErrDesc = $"ParseAnswer: ({errCode}) {ex.Message}";
-                RootLog($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ex.ToString()}");
+                Log($"{tid} {Number}{Card} {Account} {Provider}/{Service}/{Gateway}\r\n{ex.ToString()}");
                 state = 12;
 			}
 
-			return errCode;
+			return state == 12? 1: 0;
 
         }
 
@@ -625,8 +625,7 @@ namespace Oldi.Net.Cyber
 					break;
 			}
 
-			RootLog("\r\n{0} Host: \"{1}\" {2}", Session, host, state);
-			Console.WriteLine("\r\n{0} Host: \"{1}\" {2}", Session, host, state);
+			Log("\r\n{0} Host: \"{1}\" {2}", Session, host, state);
 
 			// Создание шаблона сообщения pay_check
 
@@ -636,7 +635,7 @@ namespace Oldi.Net.Cyber
 					if (SendRequest(host) == 0)
 						if (ParseAnswer(stResponse) == 0)
 							{
-							RootLog($"DoPay: error={0} result={1} state={state}", errCode, result);
+							Log($"DoPay: error={0} result={1} state={state}", errCode, result);
 							if (old_state == 0 || old_state == 1)
 								{
 								// Сессия с таким номером существует установим статус 11
@@ -648,7 +647,7 @@ namespace Oldi.Net.Cyber
 									UpdateState(tid: Tid, state: state, errCode: ErrCode, errDesc: ErrDesc, result: result,
 										outtid: outtid, acceptdate: XConvert.AsDate2(acceptdate),
 										price: price, addinfo: addinfo);
-									RootLog("Tid={0} Result={1} Error={1} Session={2} {3}", Tid, Result, errCode, Session, errDesc);
+									Log("Tid={0} Result={1} Error={1} Session={2} {3}", Tid, Result, errCode, Session, errDesc);
 									Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
 									return 0;
 								}
@@ -676,7 +675,8 @@ namespace Oldi.Net.Cyber
 										// PrintParams("DoPay");
 										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
 											acceptCode :acceptCode, acceptdate :XConvert.AsDate2(acceptdate));
-										RootLog($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+										Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+										return 0;
 									}
 									else if (result == 1) // Платеж не зарегистраирован
 										{
@@ -685,7 +685,8 @@ namespace Oldi.Net.Cyber
 										errDesc = "Платеж не зарегистрирован";
 										// PrintParams("DoPay");
 										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
-										RootLog($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+										Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+										return 0;
 									}
 									else if (result != 7)
 										{
@@ -694,6 +695,7 @@ namespace Oldi.Net.Cyber
 										// PrintParams("DoPay");
 										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
 										Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+										return 0;
 									}
 									errCode = 0;
 									return 0;
@@ -702,10 +704,10 @@ namespace Oldi.Net.Cyber
 								ChangeState(old_state); // state 1 или 0 или 12
 								// PrintParams("DoPay");
 								UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
-								RootLog($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+								Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
 								return 1;
 							}
-							RootLog($"DoPay: error={0} result={1} state={state}", errCode, result);
+							Log($"DoPay: error={0} result={1} state={state}", errCode, result);
 						}
 			}
 			catch (Exception ex)
@@ -716,7 +718,8 @@ namespace Oldi.Net.Cyber
 			}
 
 			// Изменим состояние платежа
-			ChangeState(old_state);
+			if (state != 12 && state != 11)
+				ChangeState(old_state);
 
 			if (old_state == 0 && ErrCode != 0 && !string.IsNullOrEmpty(AddInfo))
 				errDesc += errDesc + ": " + AddInfo.Replace("<br>", "");
