@@ -799,7 +799,7 @@ namespace RT
 			if (!string.IsNullOrEmpty(Account))
 				sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "account", Account);
 			if (!string.IsNullOrEmpty(AddInfo))
-				sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "info", AddInfo.Length <= 250 ? HttpUtility.HtmlEncode(AddInfo) : HttpUtility.HtmlEncode(AddInfo.Substring(0, 250)));
+				sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "info", AddInfo.Length <= 250 ? HttpUtility.HtmlEncode(AddInfo) : HttpUtility.HtmlEncode(AddInfo.Replace("<br>", "")?.Substring(0, 250)));
 
             if (Recpay != null)
                 sb1.AppendFormat("\r\n\t<{0}>{1}</{0}>", "recpay", XConvert.AsAmount(Recpay.Value));

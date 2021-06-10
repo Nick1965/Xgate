@@ -467,7 +467,7 @@ namespace Oldi.Net.Cyber
 					// Дополнительная информация о ПУ
 					if (string.IsNullOrEmpty(addinfo))
 						// addinfo = HttpUtility.UrlEncode(GetValue("addinfo"));
-						addinfo = GetValue("addinfo").Replace("<", "&lt:").Replace(">", "&gt;");
+						addinfo = GetValue("addinfo")?.Replace("<br>", "");
 
 					// Номер счета у ПУ
 					if (string.IsNullOrEmpty(account)) 
@@ -625,7 +625,7 @@ namespace Oldi.Net.Cyber
 					break;
 			}
 
-			Log("\r\n{0} Host: \"{1}\" {2}", Session, host, state);
+			RootLog("\r\n{0} Host: \"{1}\" {2}", Session, host, state);
 			Console.WriteLine("\r\n{0} Host: \"{1}\" {2}", Session, host, state);
 
 			// Создание шаблона сообщения pay_check
@@ -676,15 +676,16 @@ namespace Oldi.Net.Cyber
 										// PrintParams("DoPay");
 										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result,
 											acceptCode :acceptCode, acceptdate :XConvert.AsDate2(acceptdate));
-										Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+										RootLog($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
 									}
 									else if (result == 1) // Платеж не зарегистраирован
 										{
-										state = 0;
+										errCode = 1;
+										state = 12;
 										errDesc = "Платеж не зарегистрирован";
 										// PrintParams("DoPay");
 										UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
-										Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+										RootLog($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
 									}
 									else if (result != 7)
 										{
@@ -701,10 +702,10 @@ namespace Oldi.Net.Cyber
 								ChangeState(old_state); // state 1 или 0 или 12
 								// PrintParams("DoPay");
 								UpdateState(tid :Tid, state :state, errCode :ErrCode, errDesc :ErrDesc, result :result);
-								Log($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
+								RootLog($"Обработан: state={state} errCode={errCode} errDesc={errDesc}");
 								return 1;
 							}
-							Log($"DoPay: error={0} result={1} state={state}", errCode, result);
+							RootLog($"DoPay: error={0} result={1} state={state}", errCode, result);
 						}
 			}
 			catch (Exception ex)
@@ -718,7 +719,7 @@ namespace Oldi.Net.Cyber
 			ChangeState(old_state);
 
 			if (old_state == 0 && ErrCode != 0 && !string.IsNullOrEmpty(AddInfo))
-				errDesc += errDesc + ": " + AddInfo;
+				errDesc += errDesc + ": " + AddInfo.Replace("<br>", "");
 			
 			UpdateState(tid: Tid, state: state, errCode: ErrCode, errDesc: ErrDesc,
 				acceptCode: acceptCode, outtid: outtid, acceptdate: XConvert.AsDate2(acceptdate),

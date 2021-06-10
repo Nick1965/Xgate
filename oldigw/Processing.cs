@@ -311,15 +311,6 @@ namespace Oldi.Net
                         // stResponse = string.Format(Properties.Settings.Default.Response, 3, gw.ErrDesc, gw.Outtid, gw.Acceptdate, gw.AcceptCode, gw.Account, gw.AddInfo);
                         int pos = 0;
                         string addInfo = r.AddInfo ?? "";
-/*
-                        if (r.Provider == Settings.Mts.Name)
-                        {
-                            // addInfo = string.Format("{0} {1} {2} Limmit={3}", r.Fio, r.Opname, r.Opcode, XConvert.AsAmount(r.Limit));
-                            addInfo = string.Format("{0} {1} {2}", r.Fio, r.Opname, r.Opcode);
-                        }
-                        else
-                        {
-*/
                         if (addInfo.Length > 250)
                         {
                             pos = addInfo.IndexOf(";");
@@ -330,7 +321,7 @@ namespace Oldi.Net
                         }
                         // }
                         stResponse = string.Format(Properties.Settings.Default.Response, 3, errDesc,
-                            r.Outtid, r.Acceptdate, r.AcceptCode, r.Account, addInfo, XConvert.AsAmount(r.Price));
+                            r.Outtid, r.Acceptdate, r.AcceptCode, r.Account, "", XConvert.AsAmount(r.Price));
                         // errDesc = r.ErrDesc;
                     }
                     else if (r.State == 12)

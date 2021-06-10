@@ -436,7 +436,7 @@ namespace Oldi.Net
 									locked: locked,
 									acceptdate: acceptdate,
 									acceptcode: acceptCode,
-									addinfo: addinfo,
+									addinfo: addinfo.Replace("<br>", ""),
 									price: price,
 									result: result);
 		}
@@ -669,7 +669,7 @@ namespace Oldi.Net
 				cmd.AddParam("Outtid", outtid);
 				cmd.AddParam("Acceptcode", acceptcode);
 				cmd.AddParam("Acceptdate", acceptdate);
-				cmd.AddParam("Addinfo", addinfo);
+				cmd.AddParam("Addinfo", addinfo.Replace("<br>", ""));
 				cmd.AddParam("Price", price);
 				cmd.AddParam("State", state);
 				cmd.AddParam("ErrCode", errCode);
@@ -954,7 +954,7 @@ namespace Oldi.Net
 				dp.Read("Outtid", out outtid);
 				dp.Read("Acceptdate", out acceptdate);
 				dp.Read("Addinfo", out addinfo);
-				addinfo = addinfo?.Replace("<", "&lt:")?.Replace(">", "&gt;"); // экранирование html-тэгов
+				addinfo = addinfo?.Replace("<br>", ""); // экранирование html-тэгов
 				dp.Read("Filial", out filial);
 				dp.Read("Opname", out opname);
 				dp.Read("Opcode", out opcode);
@@ -1035,7 +1035,7 @@ namespace Oldi.Net
 						p.Read("Account", out account);
 						p.Read("fio", out fio);
 						p.Read("addinfo", out addinfo);
-						addinfo = addinfo?.Replace("<", "&lt:")?.Replace(">", "&gt;"); // экранирование html-тэгов
+						addinfo = addinfo?.Replace("<br>", ""); // экранирование html-тэгов
 						p.Read("Outtid", out outtid);
 						p.Read("Acceptdate", out acceptdate);
 						p.Read("Acceptcode", out acceptCode);
