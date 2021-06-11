@@ -213,15 +213,15 @@ namespace Oldi.Net
 							LogRequest(response.Headers, stResponse);
 						}
 					}
-				else
-				{
-					errCode = 1;
-					if (state == 1)
-						state = 0;
-					errDesc = "Не получен ответ от провайдера";
-					Log(ErrDesc);
-					RootLog(ErrDesc);
-				}
+					else
+					{
+						errCode = 1;
+						if (state == 1)
+							state = 0;
+						errDesc = $"[{Tid}] Не получен ответ от провайдера";
+						Log(ErrDesc);
+						RootLog(ErrDesc);
+					}
 			}
 			catch (WebException we)
 			{
@@ -229,9 +229,9 @@ namespace Oldi.Net
 				if (state == 1)
 					state = 0;
 				errCode = 502;
-				Log(we.ToString());
-				RootLog("[{0}] {1} {2}", Tid, Host, errDesc);
-                Log(we.ToString());
+				Log($"[{Tid}] Ошибка соединения host={host} id={Account}{Number}{Card} {we}");
+				// RootLog("[{0}] {1} {2}", Tid, Host, errDesc);
+                // Log(we.ToString());
 
                 // Если это ошибка установки SSL-соединения, надо повторить.
                 if (we.Status == WebExceptionStatus.SecureChannelFailure)
@@ -268,12 +268,12 @@ namespace Oldi.Net
 		void LogRequest(WebHeaderCollection headers, string text)
 		{
             StringBuilder s = new StringBuilder();
-			s.AppendFormat("Host: {0}\r\n", Host);
-			if (Settings.LogLevel.IndexOf("HDR") != -1)
-			{
-				for (int i = 0; i < headers.Count; ++i)
-					s.AppendFormat("{0}={1}\r\n", headers.Keys[i], headers[i]);
-            }
+			s.AppendFormat("Ответ сервера: Host={0}\r\n", Host);
+			// if (Settings.LogLevel.IndexOf("HDR") != -1)
+			// {
+			for (int i = 0; i < headers.Count; ++i)
+				s.AppendFormat("{0}={1}\r\n", headers.Keys[i], headers[i]);
+            // }
 			if (Provider != "cyber")
 				{
 				s.Append(text);
