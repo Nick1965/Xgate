@@ -155,7 +155,7 @@ namespace Oldi.Net
                                         Log($"[{Current.Tid}] {Messages.PayNotFound}");
                                         Current.State = 12;
                                         Current.errCode = 11;
-                                        Current.errDesc = string.Format(Messages.PayNotFound, Current.Tid);
+                                        Current.errDesc = string.Format("Tid={1} {0}", Messages.PayNotFound, Current.Tid);
                                     }
                                 }
                                 // Log(Messages.StatusRequest, Current.Tid, Current.ErrDesc);

@@ -133,7 +133,7 @@
     <value>[Processing] Ошибка разбора {0} {1}</value>
   </data>
   <data name="PayNotFound" xml:space="preserve">
-    <value>Tid={0} [STATUS] Платёж не найден.</value>
+    <value>[STATUS] Платёж не найден.</value>
   </data>
   <data name="StatusRequest" xml:space="preserve">
     <value>{0} [STAUS] - {1}</value>
