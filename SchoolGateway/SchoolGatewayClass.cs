@@ -313,7 +313,9 @@ namespace SchoolGateway
             Log($"{Tid} Поиск ПУ для {account}");
 
             IDbConnection cnn = new SqlConnection(Settings.GorodConnectionString);
-            var answer = cnn.Query<Rec>("Select SchoolNumber, Name From [PU].[dbo].Student where Phone = @p or Phone1 = @p or Phone2 = @p", new { p = Account } );
+            var answer = Service == "1" ? cnn.Query<Rec>("Select SchoolNumber, Name From [PU].[dbo].Student where Phone = @p or Phone1 = @p or Phone2 = @p", new { p = Account })
+                : cnn.Query<Rec>("Select SchoolNumber, Parent1 as Name From [PU].[dbo].Student where Phone = @p or Phone1 = @p or Phone2 = @p", new { p = Account });
+
             if (answer.Count() >= 1)
             {
 
@@ -323,7 +325,7 @@ namespace SchoolGateway
                 state = 1;
                 errDesc = "Абонент найден";
 
-                Log($"{Tid} [DoCheck] Phone={Account} School={addinfo} fio={fio}");
+                Log($"{Tid} [DoCheck] Phone={Account} School={addinfo} service={Service} fio={fio}");
 
                 if (Service == "1") // Cafeteria`
                 {
