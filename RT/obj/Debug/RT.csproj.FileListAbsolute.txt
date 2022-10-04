@@ -170,11 +170,6 @@ D:\Projects\XGate\RT\obj\Debug\RT.csproj.CopyComplete
 D:\Projects\XGate\RT\obj\Debug\RT.dll
 D:\Projects\XGate\RT\obj\Debug\RT.pdb
 D:\Projects\XGate\RT\obj\Debug\RT.csprojAssemblyReference.cache
-C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.Properties.Resources.resources
-C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.csproj.GenerateResource.cache
-C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.csproj.CoreCompileInputs.cache
-C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.dll
-C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.pdb
 C:\Users\shareuser\source\repos\XGate\RT\bin\Debug\RT.dll.config
 C:\Users\shareuser\source\repos\XGate\RT\bin\Debug\RT.dll
 C:\Users\shareuser\source\repos\XGate\RT\bin\Debug\RT.pdb
@@ -191,5 +186,10 @@ C:\Users\shareuser\source\repos\XGate\RT\bin\Debug\Dapper.xml
 C:\Users\shareuser\source\repos\XGate\RT\bin\Debug\Dapper.Contrib.xml
 C:\Users\shareuser\source\repos\XGate\RT\bin\Debug\Newtonsoft.Json.xml
 C:\Users\shareuser\source\repos\XGate\RT\bin\Debug\SMPP.pdb
-C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.csproj.CopyComplete
 C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.csproj.AssemblyReference.cache
+C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.Properties.Resources.resources
+C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.csproj.GenerateResource.cache
+C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.csproj.CoreCompileInputs.cache
+C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.csproj.CopyComplete
+C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.dll
+C:\Users\shareuser\source\repos\XGate\RT\obj\Debug\RT.pdb

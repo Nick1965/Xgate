@@ -79,6 +79,7 @@ C:\Users\shareuser\source\repos\XGate\Ekt\bin\Debug\Oldi.Net.pdb
 C:\Users\shareuser\source\repos\XGate\Ekt\bin\Debug\Oldi.Net.dll.config
 C:\Users\shareuser\source\repos\XGate\Ekt\bin\Debug\Utility.pdb
 C:\Users\shareuser\source\repos\XGate\Ekt\bin\Debug\SMPP.pdb
+C:\Users\shareuser\source\repos\XGate\Ekt\obj\Debug\Ekt.csproj.AssemblyReference.cache
 C:\Users\shareuser\source\repos\XGate\Ekt\obj\Debug\Oldi.Ekt.Messages.resources
 C:\Users\shareuser\source\repos\XGate\Ekt\obj\Debug\Oldi.Ekt.Properties.Resources.resources
 C:\Users\shareuser\source\repos\XGate\Ekt\obj\Debug\Ekt.csproj.GenerateResource.cache
@@ -86,4 +87,3 @@ C:\Users\shareuser\source\repos\XGate\Ekt\obj\Debug\Ekt.csproj.CoreCompileInputs
 C:\Users\shareuser\source\repos\XGate\Ekt\obj\Debug\Ekt.csproj.CopyComplete
 C:\Users\shareuser\source\repos\XGate\Ekt\obj\Debug\Ekt.dll
 C:\Users\shareuser\source\repos\XGate\Ekt\obj\Debug\Ekt.pdb
-C:\Users\shareuser\source\repos\XGate\Ekt\obj\Debug\Ekt.csproj.AssemblyReference.cache

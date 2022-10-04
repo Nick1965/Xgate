@@ -19,3 +19,9 @@ D:\Projects\XGate\SMPP\bin\Debug\SMPP.dll
 D:\Projects\XGate\SMPP\bin\Debug\SMPP.pdb
 D:\Projects\XGate\SMPP\obj\Debug\SMPP.dll
 D:\Projects\XGate\SMPP\obj\Debug\SMPP.pdb
+C:\Users\shareuser\source\repos\XGate\SMPP\bin\Debug\SMPP.dll
+C:\Users\shareuser\source\repos\XGate\SMPP\bin\Debug\SMPP.pdb
+C:\Users\shareuser\source\repos\XGate\SMPP\obj\Debug\SMPP.csproj.AssemblyReference.cache
+C:\Users\shareuser\source\repos\XGate\SMPP\obj\Debug\SMPP.csproj.CoreCompileInputs.cache
+C:\Users\shareuser\source\repos\XGate\SMPP\obj\Debug\SMPP.dll
+C:\Users\shareuser\source\repos\XGate\SMPP\obj\Debug\SMPP.pdb

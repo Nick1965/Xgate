@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.Data.SqlClient;
-using OldiGW.Redo.Net;
+using Redo;
 using System.Diagnostics;
 using Oldi.Utility;
 using Oldi.Mts;

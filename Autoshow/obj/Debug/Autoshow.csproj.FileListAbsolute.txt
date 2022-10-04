@@ -44,3 +44,17 @@ D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\bin\Debug\Utility.pdb
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.csprojResolveAssemblyReference.cache
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.dll
 D:\MyDocs\Visual Studio 2013\Projects\X-Gate\Autoshow\obj\Debug\Autoshow.pdb
+C:\Users\shareuser\source\repos\XGate\Autoshow\bin\Debug\Autoshow.dll
+C:\Users\shareuser\source\repos\XGate\Autoshow\bin\Debug\Autoshow.pdb
+C:\Users\shareuser\source\repos\XGate\Autoshow\bin\Debug\Oldi.Net.dll
+C:\Users\shareuser\source\repos\XGate\Autoshow\bin\Debug\SMPP.dll
+C:\Users\shareuser\source\repos\XGate\Autoshow\bin\Debug\Utility.dll
+C:\Users\shareuser\source\repos\XGate\Autoshow\bin\Debug\Oldi.Net.pdb
+C:\Users\shareuser\source\repos\XGate\Autoshow\bin\Debug\Oldi.Net.dll.config
+C:\Users\shareuser\source\repos\XGate\Autoshow\bin\Debug\SMPP.pdb
+C:\Users\shareuser\source\repos\XGate\Autoshow\bin\Debug\Utility.pdb
+C:\Users\shareuser\source\repos\XGate\Autoshow\obj\Debug\Autoshow.csproj.AssemblyReference.cache
+C:\Users\shareuser\source\repos\XGate\Autoshow\obj\Debug\Autoshow.csproj.CoreCompileInputs.cache
+C:\Users\shareuser\source\repos\XGate\Autoshow\obj\Debug\Autoshow.csproj.CopyComplete
+C:\Users\shareuser\source\repos\XGate\Autoshow\obj\Debug\Autoshow.dll
+C:\Users\shareuser\source\repos\XGate\Autoshow\obj\Debug\Autoshow.pdb
