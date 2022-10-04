@@ -146,8 +146,8 @@ namespace OldiGW.Redo.Net
 			TaskState stateInfo = (TaskState)state;
             // ManualResetEvent[] manualEvents = new ManualResetEvent[64];
 
-            Log(Properties.Resources.MsgRedoRunning);
-			Console.WriteLine(Properties.Resources.MsgRedoRunning);
+            Log("REDO: Запущен процесс допроведения");
+			Console.WriteLine("REDO: Запущен процесс допроведения");
 
 			// Читать отложенные платежи
 
