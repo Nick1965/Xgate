@@ -14,7 +14,7 @@ using System.Data.Linq;
 using System.Collections.Concurrent;
 
 
-namespace Redo
+namespace OldiGW.Redo.Net
 {
 
 	/*

@@ -11,11 +11,12 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.Data.SqlClient;
-using Redo;
+// using Redo;
 using System.Diagnostics;
 using Oldi.Utility;
 using Oldi.Mts;
 using System.Net;
+using OldiGW.Redo.Net;
 
 namespace Oldi.Net
 {
